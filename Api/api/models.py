@@ -8,7 +8,7 @@ from . import db
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(), nullable=False)
-    name = db.Column(db.Integer, default=0)
+    name = db.Column(db.String(), default=0)
     description = db.Column(db.String(), nullable=False)
     review = db.Column(db.Integer, default=0)
     movies = db.Column(db.String)
