@@ -3,7 +3,7 @@ from Api import create_app
 app = create_app()
 app.app_context().push()
 
-ENV = 'dev'
+ENV = 'prod'
 
 if ENV == 'dev':
     app.debug = True
