@@ -6,9 +6,9 @@ from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
-from api import db, request, render_template
-from api.models import Movie, MovieSchema
-from api.utils import save_img
+from . import db, request, render_template
+from .models import Movie, MovieSchema
+from .utils import save_img
 import requests
 import json
 import imdb
