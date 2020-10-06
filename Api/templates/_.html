@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <form method="POST" action="" enctype="multipart/form-data" >
+                                {{ form.hidden_tag() }}
+    {{ form.name }}
+{{ form.description }}
+{{ form.review }}
+{{ form.photo }}
+{{ form.movie.label}}
+{{form.movie }}
+{{ form.submit }}
+</form>
+
+{% for x in c%}
+  <hr>
+    <br>
+  <br>
+  {{x.name}}
+  <br>
+  <br>
+
+  {{x.description}}
+  <br>
+  <br>
+  {{x.review}}
+  <br>
+  <br>
+  <img alt="" height="200" width='200' src="{{  url_for('static', filename= 'movies/' + x.poster) }}">
+{% endfor %}
+</body>
+</html>
