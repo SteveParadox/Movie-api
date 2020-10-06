@@ -37,13 +37,10 @@ cffi==1.11.5
 chardet==3.0.4
 Click==7.0
 cryptography==2.3.1
-Flask==1.0.2
 Flask-JWT-Extended==3.13.0
 Flask-SQLAlchemy==2.1
 idna==2.7
 itsdangerous==0.24
-Jinja2==2.10
-MarkupSafe==1.0
 ndg-httpsclient==0.5.1
 nltk==3.3
 pusher==2.0.1
@@ -52,11 +49,7 @@ pycparser==2.19
 PyJWT==1.6.4
 pyOpenSSL==18.0.0
 python-dotenv==0.8.2
-requests==2.19.1
 six==1.11.0
-SQLAlchemy==1.2.0
 textblob==0.15.1
-urllib3==1.23
-Werkzeug==0.14.1
 shortuuid==0.5.0
 IMDbPY==6.8
