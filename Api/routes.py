@@ -79,7 +79,7 @@ def upload():
             r = requests.get(url)
             filetype = r.headers['content-type'].split('/')[-1]
             filename = 'poster_{0}.{1}'.format(nr + 1, filetype)
-        with open(os.path.join(os.path.abspath('static/movies/'), filename), 'wb') as w:
+        with open(os.path.join(os.path.abspath('/Api/static/movies/'), filename), 'wb') as w:
             w.write(r.content)
         movie_detail = movie.text
         dict_movie = json.loads(movie_detail)
