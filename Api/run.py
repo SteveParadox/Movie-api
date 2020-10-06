@@ -1,4 +1,4 @@
-from api import create_app
+from base import create_app
 
 app = create_app()
 app.app_context().push()
@@ -11,4 +11,4 @@ else:
     app.debug = False
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host="127.1.1.4", debug=True)
