@@ -10,7 +10,7 @@ class Movie(db.Model):
     public_id = db.Column(db.String(), nullable=False)
     name = db.Column(db.String(), default=0)
     description = db.Column(db.String(), nullable=False)
-    review = db.Column(db.Integer, default=0)
+    review = db.Column(db.Float)
     movies = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
     poster = db.Column(db.String)
