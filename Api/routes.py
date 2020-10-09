@@ -6,9 +6,9 @@ from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
-from . import db, request, render_template
-from .models import Movie, MovieSchema
-from .utils import save_img
+from Api import db, request, render_template
+from Api.models import Movie, MovieSchema
+from Api.utils import save_img
 import requests
 import json
 import imdb
@@ -22,12 +22,12 @@ api = Blueprint('api', __name__)
 CHUNK_SIZE = 512
 
 
-@api.route('/')
+@api.route('/', methods=['GET'])
 def home():
     movies = Movie.query.all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
-    return jsonify(result)
+    return jsonify(result), 200
 
 
 class Movies_(FlaskForm):
@@ -112,4 +112,25 @@ def get_by_name(u_id):
         'review': result['review'],
         'poster': result['poster'],
         'movies': result['movies']
-    })
+    }), 200
+
+
+@api.route('/search/movie', methods=['POST'])
+def search():
+    data = request.get_json()
+    print(data["name"])
+    movie_name = Movie.query.filter_by(name=data['name']).first()
+    if not movie_name:
+        return jsonify({
+            "message": " Could not find Name"
+        }), 404
+    else:
+        movie_schema = MovieSchema()
+        result = movie_schema.dump(movie_name)
+        return jsonify({
+            'name': result['name'],
+            'description': result['description'],
+            'review': result['review'],
+            'poster': result['poster'],
+            'movies': result['movies']
+        }), 200
