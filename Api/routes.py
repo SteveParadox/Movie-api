@@ -24,10 +24,29 @@ CHUNK_SIZE = 512
 
 @api.route('/api/', methods=['GET'])
 def home():
+    id= ''
+    name = ''
     movies = Movie.query.all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
-    return jsonify(result), 200
+    if current_user.is_authenticated:
+        id= current_user.id
+        name= current_user.name
+        return jsonify({
+        "movie_name" : result['name'],
+         "movie_review" : result['review'],
+            "movie_description" : result['description'],
+            "movie_poster" : result['poster'],
+            "user_id" : id,
+            "user_name" : name
+        }), 200
+    return jsonify({
+          "movie_name" : result['name'],
+         "movie_review" : result['review'],
+            "movie_description" : result['description'],
+            "movie_poster" : result['poster'],
+    "message" : "user not found"
+    })
 
 # registering 
 @api.route('/api/sign_up', methods=['POST'])
