@@ -1,9 +1,16 @@
 from datetime import datetime
 
+from flask_login import UserMixin
+
 from marshmallow_sqlalchemy import ModelSchema
 
-from . import db
+from . import db, login_manager
 
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,12 +19,31 @@ class Movie(db.Model):
     description = db.Column(db.String(), nullable=False)
     review = db.Column(db.Float)
     movies = db.Column(db.String)
+    genre = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
     poster = db.Column(db.String)
     poster_data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user = db.relationship('Users', backref='view', lazy=True)
+    connection = db.relationship('Connection', backref='stream', lazy=True)
 
-
+    
+class Users(db.Model, UserMixin):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String())
+  email = db.Column(db.String())
+  dob = db.Column(db.String())
+  password = db.Column(db.String())
+  movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
+  connect = db.relationship('Connection', backref='link', lazy=True)
+  vid_time= db.Column(db.String())
+  
+  
+  def __repr__(self):
+        return f"User('{self.name}', '{self.email}')"
+  
+      
+  
 class MovieSchema(ModelSchema):
     class Meta:
         model = Movie
@@ -25,3 +51,13 @@ class MovieSchema(ModelSchema):
 
 movie_schema = MovieSchema
 movies_schema = MovieSchema(many=True)
+
+
+
+class UsersSchema(ModelSchema):
+    class Meta:
+        model = Users
+
+
+user_schema = UsersSchema
+users_schema = UsersSchema(many=True)
