@@ -92,7 +92,7 @@ def login():
 
 
 #logging out
-@api.route('/api/logout')
+@api.route('/api/logout', methods=[POST'])
 @login_required
 def logout():
     logout_user()
@@ -172,7 +172,7 @@ def upload():
     return render_template('_.html', form=form, c=c)
 
 #link to redirect to selected movie
-@api.route('/api/get/movie/<string:u_id>/')
+@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
 def get_by_name(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
     movie_schema = MovieSchema()
