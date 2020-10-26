@@ -1,6 +1,6 @@
 import uuid
 import os
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
@@ -177,6 +177,7 @@ def get_by_name(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
     movie_schema = MovieSchema()
     result = movie_schema.dump(movie_name)
+    user= Users.query.filter_by(name=current_user.name).first()                               
     try:
       return jsonify({
           'name': result['name'],
