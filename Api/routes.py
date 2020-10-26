@@ -7,7 +7,7 @@ from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
 from Api import db, request, render_template
-from Api.models import Movie, MovieSchema
+from Api.models import Movie, MovieSchema, Users, UsersSchema
 from Api.utils import save_img
 import requests
 import json
@@ -29,13 +29,84 @@ def home():
     result = movie_schema.dump(movies)
     return jsonify(result), 200
 
+# registering 
+@api.route('/sign_up', methods=['POST'])
+def sign_up():
+  data= request.get_json()
+  name= data['name']
+  dob=data['dob']
+  email=data['email']
+  password= data['password']
+  user = User.query.filter_by(email=email).first()
+  if user:
+    return jsonify({
+      "message" : "User already registered"
+    })
+  else:
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    users= Users()
+    users.name=name
+    users.dob=dob
+    users.email=email
+    users.password=hashed_password
+    try:
+      db.session.add(users)
+      db.session.commit()
+      
+    except:
+      return jsonify({
+                "status": "error",
+                "message": "Could not add user"
+            })
+    return jsonify({
+            "status": "success",
+            "message": "User added successfully"
+        }), 201
+  
+  #registering user's preferred genre
+@api.route('/sign_up/genre', methods=['POST'])
+def genre():
+  pass
+#logging in  
+@api.route('/login')
+def login():
+    data = request.get_json()
+    name = data['name']
+    password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+    user = User.query.filter_by(name=name).first()
+    if not  user and bcrypt.check_password_hash(user.password, data['password']):
+          return jsonify({
+              "status": "failed",
+              "message": "Failed getting user"
+          }), 401
+    login_user(user)
+    return jsonify({
+            "status": "success",
+            "message": "login successful",
+            "data": {
+                "id": user.id,
+                "name": user.name
+            }
+       }), 200
 
+
+
+#logging out
+@api.route('/logout')
+@login_required
+def logout():
+    logout_user()
+
+            
+  
 class Movies_(FlaskForm):
     movie = FileField('Video', validators=[FileAllowed(['mp4', 'webm', 'hd'])])
     name = StringField(validators=[DataRequired()])
     submit = SubmitField('Submit ')
 
 
+    
+    
 @api.route('/upload', methods=['GET', 'POST'])
 def upload():
     # data = request.get_json()
@@ -100,21 +171,26 @@ def upload():
     c = Movie.query.all()
     return render_template('_.html', form=form, c=c)
 
-
+#link to redirect to selected movie
 @api.route('/get/movie/<string:u_id>/')
 def get_by_name(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
     movie_schema = MovieSchema()
     result = movie_schema.dump(movie_name)
-    return jsonify({
-        'name': result['name'],
-        'description': result['description'],
-        'review': result['review'],
-        'poster': result['poster'],
-        'movies': result['movies']
-    }), 200
+    try:
+      return jsonify({
+          'name': result['name'],
+          'description': result['description'],
+          'review': result['review'],
+          'poster': result['poster'],
+          'movies': result['movies']
+      }), 200
+    except:
+      return jsonify({
+        'message' : "could mot load data"
+      })
 
-
+#searching for movie
 @api.route('/search/movie', methods=['POST'])
 def search():
     data = request.get_json()
@@ -132,5 +208,10 @@ def search():
             'description': result['description'],
             'review': result['review'],
             'poster': result['poster'],
-            'movies': result['movies']
+            #'movies': result['movies']
         }), 200
+      
+      
+@api.route('/')
+def user_com():
+  pass
