@@ -236,3 +236,8 @@ def search():
 def user_com(*sec_user):
                                    
   host= Users.query.filter_by(name=current_user.name).first()
+  for others in sec_user:
+    sec_user= User.query.filter_by(name=others).first()         
+    user= User()
+    user.pair= str(shortuuid() + ([host, sec_user]) )     
+    db.sessioon.commit()                               
