@@ -232,6 +232,7 @@ def search():
         }), 200
       
       
-@api.route('/api/user/<string:name>/connect/<string:sec_user>')
-def user_com(name, sec_user):
-  pass
+@api.route('/api/users/connect/<string:sec_user>')
+def user_com(*sec_user):
+                                   
+  host= Users.query.filter_by(name=current_user.name).first()
