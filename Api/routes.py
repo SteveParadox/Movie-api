@@ -1,5 +1,6 @@
 import uuid
 import os
+import shortuuid
 from flask import Blueprint, jsonify, current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
@@ -234,10 +235,19 @@ def search():
       
 @api.route('/api/users/connect/<string:sec_user>')
 def user_com(*sec_user):
-                                   
+  d= []                                 
   host= Users.query.filter_by(name=current_user.name).first()
   for others in sec_user:
     sec_user= User.query.filter_by(name=others).first()         
     user= User()
-    user.pair= str(shortuuid() + ([host, sec_user]) )     
-    db.sessioon.commit()                               
+    user.pair= str(shortuuid() + str(d.append(host, sec_user)) )     
+    db.session.commit()       
+                                   
+@api.route('/api/watch/<string:u_id>')
+def watch(u_id):        
+    movie =  Movie.query.filter_by(unique_id=u_id).first()                                
+    list = User.query.filter(current_user in User.pair).all()       
+    if list:
+        return jsonify({
+        'name':[i[1:] for i in list]
+        })                               
