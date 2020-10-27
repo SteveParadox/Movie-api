@@ -37,6 +37,7 @@ class Users(db.Model, UserMixin):
   movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
   connect = db.relationship('Connection', backref='link', lazy=True)
   vid_time= db.Column(db.String())
+  pair= db.Column(db.String())
   
   
   def __repr__(self):
