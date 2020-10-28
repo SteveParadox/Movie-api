@@ -9,8 +9,8 @@ from . import db, login_manager
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User.query.get(int(user_id))
+def load_user(users_id):
+    return Users.query.get(int(users_id))
 
 class Movie(db.Model):
     id = db.Column(db.Integer, primary_key=True)
