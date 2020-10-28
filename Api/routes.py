@@ -65,9 +65,15 @@ def sign_up():
     users.email=email
     users.password=hashed_password
  
-    db.session.add(users)
-    db.session.commit()
+    try:
+      db.session.add(users)
+      db.session.commit()
       
+    except:
+      return jsonify({
+                "status": "error",
+                "message": "Could not add user"
+            })
     
     return jsonify({
             "status": "success",
@@ -84,7 +90,7 @@ def login():
     data = request.get_json()
     name = data['name']
     password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
-    user = User.query.filter_by(name=name).first()
+    user = Users.query.filter_by(name=name).first()
     if not  user and bcrypt.check_password_hash(user.password, data['password']):
           return jsonify({
               "status": "failed",
