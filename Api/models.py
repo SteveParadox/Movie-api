@@ -24,7 +24,6 @@ class Movie(db.Model):
     poster = db.Column(db.String)
     poster_data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    user = db.relationship('Users', backref='view', lazy=True)
     
 
     
@@ -34,7 +33,6 @@ class Users(db.Model, UserMixin):
   email = db.Column(db.String())
   dob = db.Column(db.String())
   password = db.Column(db.String())
-  movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'), nullable=False)
   vid_time= db.Column(db.String())
   pair= db.Column(db.String())
   
