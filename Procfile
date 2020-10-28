@@ -1,1 +1,1 @@
-web: gunicorn run:app
+web: gunicorn --workers=2 'Api:create_app()'
