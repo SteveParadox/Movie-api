@@ -64,15 +64,11 @@ def sign_up():
     users.dob=dob
     users.email=email
     users.password=hashed_password
-    try:
-      db.session.add(users)
-      db.session.commit()
+ 
+    db.session.add(users)
+    db.session.commit()
       
-    except:
-      return jsonify({
-                "status": "error",
-                "message": "Could not add user"
-            })
+    
     return jsonify({
             "status": "success",
             "message": "User added successfully"
@@ -218,12 +214,8 @@ def get_movie(u_id):
 
     try:
       return jsonify({
-          'name': result['name'],
-          'description': result['description'],
-          'review': result['review'],
-          'poster': result['poster'],
-          'movies': result['movies'],
-          'user' : current_user.name
+          'data' : result
+         
       }), 200
     except:
       return jsonify({
