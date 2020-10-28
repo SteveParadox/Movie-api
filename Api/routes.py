@@ -34,18 +34,13 @@ def home():
         id= current_user.id
         name= current_user.name
         return jsonify({
-        "movie_name" : result['name'],
-         "movie_review" : result['review'],
-            "movie_description" : result['description'],
-            "movie_poster" : result['poster'],
+        "data" : result,
+      
             "user_id" : id,
             "user_name" : name
         }), 200
     return jsonify({
-          "movie_name" : result['name'],
-         "movie_review" : result['review'],
-            "movie_description" : result['description'],
-            "movie_poster" : result['poster'],
+          "data" : result,
     "message" : "user not found"
     })
 
