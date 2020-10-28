@@ -1,7 +1,8 @@
 import uuid
 import os
 import shortuuid
-from flask import Blueprint, jsonify, current_user
+from flask import Blueprint, jsonify
+from flask_login import current_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
@@ -227,7 +228,8 @@ def get_movie(u_id):
           'description': result['description'],
           'review': result['review'],
           'poster': result['poster'],
-          'movies': result['movies']
+          'movies': result['movies'],
+          'user' : current_user.name
       }), 200
     except:
       return jsonify({
