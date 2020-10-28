@@ -112,7 +112,7 @@ def login():
 
 
 #logging out
-@api.route('/api/logout', methods=[POST'])
+@api.route('/api/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
@@ -191,25 +191,7 @@ def upload():
     c = Movie.query.all()
     return render_template('_.html', form=form, c=c)
 
-#link to redirect to selected movie
-@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
-def get_by_name(u_id):
-    movie_name = Movie.query.filter_by(public_id=u_id).first()
-    movie_schema = MovieSchema()
-    result = movie_schema.dump(movie_name)
-    user= Users.query.filter_by(name=current_user.name).first()                               
-    try:
-      return jsonify({
-          'name': result['name'],
-          'description': result['description'],
-          'review': result['review'],
-          'poster': result['poster'],
-          'movies': result['movies']
-      }), 200
-    except:
-      return jsonify({
-        'message' : "could not load data"
-      })
+
 
 #searching for movie
 @api.route('/api/search/movie', methods=['POST'])
@@ -232,7 +214,26 @@ def search():
             #'movies': result['movies']
         }), 200
       
-      
+#link to redirect to selected movie
+@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
+def get_movie(u_id):
+    movie_name = Movie.query.filter_by(public_id=u_id).first()
+    movie_schema = MovieSchema()
+    result = movie_schema.dump(movie_name)
+    user= Users.query.filter_by(name=current_user.name).first()                               
+    try:
+      return jsonify({
+          'name': result['name'],
+          'description': result['description'],
+          'review': result['review'],
+          'poster': result['poster'],
+          'movies': result['movies']
+      }), 200
+    except:
+      return jsonify({
+        'message' : "could not load data"
+      })
+
 @api.route('/api/users/connect/<string:sec_user>')
 def user_com(*sec_user):
   d= []                                 
@@ -248,6 +249,6 @@ def watch(u_id):
     movie =  Movie.query.filter_by(unique_id=u_id).first()                                
     list = User.query.filter(current_user in User.pair).all()       
     if list:
-        return jsonify({
+        return jsonifmy({
         'name':[i[1:] for i in list]
         })                               
