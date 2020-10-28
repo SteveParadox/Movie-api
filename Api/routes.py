@@ -221,7 +221,8 @@ def get_movie(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
     movie_schema = MovieSchema()
     result = movie_schema.dump(movie_name)
-    user= Users.query.filter_by(name=current_user.name).first()                               
+    #user= Users.query.filter_by(name=current_user.name).first()  
+
     try:
       return jsonify({
           'name': result['name'],
@@ -241,8 +242,8 @@ def user_com(*sec_user):
   d= []                                 
   host= Users.query.filter_by(name=current_user.name).first()
   for others in sec_user:
-    sec_user= User.query.filter_by(name=others).first()         
-    user= User()
+    sec_user= Users.query.filter_by(name=others).first()         
+    user= Users()
     user.pair= str(shortuuid() + str(d.append(host, sec_user)) )     
     db.session.commit()       
                                    
