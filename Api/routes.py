@@ -2,7 +2,7 @@ import uuid
 import os
 import shortuuid
 from flask import Blueprint, jsonify
-from flask_login import current_user
+from flask_login import current_user, login_user, logout_user
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
@@ -114,7 +114,6 @@ def login():
 
 #logging out
 @api.route('/api/logout', methods=['POST'])
-@login_required
 def logout():
     logout_user()
 
