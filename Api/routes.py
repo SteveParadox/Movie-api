@@ -7,8 +7,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
-from flask_bcrypt import bcrypt, Bcrypt
-from Api import db, request, render_template
+from Api import *
 from Api.models import Movie, MovieSchema, Users, UsersSchema
 from Api.utils import save_img
 import requests
@@ -58,7 +57,7 @@ def sign_up():
   dob=data['dob']
   email=data['email']
   password= data['password']
-  user = User.query.filter_by(email=email).first()
+  user = Users.query.filter_by(email=email).first()
   if user:
     return jsonify({
       "message" : "User already registered"
