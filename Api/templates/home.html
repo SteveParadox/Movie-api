@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content%}
+{%if current_user.is_authenticated%}
+welcome  {{current_user.name}}, you are a bitch &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+<a  href="{{ url_for('users.logout_users') }}">Log Out</a>
+{%else%}
+
+<a  href="{{ url_for('users.login_users') }}">Login</a> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('users.reg') }}">Sign up</a>{%endif%}
+{%for movies in movie%}
+ <hr>
+    <br>
+  <br>
+<a  href="{{ url_for('upload.movie_show', u_id=movies.public_id) }}">{{movies.name}}</a>
+  <br>
+  <br>
+
+  {{movies.description}}
+  <br>
+  <br>
+  {{movies.review}}
+
+  <img alt="" height="400" width='300' src="{{  url_for('static', filename= 'movies/' + movies.poster) }}">
+{%endfor%}
+{%endblock content%}
+</body>
+</html>

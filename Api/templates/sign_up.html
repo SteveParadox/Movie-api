@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content%}
+<h2>Sign Up</h2>
+  <form method="POST" action="" enctype="multipart/form-data" >
+                                {{ form.hidden_tag() }}
+      <h3>Name:
+      {{ form.name }}
+      </h3>
+      <h3>Email:
+      {{ form.email }}
+      </h3>
+      <h3>Date of Birth:
+      {{ form.dob }}
+      </h3>
+      <h3>Password:
+      {{ form.password }}
+      </h3>
+      {{ form.submit }}
+
+  </form>
+{%endblock content%}
+</body>
+</html>
