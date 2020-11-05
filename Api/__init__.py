@@ -6,9 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from .config import Config
 from flask_cors import CORS, cross_origin
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 cors = CORS()
+io=SocketIO()
 app.config.from_object(Config)
 db = SQLAlchemy()
 ma = Marshmallow()
@@ -30,15 +32,21 @@ def create_app(config_class=Config):
     ma.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app)
+    io.init_app(app)
    # mail.init_app(app)
-    # socketio.init_app(app)
-    #jwt.init_app(app)
+
+
+
+
+
     from .api.routes import api
     from .users.routes import users
     from .upload.routes import upload
+    from .chat.view import chat
 
     app.register_blueprint(api)
     app.register_blueprint(users)
     app.register_blueprint(upload)
+    app.register_blueprint(chat)
 
     return app
