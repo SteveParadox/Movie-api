@@ -16,7 +16,10 @@ import requests
 import imdb
 from flask_cors import CORS, cross_origin
 
-r = requests.request("GET", "https://api.themoviedb.org/3/movie/550?api_key=03fe919b123d0ced4b33dd633638527a")
+try:
+    r = requests.request("GET", "https://api.themoviedb.org/3/movie/550?api_key=03fe919b123d0ced4b33dd633638527a")
+except:
+    pass
 
 # creating instance of IMDb
 ia = imdb.IMDb()
