@@ -1,0 +1,186 @@
+
+
+{% extends 'layout.html'%}
+{% block content%}
+    <head>
+         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+        <script type="text/javascript" charset="utf-8">
+
+        </script>
+        <style>
+.dx{
+display: none;
+position:absolute;
+right: 4rem;
+}
+    .dx.is-open{
+  display: block;
+}
+</style>
+    </head>
+    <body>
+    <div class="header-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                       <div class="logo">
+                            <a href="{{ url_for('raw.home_page') }}"><h1 align="center"><i class="fa fa-heart"></i> <b>{{movie.name}}</b></h1></a>
+                        </div><!-- end logo -->
+<div class="topsearch text-left">
+    <button type="button" class="btn btn-success button ">Video Chat <i class="fa fa-group"></i></button>
+                     </div><!-- end search -->
+                     <div class="topsearch text-right">
+                            <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"> <button type="button" class="btn btn-success">Invite Friends <i class="fa fa-plus"></i></button></a>
+<video class="dx"  muted height="200" width="500" >
+	 <source src="" type="video/mp4">
+
+ </video>
+                     </div><!-- end search --></div>
+
+
+
+ </div><!-- end row -->
+            </div><!-- end header-logo -->
+        </div><!-- end header -->
+                           <video  autoplay controls height="400" width="800" >
+	 <source src="{{ url_for('static', filename= 'movies/' + movie.movies ) }}" type="video/mp4">
+
+ </video>
+
+<div class="col-sm-8">
+    <div id="nomsg">
+        <h1 style="color: #ccc">No message Yet</h1>
+         <div class="msg-wrapper"></div>
+    </div>
+</div>
+<div class="col-sm-8">
+    <form action="" method="POST" >
+        <div class="form-group">
+                <input type="text" class="message form-control" id="exampleInputPassword1" placeholder="Message">
+
+
+        </div>
+        <button type="submit" class="btn btn-success">Send</button>
+    </form>
+</div>
+<!--var socket = io.connect( "http://127.0.0.1:5000/chat/" + {{room}})-->
+                                         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
+    <script>
+
+    var socket = io.connect( "http://127.0.0.1:5000/watch/{{movie.name}}/in/room/{{room.unique_id}}")
+    console.log(socket);
+    socket.on("connect", function(){
+    socket.emit( "my event", {
+        data : 'user connected'
+    })
+    })
+        var form = $( 'form' ).on( 'submit' , function(e){
+        e.preventDefault()
+        var user_name= '{{current_user.name}}'
+        var message = $( "input.message" ).val()
+
+        socket.emit( 'my event', {
+            user : user_name,
+            msg : message
+        })
+       $( "input.message" ).val('').focus()
+        })
+            socket.on('response', function(msg){
+            if ( typeof msg.user !== 'undefined'){
+            $( 'h1').remove()
+            $( 'div.msg-wrapper').append( '<div class="msgbbl"><b>'+msg.user+'</b> '+msg.msg+'</div>')
+            }
+            console.log(msg)
+            })
+
+         socket.on('New user', function(msg){
+         socket.emit( "join_user", {
+        data : 'user joined'
+    })
+
+         })
+             socket.on('Watch', function(msg){
+         socket.emit( "watch_movie", {
+        data : 'movie' + {{movie.name}}
+    })
+
+         })
+
+    </script>
+
+
+    <div class="container-fluid" >
+        <div class="row h-10 w-100">
+            <div class="col">
+                <select id="filter" class="w-100 bg-dark text-light ml-2 mt-2 select font-weight-bold border">
+                    <option value="none">Normal</option>
+                    <option value="grayscale(100%)">B & W</option>
+                    <option value="sepia(100%)">Old School</option>
+                    <option value="contrast(150%)">Lumination</option>
+                    <option value="blur(20px)">Hidden Mist</option>
+                    <option value="invert(100%)">Dracula</option>
+                    <option value="hue-rotate(180deg">X-men Beast</option>
+                    <option value="saturate(25)">Super Saiyan God</option>
+                </select>
+            </div>
+            <div class="col">
+                <div class="float-right mt-3">
+                    <input class="form-check-input" type="checkbox" id="theme">
+                    <label class="form-check-label" for="theme">
+                        Dark Theme
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row h-90 w-100">
+            <div class="col-12 col-sm-6 d-flex justify-content-center">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <video class="embed-responsive-item" muted></video>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 d-flex justify-content-center">
+                <div id="peerDiv" class="embed-responsive embed-responsive-16by9">
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+  <script  src= "{{ url_for('static', filename='bundle.js') }}"></script>
+  <script  src= "{{ url_for('static', filename='main.js') }}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+                                           <script>
+        var button = $(".button"),
+		message = $(".dx"),
+		open = false;
+
+        button.on("click touchstart", function(e) {
+	e.preventDefault();
+
+	// if opened is true, then we will want to close
+	// the overlay as it will mean its already visible.
+	if (open){
+		open = false;
+		message.removeClass("is-open");
+	}
+	// if false, then we want to open the overlay
+	// so we set open equal to true.
+	else{
+		open = true;
+		message.addClass("is-open");
+		console.log(open);
+	}
+
+});
+
+    </script>
+
+    </body>
+
+{%endblock content%}

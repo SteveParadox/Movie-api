@@ -1,0 +1,590 @@
+{% extends 'layout.html'%}
+{% block content %}
+
+
+    <!-- LOADER -->
+    <div id="preloader" style="background:#141414;">
+        <img class="preloader" src="static/images/loader.gif" alt="">
+    </div><!-- end loader -->
+    <!-- END LOADER -->
+
+    <div id="wrapper">
+        <div class="collapse top-search" id="collapseExample">
+            <div class="card card-block">
+                <div class="newsletter-widget text-center">
+                    <form class="form-inline">
+                        <input type="text" class="form-control" placeholder="What movie are you looking for?">
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+                    </form>
+                </div><!-- end newsletter -->
+            </div>
+        </div><!-- end top-search -->
+
+
+        <div class="header-section" style="background:#000000;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="logo">
+                            <a href="{{ url_for('raw.home_page') }}"><h1 align="center"><i class="fa fa-heart"></i> <b>FILBA</b></h1></a>
+                        </div><!-- end logo -->
+
+                     <div class="topsearch text-right">
+                         <a data-toggle="collapse" href="#collapseExample" aria-expanded="false" aria-controls="collapseExample"><p><i class="fa fa-search"></i> Search</p></a>
+                        </div><!-- end search --></div>
+                </div><!-- end row -->
+            </div><!-- end header-logo -->
+        </div><!-- end header -->
+
+        <header class="header">
+            <div class="container">
+                <nav class="navbar navbar-inverse navbar-toggleable-md">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#cloapediamenu" aria-controls="cloapediamenu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-md-center" id="cloapediamenu">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                               {%if current_user.is_authenticated%}
+                                welcome  <big><b>{{current_user.name}}</b></big>, Stream your favourite movies &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                                <a  href="{{ url_for('users.logout_users') }}"><span><b>Log Out</b></span></a>
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  <a  href="{{ url_for('raw.my_frnds') }}"><b> My Friends</b></a>
+                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                                <a  href="{{ url_for('raw.all') }}"><b>Add friend <i class="fa fa-user"></i></b></a> {%else%}
+
+                                <a  href="{{ url_for('raw.login_users') }}"><span><b>Login</b></span></a> &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('raw.reg') }}"><span><b>Sign up</b></span></a>{%endif%}
+
+                            </li>
+
+                    </div>
+                </nav>
+            </div><!-- end container -->
+        </header><!-- end header -->
+
+        <section class="section first-section">
+            <div class="container-fluid">
+                <div class="masonry-blog clearfix">
+                    <div class="left-side">
+                        <div class="masonry-box post-media">
+                             <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie1.poster) }}" class="img-fluid">
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-aqua"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie1.public_id) }}">{{movie1.name}}</a></h4>
+                                      </span>
+                                        <h4><a href="single.html" title="">{{movie1.description}}</a></h4>
+                                        <small><a href="single.html" title="">24 July, 2017</a></small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                        <div class="masonry-box post-media">
+                              <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie7.poster) }}" class="img-fluid">
+
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-green"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie7.public_id) }}">{{movie7.name}}</a></h4>
+                                 </span>
+                                        <h4><a href="single.html" title="">{{movie7.description}}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end left-side -->
+
+                    <div class="center-side">
+                        <div class="masonry-box post-media">
+                             <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie4.poster) }}" class="img-fluid">
+
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-green"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie4.public_id) }}">{{movie4.name}}</a></h4>
+                                  </span>
+                                        <h4><a href="single.html" title="">{{movie4.description}}</a></h4>
+                                        <small><a href="single.html" title="">24 July, 2017</a></small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+
+                        <div class="masonry-box  post-media">
+                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie5.poster) }}" class="img-fluid">
+
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-green"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie5.public_id) }}">{{movie5.name}}</a></h4>
+                                 </span>
+                                        <h4><a href="single.html" title="">{{movie5.description}}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+
+
+                    </div><!-- end left-side -->
+
+                    <div class="right-side hidden-md-down">
+                        <div class="masonry-box post-media">
+                              <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie.poster) }}" class="img-fluid">
+
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-aqua"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie.public_id) }}">{{movie.name}}</a></h4>
+                                </span>
+                                        <h4><a href="single.html" title="">{{movie.description}}</a></h4>
+                                        <small><a href="single.html" title="">03 July, 2017</a></small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                             </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                        <div class="masonry-box post-media">
+                              <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie2.poster) }}" class="img-fluid">
+
+                             <div class="shadoweffect">
+                                <div class="shadow-desc">
+                                    <div class="blog-meta">
+                                        <span class="bg-green"><h4><a  href="{{ url_for('raw.movie_show', u_id=movie2.public_id) }}">{{movie2.name}}</a></h4>
+                                 </span>
+                                        <h4><a href="single.html" title="">{{movie2.description}}</a></h4>
+                                    </div><!-- end meta -->
+                                </div><!-- end shadow-desc -->
+                            </div><!-- end shadow -->
+                        </div><!-- end post-media -->
+                    </div><!-- end right-side -->
+                </div><!-- end masonry -->
+            </div>
+        </section>
+
+        <section class="section" style="background-image:url('./static/landingPage.jpg')">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="section-title">
+                                 </h3>
+                        </div><!-- end title -->
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta big-meta">
+
+                                       <h3 ><a  href="{{ url_for('raw.movie_show', u_id=movie.public_id) }}">{{movie.name}}</a>
+                           </h3>
+                                        <h4><a href="single.html" title="">{{movie.description}}</a></h4>
+                                        <small><a href="single.html" title="">24 July, 2017</a></small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+
+                                <hr class="invis">
+
+
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end col -->
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                           <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie5.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4>  <a  href="{{ url_for('raw.movie_show', u_id=movie5.public_id) }}">{{movie5.name}}</a></h4>
+
+                                        <small><a href="blog-category-01.html" title="">21 July, 2017</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+
+                                <hr class="invis">
+
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                           <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie7.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a  href="{{ url_for('raw.movie_show', u_id=movie7.public_id) }}">{{movie7.name}}</a>
+</h4>
+
+                                        <small><a href="blog-category-01.html" title="">11 July, 2017</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+                            </div><!-- end col -->
+
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                           <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie1.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a  href="{{ url_for('raw.movie_show', u_id=movie1.public_id) }}">{{movie1.name}}</a></h4>
+                                          <small><a href="blog-category-01.html" title="">08 July, 2017</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+
+                                <hr class="invis">
+
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                           <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie6.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a  href="{{ url_for('raw.movie_show', u_id=movie6.public_id) }}">{{movie6.name}}</a></h4>
+                                         <small><a href="blog-category-01.html" title="">04 July, 2017</a></small>
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+                            </div><!-- end col -->
+                        </div><!-- end row -->
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+                <hr class="invis1">
+
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="banner-spot clearfix">
+                            <div class="banner-img">
+                                <img src="static/upload/banner_01.jpg" alt="" class="img-fluid">
+                            </div><!-- end banner-img -->
+                        </div><!-- end banner -->
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+                <hr class="invis1">
+
+                <div class="row">
+                    <div class="col-lg-9">
+                        <div class="blog-list clearfix">
+
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                           <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie1.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                    <h4><a  href="{{ url_for('raw.movie_show', u_id=movie1.public_id) }}">{{movie1.name}}</a>
+                                    </h4>
+                                    <p>{{movie1.description}}</p>
+                                    <small><a href="single.html" title="">21 July, 2017</a></small>
+
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+
+                            <hr class="invis">
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie7.poster) }}" class="img-fluid">
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                    <h4><a  href="{{ url_for('raw.movie_show', u_id=movie7.public_id) }}">{{movie7.name}}</a></h4>
+                                    <p>{{movie1.description}}</p>
+                                    <small><a href="single.html" title="">20 July, 2017</a></small>
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+
+                            <hr class="invis">
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie5.poster) }}" class="img-fluid">
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                    <h4><a  href="{{ url_for('raw.movie_show', u_id=movie5.public_id) }}">{{movie5.name}}</a></h4>
+                                    <p>{{movie5.description}}</p>
+                                    <small><a href="single.html" title="">19 July, 2017</a></small>
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+                        </div><!-- end blog-list -->
+
+                        <hr class="invis">
+
+                        <div class="blog-list clearfix">
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie4.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                    <h4><a  href="{{ url_for('raw.movie_show', u_id=movie4.public_id) }}">{{movie4.name}}</a></h4>
+                                    <p>{{movie4.description}}</p>
+                                    <small><a href="single.html" title="">11 July, 2017</a></small>
+
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+
+                            <hr class="invis">
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                   <h4><a  href="{{ url_for('raw.movie_show', u_id=movie.public_id) }}">{{movie.name}}</a></h4>
+                                    <p>{{movie.description}}</p>
+                                    <small><a href="single.html" title="">10 July, 2017</a></small>
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+
+                            <hr class="invis">
+
+                            <div class="blog-box row">
+                                <div class="col-md-4">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                             <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie2.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect"></div>
+                                        </a>
+                                    </div><!-- end media -->
+                                </div><!-- end col -->
+
+                                <div class="blog-meta big-meta col-md-8">
+                                     <h4><a  href="{{ url_for('raw.movie_show', u_id=movie2.public_id) }}">{{movie2.name}}</a></h4>
+                                    <p>{{movie2.description}}</p>
+                                    <small><a href="single.html" title="">09 July, 2017</a></small>
+                                </div><!-- end meta -->
+                            </div><!-- end blog-box -->
+                        </div><!-- end blog-list -->
+                    </div><!-- end col -->
+
+                    <div class="col-lg-3">
+ <div class="section-title">
+                            <h3 class="color-grey"><a href="blog-category-01.html" title="">Sci-fi</a></h3>
+                        </div><!-- end title -->
+                        <div class="blog-box">
+                            <div class="post-media">
+                                <a href="single.html" title="">
+                                      <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie6.poster) }}" class="img-fluid">
+
+                                    <div class="hovereffect">
+                                        <span class="videohover"></span>
+                                    </div><!-- end hover -->
+                                </a>
+                            </div><!-- end media -->
+                            <div class="blog-meta">
+                                <h4><a  href="{{ url_for('raw.movie_show', u_id=movie6.public_id) }}">{{movie6.name}}</a></h4>
+                                    <p>{{movie6.description}}</p>
+                                <small><a href="blog-category-01.html" title="">21 July, 2017</a></small>
+                            </div><!-- end meta -->
+                        </div><!-- end blog-box -->
+
+                        <hr class="invis">
+ <div class="section-title">
+                            <h3 class="color-grey"><a href="blog-category-01.html" title="">Action</a></h3>
+                        </div><!-- end title -->
+
+                        <div class="blog-box">
+                            <div class="post-media">
+                                <a href="single.html" title="">
+                                   <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie.poster) }}" class="img-fluid">
+
+                                    <div class="hovereffect">
+                                        <span class="videohover"></span>
+                                    </div><!-- end hover -->
+                                </a>
+                            </div><!-- end media -->
+                            <div class="blog-meta">
+                               <h4><a  href="{{ url_for('raw.movie_show', u_id=movie.public_id) }}">{{movie.name}}</a></h4>
+                                    <p>{{movie.description}}</p>
+                                <small><a href="blog-category-01.html" title="">20 July, 2017</a></small>
+                            </div><!-- end meta -->
+                        </div><!-- end blog-box -->
+
+                        <hr class="invis">
+ <div class="section-title">
+                            <h3 class="color-grey"><a href="blog-category-01.html" title="">Mystery</a></h3>
+                        </div><!-- end title -->
+
+                        <div class="blog-box">
+                            <div class="post-media">
+                                <a href="single.html" title="">
+                                   <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie5.poster) }}" class="img-fluid">
+                                    <div class="hovereffect">
+                                        <span class="videohover"></span>
+                                    </div><!-- end hover -->
+                                </a>
+                            </div><!-- end media -->
+                            <div class="blog-meta">
+                               <h4><a  href="{{ url_for('raw.movie_show', u_id=movie5.public_id) }}">{{movie5.name}}</a></h4>
+                                    <p>{{movie5.description}}</p>
+                                <small><a href="blog-category-01.html" title="">20 July, 2017</a></small>
+                            </div><!-- end meta -->
+                        </div><!-- end blog-box -->
+
+                        <hr class="invis">
+
+                        <div class="section-title">
+                            <h3 class="color-grey"><a href="blog-category-01.html" title="">Comedy</a></h3>
+                        </div><!-- end title -->
+
+                        <div class="blog-box">
+                            <div class="post-media">
+                                <a href="single.html" title="">
+                                    <img alt=""  src="{{  url_for('static', filename= 'movies/' + movie7.poster) }}" class="img-fluid">
+
+                                    <div class="hovereffect">
+                                        <span></span>
+                                    </div><!-- end hover -->
+                                </a>
+                            </div><!-- end media -->
+                            <div class="blog-meta">
+                                <h4><a  href="{{ url_for('raw.movie_show', u_id=movie7.public_id) }}">{{movie7.name}}</a></h4>
+                                    <p>{{movie7.description}}</p>
+                                <small><a href="blog-category-01.html" title="">21 July, 2017</a></small>
+                            </div><!-- end meta -->
+                        </div><!-- end blog-box -->
+
+
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+                <hr class="invis1">
+
+                <div class="row">
+                    <div class="col-lg-10 offset-lg-1">
+                        <div class="banner-spot clearfix">
+                            <div class="banner-img">
+                                <img src="static/upload/banner_02.jpg" alt="" class="img-fluid">
+                            </div><!-- end banner-img -->
+                        </div><!-- end banner -->
+                    </div><!-- end col -->
+                </div><!-- end row -->
+            </div><!-- end container -->
+        </section>
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+
+
+                    <div class="col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                        <div class="widget">
+                            <h2 class="widget-title">Popular Genres</h2>
+                            <div class="link-widget">
+                                <ul>
+                                    <li><a href="#">Comedy <span>(3321)</span></a></li>
+                                    <li><a href="#">Horror <span>(3415)</span></a></li>
+                                    <li><a href="#">Sci-fi <span>(3451)</span></a></li>
+                                    <li><a href="#">Mystery <span>(2352)</span></a></li>
+                                    <li><a href="#">Action <span>(3766)</span></a></li>
+                                    <li><a href="#">Documentary <span>(2511)</span></a></li>
+                                    <li><a href="#">Romance <span>(4587)</span></a></li>
+                                </ul>
+                            </div><!-- end link-widget -->
+                        </div><!-- end widget -->
+                    </div><!-- end col -->
+                </div><!-- end row -->
+
+                <hr class="invis1">
+
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="widget">
+                            <div class="footer-text text-center">
+                                 <a  href="{{ url_for('raw.home_page') }}">
+                                <h1>Filba</h1>
+                                 </a>
+                                <hr class="invis">
+
+                                <div class="newsletter-widget text-center">
+                                    <form class="form-inline">
+                                        <input type="text" class="form-control" placeholder="Enter your email address">
+                                        <button type="submit" class="btn btn-primary">Subscribe <i class="fa fa-envelope-open-o"></i></button>
+                                    </form>
+                                </div><!-- end newsletter -->
+                            </div><!-- end footer-text -->
+                        </div><!-- end widget -->
+                    </div><!-- end col -->
+                </div>
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <br>
+                        <div class="copyright">&copy; Filba <a href="http://html.design">Team</a>.</div>
+                    </div>
+                </div>
+            </div><!-- end container -->
+        </footer><!-- end footer -->
+
+        <div class="dmtop">Scroll to Top</div>
+
+    </div><!-- end wrapper -->
+
+
+{% endblock content %}

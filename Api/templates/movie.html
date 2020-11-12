@@ -1,25 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'layout.html'%}
 {% block content%}
-{{movie.description}}
-<br>
-  <br>
-{{movie.name}}
-<br>
-  <br>
-{{movie.review}} ratings
-<br>
-  <br>
-<video  autoplay >
+<style>
+    .VideoCard {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    height: 50%;
+    width: 70%;
+        position: relative;
+right: -12rem;
+}
+
+.VideoCard:hover .VideoInfo {
+    display: block;
+}
+
+.NetflixOriginalCard:hover .VideoInfo {
+    display: block;
+}
+
+.VideoInfo {
+    display: none;
+    padding: 10px;
+    margin-top: 15px;
+    font-weight: 400;
+}
+
+.VideoInfo h6 {
+    margin: 0;
+}
+
+.horizontalStyle {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.horizontalStyle span {
+    font-size: 0.5em;
+}
+
+
+
+</style>
+
+ <div class="logo">
+                            <a href="{{ url_for('raw.home_page') }}"><h1 align="center"><i class="fa fa-heart"></i> <b>FILBA</b></h1></a>
+                        </div><!-- end logo -->
+<div >
+<a  href="{{ url_for('raw.crt_room', movie=movie.public_id) }}"><button type="button" class="btn btn-success">Create room for movie</button></a>
+</div>
+<section class="section">
+
+                                         <video class="VideoCard" autoplay controls height="450" width="1340" >
 	 <source src="{{ url_for('static', filename= 'movies/' + movie.movies) }}" type="video/mp4">
 
  </video>
 
+            <div class="container">
+
+                <div class="row">
+
+                        <div class="section-title">
+                        </div><!-- end title -->
+
+
+
+
+                   <a>
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta big-meta">
+                                        <h4><a  href="{{ url_for('raw.movie_show', u_id=movie.public_id) }}">{{movie.name}}</a></h4>
+                                        <p>{{movie.description}}
+                                        </p>
+                                        <small><a href="blog-category-01.html" title="">{{movie.review}} ratings</a></small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
+                            </div>
+                        </div>
+
+</section>
+{% for mov in movies %}
+<a  href="{{ url_for('raw.movie_show', u_id=mov.public_id) }}">
+
+ <img alt="" width="180px" height="200px" src="{{  url_for('static', filename= 'movies/' + mov.poster) }}" class="img-fluid">
+</a>
+{% endfor %}
+
+
+
 {%endblock content%}
-</body>
-</html>

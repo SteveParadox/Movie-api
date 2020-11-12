@@ -1,0 +1,23 @@
+{% extends 'layout.html'%}
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+
+ <div class="header-section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                       <div class="logo">
+                           <h1 align="center"> <a href="{{ url_for('raw.home_page') }}">Filba </a></h1>
+                            <h6 align="center"> <b>People you may know</b></h6>
+                        </div><!-- end logo -->
+                    {% for user in pair %}
+<br>
+                        <div><h6>{{ user.name }} :    <button type="button" class="btn btn-success "> <a methods="post" href="{{ url_for('chat.add_', name=user.name) }}">Add <i class="fa fa-plus"></i></a></button></h6></div>
+{% endfor %}
+                    </div>
+                </div>
+            </div>
+ </div>
+
+
+{%endblock content%}

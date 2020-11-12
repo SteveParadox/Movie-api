@@ -101,8 +101,3 @@ def upload_movie():
     c = Movie.query.all()
     return render_template('_.html', form=form, c=c)
 
-@upload.route('/movie/<string:u_id>', methods=['GET', 'POST'])
-@login_required
-def movie_show(u_id):
-    movie= Movie.query.filter_by(public_id=u_id).first()
-    return render_template('movie.html', movie=movie)

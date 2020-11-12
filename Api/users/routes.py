@@ -1,17 +1,8 @@
-import uuid
-import os
-import shortuuid
-from Api import *
-from .form import *
 from flask import *
-from flask_login import current_user, login_user, logout_user
-from Api import *
-from Api.models import Movie, MovieSchema, Users, UsersSchema
-import requests
-import json
-from flask_cors import CORS, cross_origin
-
-
+from flask_login import login_user, logout_user, login_required, current_user
+from Api.models import Users, UsersSchema
+from Api import db, bcrypt
+from flask_cors import cross_origin
 
 users = Blueprint('users', __name__)
 
@@ -44,58 +35,12 @@ def sign_up():
             return jsonify({
                 "status": "error",
                 "message": "Could not add user"
-            })
+            }), 401
 
         return jsonify({
             "status": "success",
             "message": "User added successfully"
         }), 201
-
-
-
-
-# registering user's preferred genre
-@users.route('/api/sign_up/genre', methods=['POST'])
-def genre():
-    pass
-
-
-
-
-@users.route('/sign_up', methods=['GET', 'POST'])
-def reg():
-    form = Sign_Up()
-    if form.validate_on_submit():
-        users = Users()
-        users.name = form.name.data
-        users.email = form.email.data
-        users.password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        users.dob = form.dob.data
-        db.session.add(users)
-        db.session.commit()
-        return redirect(url_for('users.login_users'))
-    return render_template('sign_up.html', form=form)
-
-
-
-@users.route('/login', methods=['GET', 'POST'])
-def login_users():
-    if current_user.is_authenticated:
-        return redirect(url_for('api.home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('api.home'))
-        else:
-            flash('Login failed. please check email and password', 'danger')
-        if current_user.is_authenticated:
-            return redirect(url_for('api.home_page'))
-    return render_template('login.html', form=form)
-
-
 
 
 # logging in
@@ -121,10 +66,57 @@ def login():
     }), 401
 
 
+# registering user's preferred genre
+@users.route('/api/select/genre', methods=['POST'])
+@cross_origin()
+@login_required
+def genre():
+    user = Users.query.filter_by(email=current_user.email).first()
+    data = request.get_json()
+    action = data['action']
+    comedy = data['comedy']
+    horror = data['horror']
+    documentary = data['documentary']
+    mystery = data['mystery']
+    animation = data['animation']
+    sci_fi = data['sci-fi']
+    romance = data['romance']
+    erotic = data['erotic']
+    fantasy = data['fantasy']
+    drama = data['drama']
+    thriller = data['thriller']
+    para_normal = data['para-normal']
+    family = data['family']
+    try:
+        user.action = action
+        user.comedy = comedy
+        user.horror = horror
+        user.documentary = documentary
+        user.mystery = mystery
+        user.animation = animation
+        user.sci_fi = sci_fi
+        user.romance = romance
+        user.erotic = erotic
+        user.fantasy = fantasy
+        user.drama = drama
+        user.thriller = thriller
+        user.para_normal = para_normal
+        user.family = family
+        db.session.commit()
+        return jsonify({
+            "message": "committed"
+        })
+    except:
+        return jsonify({
+
+            "message": 'error'
+        })
+
+
 @users.route('/logout')
 def logout_users():
     logout_user()
-    return redirect(url_for('api.home_page'))
+    return redirect(url_for('api.home'))
 
 
 # logging out
@@ -132,15 +124,15 @@ def logout_users():
 @cross_origin()
 def logout():
     logout_user()
-    #return redirect(url_for('api.home'))
+    # return redirect(url_for('api.home'))
     return jsonify({
         'message': 'logged out successfully'
     })
 
 
-@users.route('/users')
+@users.route('/api/users')
 def user():
-    pair = Users.query.all()
+    pair = Users.query.filter(Users.email != current_user.email).all()
     users_schema = UsersSchema(many=True)
     result = users_schema.dump(pair)
     return jsonify(result)
@@ -155,5 +147,3 @@ def delete_users():
     return jsonify({
         'msg': 'deleted'
     })
-
-

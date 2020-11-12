@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-</head>
-<body>
-{% block content%}
-{%if current_user.is_authenticated%}
-welcome  {{current_user.name}}, you are a bitch &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
-<a  href="{{ url_for('users.logout_users') }}">Log Out</a>
-{%else%}
+<!--    <style>
+body {
+  background-color: #808080;
+  margin-left:40px;
+}
+img {
+  align-content:center;
+  }
 
-<a  href="{{ url_for('users.login_users') }}">Login</a> &nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('users.reg') }}">Sign up</a>{%endif%}
+h1 {
+  color: maroon;
+  margin-left: 40px;
+}
+</style>-->
+</head>
+<body >
+{% block content%}
+
 {%for movies in movie%}
  <hr>
     <br>
@@ -31,3 +39,33 @@ welcome  {{current_user.name}}, you are a bitch &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
 {%endblock content%}
 </body>
 </html>
+
+
+
+{%if current_user.is_authenticated%}
+welcome  <b>{{current_user.name}}</b>, Stream your favourite movies &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                                <a  href="{{ url_for('users.logout_users') }}"><span>Log Out</span></a>
+                              &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  <a  href="{{ url_for('chat.my_frnds') }}"> My Friends</a>
+                               &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+                                <a  href="{{ url_for('users.all') }}">Add friend</a> {%else%}
+
+                                <a  href="{{ url_for('raw.login_users') }}"><span>Login</span></a> &nbsp;&nbsp;
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('users.reg') }}"><span>Sign up</span></a>{%endif%}
+
+   <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="blog-box">
+                                    <div class="post-media">
+                                        <a href="single.html" title="">
+                                            <img alt="" height="400" width='300' src="{{  url_for('static', filename= 'movies/' + movie6.poster) }}" class="img-fluid">
+
+                                            <div class="hovereffect">
+                                                <span></span>
+                                            </div><!-- end hover -->
+                                        </a>
+                                    </div><!-- end media -->
+                                    <div class="blog-meta">
+                                        <h4><a  href="{{ url_for('upload.movie_show', u_id=movie6.public_id) }}">{{movie6.name}}</a></h4>
+                                        <small>{{movie6.description}}</small>
+
+                                    </div><!-- end meta -->
+                                </div><!-- end blog-box -->
