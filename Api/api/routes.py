@@ -79,5 +79,14 @@ def get_movie(u_id):
 @api.route('/api/rate/movie', methods=['POST'])
 @cross_origin()
 def rate():
+"""
+@main.route('/property/detail/love/<string:public_id>', methods=['POST'])
+def add_rate(public_id):
+    data = request.form.get('text')
+    apartment = Apartment.query.filter_by(public_id=public_id).first()
+    apartment.love = apartment.love + ((int(data) * 0) + 1)
+    db.session.commit()
+    return jsonify(apartment.love)
 
+"""
     pass
