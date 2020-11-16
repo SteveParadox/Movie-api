@@ -12,15 +12,51 @@ def load_user(users_id):
     return Users.query.get(int(users_id))
 
 
-
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
     email = db.Column(db.String(), unique=True)
     dob = db.Column(db.String())
     password = db.Column(db.String(), nullable=False)
+    logged_in = db.Column(db.Boolean, default=False)
     pair = db.Column(db.String())
     friends = db.relationship('Friend', backref='get', lazy=True)
+    my_movies = db.relationship('Data', backref='love', lazy=True)
+    admin = db.Column(db.Boolean, default=False)
+
+    def __repr__(self):
+        return f"User('{self.name}', '{self.email}')"
+
+
+class Movie(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    public_id = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String(), nullable=False)
+    description = db.Column(db.String(), nullable=False)
+    review = db.Column(db.Float)
+    genre = db.Column(db.String())
+    movies = db.Column(db.String)
+    movie_data = db.Column(db.LargeBinary)
+    poster = db.Column(db.String)
+    poster_data = db.Column(db.LargeBinary)
+    date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    thumbs_up = db.Column(db.Integer, default=0)
+    thumbs_down = db.Column(db.Integer, default=0)
+
+
+class Friend(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    u_friend = db.Column(db.String(), nullable=False)
+
+    def __repr__(self):
+        return f"Friend('{self.u_friend}')"
+
+
+class Data(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    loved = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     action = db.Column(db.Boolean, default=False)
     comedy = db.Column(db.Boolean, default=False)
     horror = db.Column(db.Boolean, default=False)
@@ -37,34 +73,7 @@ class Users(db.Model, UserMixin):
     family = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
-        return f"User('{self.name}', '{self.email}')"
-
-class Movie(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    public_id = db.Column(db.String(), nullable=False)
-    name = db.Column(db.String(), nullable=False)
-    description = db.Column(db.String(), nullable=False)
-    review = db.Column(db.Float)
-    movies = db.Column(db.String)
-    movie_data = db.Column(db.LargeBinary)
-    poster = db.Column(db.String)
-    poster_data = db.Column(db.LargeBinary)
-    date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
-    thumbs_up = db.Column(db.Integer, default=0)
-    thumbs_down = db.Column(db.Integer, default=0)
-    admin = db.Column(db.Boolean, default=False)
-
-
-
-
-
-class Friend(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    u_friend = db.Column(db.String(), nullable=False)
-
-    def __repr__(self):
-        return f"Friend('{self.u_friend}')"
+        return f"Data('{self.user_id}')"
 
 
 class Room(db.Model):
@@ -86,6 +95,15 @@ class FriendSchema(ModelSchema):
 
 friend_schema = FriendSchema
 friends_schema = FriendSchema(many=True)
+
+
+class DataSchema(ModelSchema):
+    class Meta:
+        model = Data
+
+
+data_schema = DataSchema
+data_schemas = DataSchema(many=True)
 
 
 class MovieSchema(ModelSchema):

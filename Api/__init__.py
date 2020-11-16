@@ -1,14 +1,12 @@
 import datetime
-from flask import *
+from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from .config import Config
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 from flask_socketio import SocketIO
-
-import socket
 
 app = Flask(__name__)
 cors = CORS()
@@ -20,7 +18,10 @@ db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-login_manager.login_view = 'users.login_users'
+try:
+    login_manager.login_view = 'raw.login_users'
+except:
+    login_manager.login_view = 'users.login'
 login_manager.login_message = None
 io.manage_session= False
 login_manager.session_protection = "strong"
@@ -31,8 +32,6 @@ REMEMBER_COOKIE_REFRESH_EACH_REQUEST = False
 
 def create_app(config_class=Config):
     app = Flask(__name__)
-
-    
     app.config.from_object(Config)
     db.init_app(app)
     bcrypt.init_app(app)
