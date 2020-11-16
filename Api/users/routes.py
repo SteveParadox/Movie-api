@@ -1,13 +1,13 @@
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-from Api.models import Users, UsersSchema
+from Api.models import Users, UsersSchema, Data, DataSchema
 from Api import db, bcrypt
 from flask_cors import cross_origin
 
 users = Blueprint('users', __name__)
 
 
-# registering
+# registering a user
 @users.route('/api/sign_up', methods=['POST'])
 @cross_origin()
 def sign_up():
@@ -52,6 +52,8 @@ def login():
     user = Users.query.filter_by(email=email).first()
     if user and bcrypt.check_password_hash(user.password, data['password']):
         login_user(user)
+        user.logged_in = True
+        db.session.commit()
         return jsonify({
             "status": "success",
             "message": "login successful",
@@ -66,12 +68,11 @@ def login():
     }), 401
 
 
-# registering user's preferred genre
+# registering user's preferred genre for data processing
 @users.route('/api/select/genre', methods=['POST'])
 @cross_origin()
 @login_required
 def genre():
-    user = Users.query.filter_by(email=current_user.email).first()
     data = request.get_json()
     action = data['action']
     comedy = data['comedy']
@@ -88,6 +89,7 @@ def genre():
     para_normal = data['para-normal']
     family = data['family']
     try:
+        user = Data(love=current_user)
         user.action = action
         user.comedy = comedy
         user.horror = horror
@@ -102,6 +104,7 @@ def genre():
         user.thriller = thriller
         user.para_normal = para_normal
         user.family = family
+        db.session.add(user)
         db.session.commit()
         return jsonify({
             "message": "committed"
@@ -114,8 +117,14 @@ def genre():
 
 
 @users.route('/logout')
+@cross_origin()
+@login_required
 def logout_users():
+    user = Users.query.filter_by(email=current_user.email).first()
+    user.logged_in = False
+    db.session.commit()
     logout_user()
+
     return redirect(url_for('api.home'))
 
 
@@ -123,21 +132,32 @@ def logout_users():
 @users.route('/api/logout', methods=['POST'])
 @cross_origin()
 def logout():
+    user = Users.query.filter_by(email=current_user.email).first()
+    user.logged_in = False
+    db.session.commit()
     logout_user()
     # return redirect(url_for('api.home'))
     return jsonify({
         'message': 'logged out successfully'
     })
 
-
+# all users
 @users.route('/api/users')
 def user():
-    pair = Users.query.filter(Users.email != current_user.email).all()
+    pair = Users.query.all()
     users_schema = UsersSchema(many=True)
     result = users_schema.dump(pair)
     return jsonify(result)
 
+# all users choice
+@users.route('/api/data')
+def datas():
+    pair = Data.query.all()
+    datas_schema = DataSchema(many=True)
+    result = datas_schema.dump(pair)
+    return jsonify(result)
 
+# deleting all users
 @users.route('/users', methods=['DELETE'])
 def delete_users():
     pair = Users.query.all()
@@ -147,3 +167,6 @@ def delete_users():
     return jsonify({
         'msg': 'deleted'
     })
+
+
+

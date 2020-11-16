@@ -1,20 +1,18 @@
 import json
 import uuid
 import os
-import shortuuid
 
-from flask import Blueprint, jsonify, render_template, request
-from flask_login import current_user, login_user, logout_user, login_required
+from flask import Blueprint, render_template, request
+
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 from Api import *
-from Api.models import Movie, MovieSchema, Users, UsersSchema
+from Api.models import Movie
 from Api.utils import save_img
 import requests
 import imdb
-from flask_cors import CORS, cross_origin
 
 try:
     r = requests.request("GET", "https://api.themoviedb.org/3/movie/550?api_key=03fe919b123d0ced4b33dd633638527a")
@@ -26,7 +24,6 @@ ia = imdb.IMDb()
 
 api = Blueprint('api', __name__)
 CHUNK_SIZE = 512
-
 
 upload = Blueprint('upload', __name__)
 
@@ -86,6 +83,7 @@ def upload_movie():
         dict_movie = json.loads(movie_detail)
         movie_name = save_img(form.movie.data)
         video_file = request.files['movie']
+        genre = str(dict_movie['genre'])
         description = str(dict_movie['overview'])
         review = str(dict_movie["vote_average"])
         movies = Movie()
@@ -93,11 +91,15 @@ def upload_movie():
         movies.name = str(dict_movie['original_title'])
         movies.description = description
         movies.review = review
+        movies.genre = genre
         movies.poster = filename
         movies.movies = movie_name
         movies.movie_data = video_file.read(CHUNK_SIZE)
         db.session.add(movies)
         db.session.commit()
-    c = Movie.query.all()
+    c = ''
+    try:
+        c = Movie.query.all()
+    except:
+        pass
     return render_template('_.html', form=form, c=c)
-

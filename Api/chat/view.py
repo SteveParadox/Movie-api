@@ -1,18 +1,18 @@
-import datetime
 import uuid
-
-from Api import io, db
-from Api.models import Room, RoomSchema, Users, UsersSchema, Friend, FriendSchema, Movie
-from flask import Blueprint, request, url_for, jsonify, render_template
-from Api import *
+from flask import *
 from flask_cors import cross_origin
 from flask_login import current_user, login_required
 from flask_socketio import emit, close_room, leave_room, join_room
-from werkzeug.utils import redirect
+
+from Api import *
+from Api.models import Room, RoomSchema, Users, Friend, FriendSchema, Movie
 
 chat = Blueprint('chat', __name__)
 
+store = []
 
+
+# adding a friend to watch with
 @chat.route('/api/add/friend/<string:name>', methods=['POST'])
 @cross_origin()
 @login_required
@@ -29,7 +29,7 @@ def add(name):
                 }
             )
         else:
-            if add_req.name == current_user.name:
+            if add_friend.name == current_user.name:
                 return jsonify(
                     {
                         "message": "You cannot add your self"
@@ -66,7 +66,7 @@ def add_(name):
                 }
             )
         else:
-            if add_req.name == current_user.name:
+            if add_friend.name == current_user.name:
                 return jsonify(
                     {
                         "message": "You cannot add your self"
@@ -87,6 +87,7 @@ def add_(name):
     )
 
 
+# all friends of a particular user
 @chat.route('/api/my/friends', methods=['GET'])
 @cross_origin()
 @login_required
@@ -101,6 +102,7 @@ def my_friends():
     )
 
 
+# all friends of all users
 @chat.route("/all/friends")
 def all_frnds():
     f = Friend.query.all()
@@ -142,9 +144,9 @@ def create_room(movie):
 @chat.route('/api/watch/<string:movie>/in/room/<string:room>', methods=['GET'])
 @login_required
 def watch(movie, room):
-    print(movie)
     movie = Movie.query.filter_by(public_id=movie).first()
     room = Room.query.filter_by(unique_id=room).first()
+    store.append(room.unique_id)
     return jsonify(
         {
 
@@ -153,6 +155,23 @@ def watch(movie, room):
             'room': room.unique_id
         }
     )
+
+
+@chat.route('/api/active/', methods=['POST'])
+@login_required
+def active():
+    active = []
+    friends = Friend.query.filter_by(get=current_user).all()
+    friend_schema = FriendSchema(many=True)
+    result = friend_schema.dump(friends)
+    for key, value in result.items():
+        if key == 'u_friend':
+            if key.is_authenticated:
+                active.append(value)
+
+    return jsonify({
+        'active': active
+    })
 
 
 @chat.route('/api/my/rooms', methods=['GET'])
@@ -194,7 +213,6 @@ def delete_room(room_id):
 
 @chat.route("/invite")
 def invite(name):
-    user = Users.query.filter_by(name=name).first()
     pass
 
 
@@ -215,7 +233,7 @@ def chat_error_handler(e):
 
 @io.on('online')
 def online(data):
-    emit('status_change', {'username': data['username'], 'status': 'online'}, broadcast=True)
+    emit('status_change', {'username': current_user.name, 'status': 'online'}, broadcast=True)
 
 
 @io.on('offline')
@@ -236,17 +254,19 @@ def SendAnswer(data):
 # join room
 @io.on("join_user", namespace='/chat')
 def on_new_user(data):
-    room = request.get_json()
-    active = Room.query.filter_by(unique_id=room['room']).first()
-    name = current_user.name
-    join_room(active.unique_id)
-    emit("New user", {"name": name}, room=active.unique_id, broadcast=True)
+    room = store[-1]
+    active = Room.query.filter_by(unique_id=room).first()
+    if active:
+        name = current_user.name
+        join_room(active.unique_id)
+        emit("New user", {"name": name}, room=active.unique_id, broadcast=True)
+    emit(" Room error", {'message' : "not found"})
 
 
-'''@io.on('my event')
+@io.on('my event')
 def handle_event(json):
     print('recieved' + str(json))
-    io.emit('response', json)'''
+    io.emit('response', json)
 
 
 @io.on('movie')
@@ -258,8 +278,8 @@ def handle_movie(json):
 # leave room
 @io.on("leave_user", namespace='/chat')
 def on_leave_room(data):
-    room = request.get_json()
-    active = Room.query.filter_by(unique_id=room['room']).first()
+    room = store[-1]
+    active = Room.query.filter_by(unique_id=room).first()
     name = current_user.name
     leave_room(active.unique_id)
     emit("New user", {"name": name}, room=active.unique_id, broadcast=True)
@@ -269,10 +289,10 @@ def on_leave_room(data):
 # close room
 @io.on("close_room", namespace='/chat')
 def on_close_room(data):
-    room = request.get_json()
+    room = store[-1]
     active = Room.query.filter_by(host=current_user.name) \
         .filter_by(admin=True) \
-        .filter_by(unique_id=room['room']).first()
+        .filter_by(unique_id=room).first()
     close_room(active.unique_id)
     db.session.delete(active.unique_id)
     redirect(url_for("api.home"))
@@ -288,8 +308,8 @@ def on_video_chat(data):
 # watch movie
 @io.on("watch_movie", namespace='/chat')
 def on_video_stream(data):
-    room = request.get_json()
-    active = Room.query.filter_by(unique_id=room['room']).first()
+    room = store[-1]
+    active = Room.query.filter_by(unique_id=room).first()
     host = active.host
     movie_ = Movie.query.filter_by(public_id=room['u_id']).first()
     emit("Watch", {
@@ -301,24 +321,11 @@ def on_video_stream(data):
 # send message
 @io.on("post_message", namespace='/chat')
 def on_new_message(message):
-    data = request.get_json()
-    active = Room.query.filter_by(unique_id=data['room']).first()
+    room = store[-1]
+    data= request.get_json()
+    active = Room.query.filter_by(unique_id=room).first()
     emit("New message", {
         "sender": current_user.name,
         "time": datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
         "data": data['message'],
     }, room=active.unique_id, broadcast=True)
-
-    ##########################################################
-    '''def send_data(self, frame, text):
-        cur_t = time.time()
-        if cur_t - self._last_update_t > self._wait_t:
-            self._last_update_t = cur_t
-            frame = edgeiq.resize(
-                    frame, width=640, height=480, keep_scale=True)
-            sio.emit(
-                    'cv2server',
-                    {
-                        'image': self._convert_image_to_jpeg(frame),
-                        'text': '<br />'.join(text)
-                    })'''

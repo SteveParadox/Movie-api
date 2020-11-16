@@ -1,6 +1,6 @@
 import shortuuid
 import uuid
-from flask import Blueprint, jsonify, render_template, url_for, request
+from flask import *
 from flask_login import current_user, login_required, login_user, logout_user
 from Api import *
 from Api.models import Movie, MovieSchema, Users, UsersSchema, Friend, Room
@@ -9,6 +9,7 @@ from .form import LoginForm, Sign_Up
 raw = Blueprint('raw', __name__)
 
 @raw.route('/users')
+@login_required
 def all():
     pair = Users.query.filter(Users.email != current_user.email).all()
     return render_template('users.html' , pair=pair)
