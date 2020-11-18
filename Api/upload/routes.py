@@ -83,10 +83,7 @@ def upload_movie():
         dict_movie = json.loads(movie_detail)
         movie_name = save_img(form.movie.data)
         video_file = request.files['movie']
-        genres= dict_movie['genres']
-        genre=[]
-        for i in genres:
-            genre.append(i)
+
         description = str(dict_movie['overview'])
         review = str(dict_movie["vote_average"])
         movies = Movie()
@@ -94,7 +91,17 @@ def upload_movie():
         movies.name = str(dict_movie['original_title'])
         movies.description = description
         movies.review = review
-        movies.genre = genre
+        genres = dict_movie['genres']
+        genre = []
+        company= dict_movie['production_companies']
+        com=[]
+        for i in company:
+            com.append(i['name'])
+        for i in genres:
+            genre.append(i['name'])
+        movies.genre=genre[0]
+        movies.creator = com[0]
+        movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name
         movies.movie_data = video_file.read(CHUNK_SIZE)
