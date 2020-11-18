@@ -1,8 +1,12 @@
+import datetime
+
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-from Api.models import Users, UsersSchema, Data, DataSchema
+from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchema
 from Api import db, bcrypt
 from flask_cors import cross_origin
+
+from Api.utils import save_img
 
 users = Blueprint('users', __name__)
 
@@ -131,6 +135,7 @@ def logout_users():
 # logging out
 @users.route('/api/logout', methods=['POST'])
 @cross_origin()
+@login_required
 def logout():
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
@@ -141,6 +146,65 @@ def logout():
         'message': 'logged out successfully'
     })
 
+
+# getting profile of a user
+@users.route('/api/user/profile', methods=['GET'])
+@cross_origin()
+@login_required
+def profile():
+    profile_pics = save_img(request.files['picture'])
+    current_user.profile = profile_pics
+    db.session.commit()
+    name = current_user.name
+    email = current_user.email
+    image_file = url_for('static', filename='movies/' + current_user.profile)
+    friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
+    total = len(friends)
+
+    return jsonify({
+        "name": name,
+        'email': email,
+        'image': image_file,
+        'frends': total
+    })
+
+
+# uploading a story
+@users.route('/api/upload/story', methods=['POST'])
+@cross_origin()
+@login_required
+def upload_story():
+    data = request.get_json()
+    file = request.files['movie']
+    friend = Friend(get=current_user)
+    friend.story = data['name']
+    user.story_data = file.read()
+    friend.time_uploaded = datetime.datetime.now()
+    db.session.add(friend)
+    db.session.commit()
+    return jsonify({
+        'message': 'uploaded'
+    })
+
+
+# list of current user's story
+@users.route('/api/user/story', methods=['GET'])
+@cross_origin()
+@login_required
+def my_story():
+    user = Friend.query.filter_by(get=current_user).filter(Friend.u_friend == 'null').all()
+    friend_schema = FriendSchema(many=True)
+    result = friend_schema.dump(user)
+
+
+# list of current user's friend's story
+@users.route('/api/friend/story', methods=['GET'])
+@cross_origin()
+@login_required
+def friend_story():
+    pass
+
+
 # all users
 @users.route('/api/users')
 def user():
@@ -149,6 +213,7 @@ def user():
     result = users_schema.dump(pair)
     return jsonify(result)
 
+
 # all users choice
 @users.route('/api/data')
 def datas():
@@ -156,6 +221,7 @@ def datas():
     datas_schema = DataSchema(many=True)
     result = datas_schema.dump(pair)
     return jsonify(result)
+
 
 # deleting all users
 @users.route('/users', methods=['DELETE'])
@@ -167,6 +233,3 @@ def delete_users():
     return jsonify({
         'msg': 'deleted'
     })
-
-
-

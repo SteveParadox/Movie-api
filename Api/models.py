@@ -23,6 +23,8 @@ class Users(db.Model, UserMixin):
     friends = db.relationship('Friend', backref='get', lazy=True)
     my_movies = db.relationship('Data', backref='love', lazy=True)
     admin = db.Column(db.Boolean, default=False)
+    profile = db.Column(db.String)
+    profile_data = db.Column(db.LargeBinary)
 
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
@@ -34,6 +36,8 @@ class Movie(db.Model):
     name = db.Column(db.String(), nullable=False)
     description = db.Column(db.String(), nullable=False)
     review = db.Column(db.Float)
+    runtime = db.Column(db.Float)
+    creator = db.Column(db.String())
     genre = db.Column(db.String())
     movies = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
@@ -47,7 +51,10 @@ class Movie(db.Model):
 class Friend(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    u_friend = db.Column(db.String(), nullable=False)
+    u_friend = db.Column(db.String())
+    story = db.Column(db.String)
+    story_data = db.Column(db.LargeBinary)
+    time_uploaded = db.Column(db.String)
 
     def __repr__(self):
         return f"Friend('{self.u_friend}')"

@@ -75,23 +75,29 @@ def get_movie(u_id):
 # thumbs up a movie
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
+@login_required
 def like(u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
     loved_movie = Data(love=current_user, loved=movie.name)
     db.session.add(loved_movie)
     db.session.commit()
-    return jsonify(movie.thumbs_up)
+    return jsonify({
+        'data': movie.thumbs_up
+    })
 
 
 # thumbs down movie
 @api.route('/api/dislike/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
+@login_required
 def dislike(u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_down = movie.thumbs_down + 1
     db.session.commit()
-    return jsonify(movie.thumbs_down)
+    return jsonify({
+        'data': movie.thumbs_down
+    })
 
 
 # getting user's registered genre's choice for data processing

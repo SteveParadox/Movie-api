@@ -211,10 +211,6 @@ def delete_room(room_id):
 ## socket server
 ##########################################
 
-@chat.route("/invite")
-def invite(name):
-    pass
-
 
 @io.on("connect", namespace='/chat')
 def on_connect(data):
@@ -230,6 +226,10 @@ def disconnect():
 def chat_error_handler(e):
     print('An error has occurred: ' + str(e))
 
+@io.on('my event')
+def handle_event(json):
+    print('recieved' + str(json))
+    io.emit('response', json)
 
 @io.on('online')
 def online(data):
@@ -260,7 +260,7 @@ def on_new_user(data):
         name = current_user.name
         join_room(active.unique_id)
         emit("New user", {"name": name}, room=active.unique_id, broadcast=True)
-    emit(" Room error", {'message' : "not found"})
+    emit(" Room error", {'message': "not found"})
 
 
 @io.on('my event')
@@ -322,7 +322,7 @@ def on_video_stream(data):
 @io.on("post_message", namespace='/chat')
 def on_new_message(message):
     room = store[-1]
-    data= request.get_json()
+    data = request.get_json()
     active = Room.query.filter_by(unique_id=room).first()
     emit("New message", {
         "sender": current_user.name,
