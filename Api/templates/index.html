@@ -50,10 +50,14 @@
                                 <a  href="{{ url_for('users.logout_users') }}"><span><b>Log Out</b></span></a>
                                 &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  <a  href="{{ url_for('raw.my_frnds') }}"><b> My Friends</b></a>
                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
-                                <a  href="{{ url_for('raw.all') }}"><b>Add friend <i class="fa fa-user"></i></b></a> {%else%}
+                                <a  href="{{ url_for('raw.all') }}"><b>Add friend <i class="fa fa-user"></i></b></a>
+                              &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;  <a  href="{{ url_for('raw.chat') }}"><span><b>Chat</b></span></a>
+                                {%else%}
 
                                 <a  href="{{ url_for('raw.login_users') }}"><span><b>Login</b></span></a> &nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('raw.reg') }}"><span><b>Sign up</b></span></a>{%endif%}
+                                &nbsp;&nbsp;&nbsp;&nbsp; &nbsp; <a  href="{{ url_for('raw.reg') }}"><span><b>Sign up</b></span></a>
+
+                                {%endif%}
 
                             </li>
 
