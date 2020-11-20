@@ -2,7 +2,8 @@ import datetime
 
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
-from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchema
+from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchema, Activities, ActivitiesSchema, \
+    Exciting, ExcitingSchema
 from Api import db, bcrypt
 from flask_cors import cross_origin
 
@@ -92,6 +93,7 @@ def genre():
     thriller = data['thriller']
     para_normal = data['para-normal']
     family = data['family']
+    crime = data['crime']
     try:
         user = Data(love=current_user)
         user.action = action
@@ -107,6 +109,7 @@ def genre():
         user.drama = drama
         user.thriller = thriller
         user.para_normal = para_normal
+        user.crime=crime
         user.family = family
         db.session.add(user)
         db.session.commit()
@@ -152,20 +155,26 @@ def logout():
 @cross_origin()
 @login_required
 def profile():
-    profile_pics = save_img(request.files['picture'])
-    current_user.profile = profile_pics
-    db.session.commit()
+    try:
+        profile_pics = save_img(request.files['picture'])
+        current_user.profile = profile_pics
+        db.session.commit()
+    except:
+        pass
     name = current_user.name
     email = current_user.email
-    image_file = url_for('static', filename='movies/' + current_user.profile)
+    try:
+        image_file = url_for('static', filename='movies/' + current_user.profile)
+    except:
+        pass
     friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
     total = len(friends)
 
     return jsonify({
         "name": name,
         'email': email,
-        'image': image_file,
-        'frends': total
+        #'image': image_file,
+        'friends': total
     })
 
 
@@ -176,11 +185,11 @@ def profile():
 def upload_story():
     data = request.get_json()
     file = request.files['movie']
-    friend = Friend(get=current_user)
-    friend.story = data['name']
+    socials = Activities(social=current_user)
+    socials.story = data['name']
     user.story_data = file.read()
-    friend.time_uploaded = datetime.datetime.now()
-    db.session.add(friend)
+    socials.time_uploaded = datetime.datetime.now()
+    db.session.add(socials)
     db.session.commit()
     return jsonify({
         'message': 'uploaded'
@@ -192,9 +201,13 @@ def upload_story():
 @cross_origin()
 @login_required
 def my_story():
-    user = Friend.query.filter_by(get=current_user).filter(Friend.u_friend == 'null').all()
-    friend_schema = FriendSchema(many=True)
-    result = friend_schema.dump(user)
+    socials = Activities.query.filter_by(social=current_user).all()
+    activities_schema = ActivitiesSchema(many=True)
+    result = activities_schema.dump(socials)
+
+    return jsonify({
+        "data": result
+    })
 
 
 # list of current user's friend's story
@@ -221,6 +234,15 @@ def datas():
     datas_schema = DataSchema(many=True)
     result = datas_schema.dump(pair)
     return jsonify(result)
+
+
+@users.route('/api/_')
+def s():
+    pair = Exciting.query.all()
+    datas_schema = ExcitingSchema(many=True)
+    result = datas_schema.dump(pair)
+    return jsonify(result)
+
 
 
 # deleting all users

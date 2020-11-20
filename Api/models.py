@@ -22,6 +22,8 @@ class Users(db.Model, UserMixin):
     pair = db.Column(db.String())
     friends = db.relationship('Friend', backref='get', lazy=True)
     my_movies = db.relationship('Data', backref='love', lazy=True)
+    loved = db.relationship('Exciting', backref='rate', lazy=True)
+    activity = db.relationship('Activities', backref='social', lazy=True)
     admin = db.Column(db.Boolean, default=False)
     profile = db.Column(db.String)
     profile_data = db.Column(db.LargeBinary)
@@ -37,7 +39,12 @@ class Movie(db.Model):
     description = db.Column(db.String(), nullable=False)
     review = db.Column(db.Float)
     runtime = db.Column(db.Float)
+    created_on = db.Column(db.String())
     creator = db.Column(db.String())
+    cast1 = db.Column(db.String())
+    cast2 = db.Column(db.String())
+    cast3 = db.Column(db.String())
+    cast4 = db.Column(db.String())
     genre = db.Column(db.String())
     movies = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
@@ -52,9 +59,6 @@ class Friend(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     u_friend = db.Column(db.String())
-    story = db.Column(db.String)
-    story_data = db.Column(db.LargeBinary)
-    time_uploaded = db.Column(db.String)
 
     def __repr__(self):
         return f"Friend('{self.u_friend}')"
@@ -62,7 +66,6 @@ class Friend(db.Model):
 
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    loved = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     action = db.Column(db.Boolean, default=False)
     comedy = db.Column(db.Boolean, default=False)
@@ -78,9 +81,30 @@ class Data(db.Model):
     thriller = db.Column(db.Boolean, default=False)
     para_normal = db.Column(db.Boolean, default=False)
     family = db.Column(db.Boolean, default=False)
+    crime = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return f"Data('{self.user_id}')"
+
+
+class Exciting(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    loved = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class Activities(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    story = db.Column(db.String)
+    story_data = db.Column(db.LargeBinary)
+    time_uploaded = db.Column(db.String)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class Vote(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    vote1 = db.Column(db.Integer, default=0)
+    vote2 = db.Column(db.Integer, default=0)
 
 
 class Room(db.Model):
@@ -103,6 +127,21 @@ class FriendSchema(ModelSchema):
 friend_schema = FriendSchema
 friends_schema = FriendSchema(many=True)
 
+class ExcitingSchema(ModelSchema):
+    class Meta:
+        model = Exciting
+
+
+exciting_schema = ExcitingSchema
+excitings_schema = ExcitingSchema(many=True)
+
+class ActivitiesSchema(ModelSchema):
+    class Meta:
+        model = Activities
+
+
+activities_schema = ActivitiesSchema
+activitiess_schema = ActivitiesSchema(many=True)
 
 class DataSchema(ModelSchema):
     class Meta:

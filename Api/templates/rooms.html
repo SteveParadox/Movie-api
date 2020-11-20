@@ -32,7 +32,7 @@
 
     <script>
 
-    var socket = io.connect( "https://movie-stream-api.herokuapp.com/")
+    var socket = io.connect( "http://127.0.0.1:5000/")
     console.log(socket);
     socket.on("connect", function(){
     socket.emit( "my event", {
@@ -83,20 +83,42 @@
     $( 'div.cc').append( '<div class="msgbbl"><b>{{current_user.name}} is '+msg.status+'......</b> </div>')
     })
 </script>
+<button id="vote1">vote 1</button>
+<button id="vote2">vote 2</button>
+<div class="progress">
+    <div id="result1" class="progress-bar progress-bar-success" style="width: 50%">
+
+    </div>
+   <div id="result2" class="progress-bar progress-bar-warning progress-bar-stripped" style="width: 50%">
+
+    </div>
+</div>
+                <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script>
-     var socket = io.connect( "http://127.0.0.1:5000/")
-    console.log(socket);
-     socket.on("connect", function(){
-    socket.emit( "join_user", {
-        data : 'fbd09d49-e13d-4041-9c90-db5a36e06717'
 
-    })
-    })
+   var socket = io.connect( "http://127.0.0.1:5000/");
+$('#vote1').on('click', function(){
+    socket.emit('vote', 1);
+});
+$('#vote2').on('click', function(){
+    socket.emit('vote', 2);
+});
 
-    socket.on('status_change', function(msg){
-    $( 'div.cc').append( '<div class="msgbbl"><b>{{current_user.name}} is '+msg.status+'......</b> </div>')
-    })
+
+socket.on('vote_results', function(results){
+    var total_votes = results.results1 + results.results2;
+    var one_pct = Math.round(results.results1 / total_votes * 100);
+    var two_pct = 100 - one_pct;
+
+    $('#results1').css('height', one_pct + '%');
+   $('#results2').css('height', two_pct + '%');
+});
 </script>
 
+
+
     </body>
+
 

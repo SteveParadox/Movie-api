@@ -5,7 +5,7 @@ from flask_login import current_user, login_required
 from flask_socketio import emit, close_room, leave_room, join_room
 
 from Api import *
-from Api.models import Room, RoomSchema, Users, Friend, FriendSchema, Movie
+from Api.models import Room, RoomSchema, Users, Friend, FriendSchema, Movie, Vote
 
 chat = Blueprint('chat', __name__)
 
@@ -233,7 +233,8 @@ def handle_event(json):
 
 @io.on('online')
 def online(data):
-    emit('status_change', {'username': current_user.name, 'status': 'online'}, broadcast=True)
+    print(data)
+    emit('status_change', {'username': data['data'], 'status': 'online'}, broadcast=True)
 
 
 @io.on('offline')
@@ -252,15 +253,16 @@ def SendAnswer(data):
 
 
 # join room
-@io.on("join_user", namespace='/chat')
+@io.on("join_user")
 def on_new_user(data):
-    room = store[-1]
+    room = data['data']
+    print(data)
     active = Room.query.filter_by(unique_id=room).first()
-    if active:
-        name = current_user.name
-        join_room(active.unique_id)
-        emit("New user", {"name": name}, room=active.unique_id, broadcast=True)
-    emit(" Room error", {'message': "not found"})
+    print(active.unique_id)
+    name = current_user.name
+    join_room(active.unique_id)
+    emit("new_user", {"name": name, room:room}, room=active.unique_id, broadcast=True)
+
 
 
 @io.on('my event')
@@ -269,16 +271,12 @@ def handle_event(json):
     io.emit('response', json)
 
 
-@io.on('movie')
-def handle_movie(json):
-    print('recieved' + str(json))
-    io.emit('watch', json)
 
 
 # leave room
 @io.on("leave_user", namespace='/chat')
 def on_leave_room(data):
-    room = store[-1]
+    room = data['data']
     active = Room.query.filter_by(unique_id=room).first()
     name = current_user.name
     leave_room(active.unique_id)
@@ -289,7 +287,7 @@ def on_leave_room(data):
 # close room
 @io.on("close_room", namespace='/chat')
 def on_close_room(data):
-    room = store[-1]
+    room = data['data']
     active = Room.query.filter_by(host=current_user.name) \
         .filter_by(admin=True) \
         .filter_by(unique_id=room).first()
@@ -303,6 +301,22 @@ def on_video_chat(data):
     room = request.get_json()
     active = Room.query.filter_by(unique_id=room['room']).first()
     pass
+
+global clients
+
+
+io.on('NewClient' )
+def newclient():
+    clients = 0
+    if clients < 2:
+        if clients == 1:
+            io.emit('CreatePeer')
+    else:
+        io.emit('SessionActive')
+    clients =clients + 1
+
+
+
 
 
 # watch movie
@@ -329,3 +343,16 @@ def on_new_message(message):
         "time": datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
         "data": data['message'],
     }, room=active.unique_id, broadcast=True)
+
+
+
+@io.on('vote')
+def handleVote(ballot):
+
+    vote= Vote()
+    vote.vote1= vote.vote1 + 1
+    vote.vote2 = vote.vote2 + 1
+    db.session.add(vote)
+    db.session.commit()
+
+    emit('vote_result', {'result1' : vote.vote1, 'result2' : vote.vote2}, broadcast=True)

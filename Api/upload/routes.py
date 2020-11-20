@@ -83,6 +83,13 @@ def upload_movie():
         dict_movie = json.loads(movie_detail)
         movie_name = save_img(form.movie.data)
         video_file = request.files['movie']
+        credit=requests.get(f"https://api.themoviedb.org/3/movie/tt{id}/credits?api_key={KEY}&language=en-US")
+        casts=credit.text
+        lists=[]
+        json_casts= json.loads(casts)
+        cast= json_casts['cast']
+        for i in cast:
+            lists.append(i['original_name'])
 
         description = str(dict_movie['overview'])
         review = str(dict_movie["vote_average"])
@@ -92,6 +99,10 @@ def upload_movie():
         movies.description = description
         movies.review = review
         genres = dict_movie['genres']
+        movies.cast1=lists[0]
+        movies.cast2 = lists[1]
+        movies.cast3 = lists[2]
+        movies.cast4 = lists[3]
         genre = []
         company= dict_movie['production_companies']
         com=[]
@@ -101,6 +112,7 @@ def upload_movie():
             genre.append(i['name'])
         movies.genre=genre[0]
         movies.creator = com[0]
+        movies.created_on= str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name

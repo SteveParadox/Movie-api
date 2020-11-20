@@ -2,7 +2,7 @@ import random
 from flask import *
 from flask_login import current_user, login_required
 from Api import *
-from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users
+from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, ExcitingSchema
 from flask_cors import cross_origin
 
 api = Blueprint('api', __name__)
@@ -79,7 +79,7 @@ def get_movie(u_id):
 def like(u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
-    loved_movie = Data(love=current_user, loved=movie.name)
+    loved_movie = Exciting(rate=current_user, loved=movie.name)
     db.session.add(loved_movie)
     db.session.commit()
     return jsonify({
@@ -102,53 +102,71 @@ def dislike(u_id):
 
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice')
+@cross_origin()
 @login_required
 def choice():
-    d = []
-    s = []
-    datas = Data.query.filter_by(love=current_user).first()
-    datas_schema = DataSchema()
-    result = datas_schema.dump(datas)
-    for key, value in result.items():
-        if value == True:
-            d.append(key)
-            ''' for i in d:
-        movie = Movie.query.filter_by(genre=i).all()[15]
-        x = random.shuffle(movie)
-        s.append(movie.name)
+    selected_genres = []
+    suggested_movies = []
+    datas = Data.query.filter_by(love=current_user).all()
 
-        return jsonify({
-            "movies": s
-        })'''
+    datas_schema = DataSchema(many=True)
+    result = datas_schema.dump(datas)
+    for i in result:
+        for key, value in i.items():
+            if value == True:
+                selected_genres.append(key)
     try:
-        d.remove('id')
+        selected_genres.remove('id')
+        selected_genres.remove('love')
     except:
         pass
+
+    for i in selected_genres:
+        movie = Movie.query.filter_by(genre=f'{i[0].upper() + i[1:]}').all()
+
+        for z in movie:
+            suggested_movies.append({'name': z.name,
+                                     'movie': z.movies,
+                                     'image': z.poster,
+                                     'id': z.public_id,
+                                     "genre": z.genre,
+                                     'overview': z.description})
+            random.shuffle(suggested_movies)
     return jsonify({
-        "preference": d
+        "preference": suggested_movies
     })
 
 
 # using user's interested movies for data processing
 @api.route('/api/loved/movies')
+@cross_origin()
+@login_required
 def loved_movies():
-    _love = []
-    data = Data.query.filter_by(love=current_user).first()
-    datas_schema = DataSchema()
-    result = datas_schema.dump(data)
-    for key, value in result.items():
-        if key == 'loved':
-            _love.append(value)
-            random.shuffle(_love)
+    result = []
+    t = []
+    data = Exciting.query.filter_by(rate=current_user).all()
+    for i in data:
+        result.append(i.loved)
+    for c in result:
+        movie = Movie.query.filter_by(name=c).first()
+        t.append({'name': movie.name,
+                  'movie': movie.movies,
+                  'genre': movie.genre,
+                  'id': movie.id,
+                  'overview': movie.description,
+                  'image': movie.poster})
     return jsonify({
-        'loved': _love
+        'loved': t
     })
 
 
-# processing movies a user and his friend likes
-@api.route('/api/my/friend/<string:name>/genres')
+# suggesting movies a user and his friend likes
+@api.route('/api/my/friend/<string:name>/suggest')
+@cross_origin()
+@login_required
 def i_and_my_friend(name):
     conjoin = []
+    suggested_movies = []
     user = Users.query.filter_by(name=name).first()
     if user:
         friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=name).first()
@@ -163,10 +181,23 @@ def i_and_my_friend(name):
             for mine, _friend in zip(_list, friend_list):
                 if mine[1] == True and _friend[1] == True:
                     conjoin.append(mine[0])
+            for genres in conjoin:
+                movie = Movie.query.filter_by(genre=f'{genres[0].upper() + genres[1:]}').all()
 
+                for i in movie:
+                    suggested_movies.append({'name': i.name,
+                                             'id': i.public_id,
+                                             'movie': i.movies,
+                                             'image': i.poster,
+                                             'genre': i.genre,
+                                             'runtime ': i.runtime,
+                                             "overview": i.description
+
+                                             })
+                    random.shuffle(suggested_movies)
             # set(conjoin)
             return jsonify({
-                "we both like ": conjoin
+                "we both like ": suggested_movies
             })
         return jsonify({
             "message": f"{user} is not your friend"
