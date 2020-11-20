@@ -20,9 +20,6 @@
 
 `/api/dislike/movie/<string:u_id>, method=post` : thumbs down a movie
 
-`/api/choice` : getting user's genre's choice for data processing
-
-`/api/loved/movies`: getting movies a user thumbs up
 
 `/api/add/friend/<string:name>, method=post` : adding friend
 
@@ -36,3 +33,14 @@
 
 `/api/my/rooms/delete/<string:room_id>, method=post` : current user deleting a room
 
+`/api/choice`: getting movie based on user's registered genre
+
+`/api/loved/movies`: getting movie based on movies a user likes
+
+`/api/user/profile` : user profile
+
+`/api/upload/story, method=post`: current_user uploading a story
+
+`/api/user/story`: getting current user's story
+
+`/api/my/friend/<string:name>/suggest`: suggesting movies a user and his friend would like based on registered genre
