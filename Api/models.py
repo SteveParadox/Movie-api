@@ -24,6 +24,7 @@ class Users(db.Model, UserMixin):
     my_movies = db.relationship('Data', backref='love', lazy=True)
     loved = db.relationship('Exciting', backref='rate', lazy=True)
     activity = db.relationship('Activities', backref='social', lazy=True)
+    save_ = db.relationship('Store', backref='saved', lazy=True)
     admin = db.Column(db.Boolean, default=False)
     profile = db.Column(db.String)
     profile_data = db.Column(db.LargeBinary)
@@ -46,6 +47,28 @@ class Movie(db.Model):
     cast3 = db.Column(db.String())
     cast4 = db.Column(db.String())
     genre = db.Column(db.String())
+    movies = db.Column(db.String)
+    movie_data = db.Column(db.LargeBinary)
+    poster = db.Column(db.String)
+    poster_data = db.Column(db.LargeBinary)
+    date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    thumbs_up = db.Column(db.Integer, default=0)
+    thumbs_down = db.Column(db.Integer, default=0)
+    popular = db.Column(db.Integer, default=0)
+
+
+class Series(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    public_id = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String(), nullable=False)
+    overview = db.Column(db.String(), nullable=False)
+    review = db.Column(db.Float)
+    runtime = db.Column(db.Integer)
+    total_seasons = db.Column(db.Integer)
+    first_aired_on = db.Column(db.String())
+    writer = db.Column(db.JSON)
+    episode = db.Column(db.JSON)
+    genre = db.Column(db.JSON)  # , dimensions=1))
     movies = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
     poster = db.Column(db.String)
@@ -79,7 +102,8 @@ class Data(db.Model):
     fantasy = db.Column(db.Boolean, default=False)
     drama = db.Column(db.Boolean, default=False)
     thriller = db.Column(db.Boolean, default=False)
-    para_normal = db.Column(db.Boolean, default=False)
+    adventure = db.Column(db.Boolean, default=False)
+    children = db.Column(db.Boolean, default=False)
     family = db.Column(db.Boolean, default=False)
     crime = db.Column(db.Boolean, default=False)
 
@@ -95,16 +119,22 @@ class Exciting(db.Model):
 
 class Activities(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    story = db.Column(db.String)
+    story = db.Column(db.String(50))
     story_data = db.Column(db.LargeBinary)
     time_uploaded = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
+class Store(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    stored_data = db.Column(db.String(100))
+    time_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
 class Vote(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    vote1 = db.Column(db.Integer, default=0)
-    vote2 = db.Column(db.Integer, default=0)
+    votes = db.Column('data', db.Integer, default=0)
 
 
 class Room(db.Model):
@@ -127,6 +157,16 @@ class FriendSchema(ModelSchema):
 friend_schema = FriendSchema
 friends_schema = FriendSchema(many=True)
 
+
+class StoreSchema(ModelSchema):
+    class Meta:
+        model = Store
+
+
+store_schema = StoreSchema
+stores_schema = StoreSchema(many=True)
+
+
 class ExcitingSchema(ModelSchema):
     class Meta:
         model = Exciting
@@ -135,6 +175,7 @@ class ExcitingSchema(ModelSchema):
 exciting_schema = ExcitingSchema
 excitings_schema = ExcitingSchema(many=True)
 
+
 class ActivitiesSchema(ModelSchema):
     class Meta:
         model = Activities
@@ -142,6 +183,7 @@ class ActivitiesSchema(ModelSchema):
 
 activities_schema = ActivitiesSchema
 activitiess_schema = ActivitiesSchema(many=True)
+
 
 class DataSchema(ModelSchema):
     class Meta:

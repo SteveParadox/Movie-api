@@ -91,7 +91,7 @@ def genre():
     fantasy = data['fantasy']
     drama = data['drama']
     thriller = data['thriller']
-    para_normal = data['para-normal']
+    children = data['children']
     family = data['family']
     crime = data['crime']
     try:
@@ -108,7 +108,7 @@ def genre():
         user.fantasy = fantasy
         user.drama = drama
         user.thriller = thriller
-        user.para_normal = para_normal
+        user.children = children
         user.crime=crime
         user.family = family
         db.session.add(user)
@@ -163,6 +163,7 @@ def profile():
         pass
     name = current_user.name
     email = current_user.email
+    dob= current_user.dob
     try:
         image_file = url_for('static', filename='movies/' + current_user.profile)
     except:
@@ -173,6 +174,7 @@ def profile():
     return jsonify({
         "name": name,
         'email': email,
+        "dob" : dob,
         #'image': image_file,
         'friends': total
     })
@@ -187,7 +189,7 @@ def upload_story():
     file = request.files['movie']
     socials = Activities(social=current_user)
     socials.story = data['name']
-    user.story_data = file.read()
+    socials.story_data = file.read()
     socials.time_uploaded = datetime.datetime.now()
     db.session.add(socials)
     db.session.commit()
@@ -215,7 +217,15 @@ def my_story():
 @cross_origin()
 @login_required
 def friend_story():
-    pass
+    friends = Friend.query.filter_by(get=current_user).all()
+    for friend in friends:
+        socials = Activities.query.filter_by(social=friend).all()
+        activities_schema = ActivitiesSchema(many=True)
+        result = activities_schema.dump(socials)
+
+        return jsonify({
+            "data": result
+        })
 
 
 # all users

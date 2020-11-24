@@ -2,7 +2,7 @@ import random
 from flask import *
 from flask_login import current_user, login_required
 from Api import *
-from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, ExcitingSchema
+from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store
 from flask_cors import cross_origin
 
 api = Blueprint('api', __name__)
@@ -18,15 +18,162 @@ def home():
     if current_user.is_authenticated:
         id = current_user.id
         name = current_user.name
+        profile = current_user.profile
+        email = current_user.email
         return jsonify({
             "data": result,
             "user_id": id,
-            "user_name": name
+            "user_name": name,
+            'user_image': profile,
+            "email": email
         }), 200
     return jsonify({
         "data": result,
         "message": "user not logged in"
     })
+
+
+@api.route('/api/action', methods=['GET'])
+@cross_origin()
+def action():
+    movies = Movie.query.filter_by(genre='Action').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/comedy', methods=['GET'])
+@cross_origin()
+def comedy():
+    movies = Movie.query.filter_by(genre='Comedy').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/horror', methods=['GET'])
+@cross_origin()
+def horror():
+    movies = Movie.query.filter_by(genre='Horror').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/documentary', methods=['GET'])
+@cross_origin()
+def documentary():
+    movies = Movie.query.filter_by(genre='Documentary').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/thriller', methods=['GET'])
+@cross_origin()
+def thriller():
+    movies = Movie.query.filter_by(genre='Thriller').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/crime', methods=['GET'])
+@cross_origin()
+def crime():
+    movies = Movie.query.filter_by(genre='Crime').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/animation', methods=['GET'])
+@cross_origin()
+def animation():
+    movies = Movie.query.filter_by(genre='Animation').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/erotic', methods=['GET'])
+@cross_origin()
+def erotic():
+    movies = Movie.query.filter_by(genre='Erotic').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/romance', methods=['GET'])
+@cross_origin()
+def romance():
+    movies = Movie.query.filter_by(genre='Romance').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/mystery', methods=['GET'])
+@cross_origin()
+def mystery():
+    movies = Movie.query.filter_by(genre='Mystery').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/fantasy', methods=['GET'])
+@cross_origin()
+def fantasy():
+    movies = Movie.query.filter_by(genre='Fantasy').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/sci-fi', methods=['GET'])
+@cross_origin()
+def sci_fi():
+    movies = Movie.query.filter_by(genre='Sci-fi').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/children', methods=['GET'])
+@cross_origin()
+def children():
+    movies = Movie.query.filter_by(genre='para-normal').all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
 
 
 # searching for movie
@@ -37,9 +184,11 @@ def search():
     movie_name = Movie.query.filter_by(name=data['name']).first()
     if not movie_name:
         movie_name = Movie.query.filter_by(genre=data['genre']).first()
-    if not movie_name:
-        return jsonify({
-            "message": " Could not find Name"
+        if not movie_name:
+            movie_name = Movie.query.filter_by(creator=data['creator']).first()
+            if not movie_name:
+                return jsonify({
+                    "message": " Could not find Name"
         }), 404
     else:
         movie_schema = MovieSchema()
@@ -56,6 +205,8 @@ def search():
 @login_required
 def get_movie(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
+    movie_name.popular = movie_name.popular + 1
+    db.session.commit()
     movie_schema = MovieSchema()
     result = movie_schema.dump(movie_name)
     id = current_user.id
@@ -148,13 +299,16 @@ def loved_movies():
     for i in data:
         result.append(i.loved)
     for c in result:
-        movie = Movie.query.filter_by(name=c).first()
-        t.append({'name': movie.name,
-                  'movie': movie.movies,
-                  'genre': movie.genre,
-                  'id': movie.id,
-                  'overview': movie.description,
-                  'image': movie.poster})
+        liked = Movie.query.filter_by(name=c).first()
+        movies = Movie.query.filter_by(genre=liked.genre).all()
+        # get movies related to liked movies
+        for movie in movies:
+            t.append({'name': movie.name,
+                      'movie': movie.movies,
+                      'genre': movie.genre,
+                      'id': movie.public_id,
+                      'overview': movie.description,
+                      'image': movie.poster})
     return jsonify({
         'loved': t
     })
@@ -203,3 +357,47 @@ def i_and_my_friend(name):
             "message": f"{user} is not your friend"
         })
     return jsonify({"message": f"{name} not registered"})
+
+
+@api.route('/api/trending')
+def trending():
+    pass
+
+
+@api.route('/api/popular')
+def popular():
+    movies = Movie.query.order_by(Movie.popular.desc()).all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+
+@api.route('/api/add/list/<string:movie_id>', methods=['POST'])
+def add_to_list(movie_id):
+    movie = Movie.query.filter_by(public_id=movie_id).first()
+    store = Store(saved=current_user)
+    store.stored_data = movie.public_id
+    db.session.add(store)
+    db.session.commit()
+    return jsonify({
+        "data": 'committed',
+    }), 200
+
+
+@api.route('/api/my/list')
+def my_list():
+    store = Store.query.filter_by(saved=current_user).all()
+    data = []
+    for movie_id in store:
+        movies = Movie.query.filter_by(public_id=movie_id.saved_data).all()
+        for movie in movies:
+            data.append({'name': movie.name,
+                         'genre': movie.genre,
+                         'id': movie.public_id,
+                         'overview': movie.description,
+                         'image': movie.poster})
+    return jsonify({
+        "data": data,
+    }), 200

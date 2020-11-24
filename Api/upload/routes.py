@@ -9,7 +9,7 @@ from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 from Api import *
-from Api.models import Movie
+from Api.models import Movie, Series
 from Api.utils import save_img
 import requests
 import imdb
@@ -34,7 +34,7 @@ class Movies_(FlaskForm):
     submit = SubmitField('Submit ')
 
 
-@upload.route('/upload', methods=['GET', 'POST'])
+@upload.route('/upload/movie', methods=['GET', 'POST'])
 def upload_movie():
     # data = request.get_json()
     form = Movies_()
@@ -83,11 +83,11 @@ def upload_movie():
         dict_movie = json.loads(movie_detail)
         movie_name = save_img(form.movie.data)
         video_file = request.files['movie']
-        credit=requests.get(f"https://api.themoviedb.org/3/movie/tt{id}/credits?api_key={KEY}&language=en-US")
-        casts=credit.text
-        lists=[]
-        json_casts= json.loads(casts)
-        cast= json_casts['cast']
+        credit = requests.get(f"https://api.themoviedb.org/3/movie/tt{id}/credits?api_key={KEY}&language=en-US")
+        casts = credit.text
+        lists = []
+        json_casts = json.loads(casts)
+        cast = json_casts['cast']
         for i in cast:
             lists.append(i['original_name'])
 
@@ -99,20 +99,20 @@ def upload_movie():
         movies.description = description
         movies.review = review
         genres = dict_movie['genres']
-        movies.cast1=lists[0]
+        movies.cast1 = lists[0]
         movies.cast2 = lists[1]
         movies.cast3 = lists[2]
         movies.cast4 = lists[3]
         genre = []
-        company= dict_movie['production_companies']
-        com=[]
+        company = dict_movie['production_companies']
+        com = []
         for i in company:
             com.append(i['name'])
         for i in genres:
             genre.append(i['name'])
-        movies.genre=genre[0]
+        movies.genre = genre[0]
         movies.creator = com[0]
-        movies.created_on= str(dict_movie['release_date'])
+        movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name
@@ -125,3 +125,53 @@ def upload_movie():
     except:
         pass
     return render_template('_.html', form=form, c=c)
+
+
+class Series_(FlaskForm):
+    movie = FileField('Video', validators=[FileAllowed(['mp4', 'webm', 'hd'])])
+    name = StringField(validators=[DataRequired()])
+    submit = SubmitField('Submit ')
+
+@upload.route('/upload/series', methods=['GET', 'POST'])
+def upload_series():
+    form = Movies_()
+    id = ''
+    if form.validate_on_submit():
+        name = str(form.name.data)
+        search = ia.search_movie(name)
+        for i in range(0, 1):
+            # getting the id
+            id = search[i].movieID
+    # getting information
+    series = ia.get_movie(id)
+    title = series.data['title']
+    writer = series.data['writer']
+    total_seasons = series.data['number of seasons'] + 1
+    runtimes = series.data['runtimes'][0]
+    genre = series.data['genres']
+    plot = series.data['plot outline']
+    first_aired = series.data['year']
+    ia.update(series, 'episodes')
+    episodes = series.data['episodes']
+    b = []
+    for i in episodes.keys():
+
+        for j in episodes[i]:
+            title = episodes[i][j]['title']
+            b.append(title)
+
+    episodes_title = {'data': b}
+    series = Series()
+    series.name = title
+    series.overview = plot
+    series.runtime = runtimes
+    series.first_aired_on = first_aired
+    series.public_id = str(uuid.uuid4())
+    series.genre = {'data': genre}
+    series.total_seasons = total_seasons
+    series.writer = {'data': writer}
+    series.episode = episodes_title
+    db.session.add(series)
+    db.session.commit()
+
+    return render_template('')
