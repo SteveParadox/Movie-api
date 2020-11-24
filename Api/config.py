@@ -11,10 +11,11 @@ class Config:
         SECRET_KEY = 'os.environ.ge'
         API_KEY = os.environ.get('SECRET_KEY')
         SQLALCHEMY_DATABASE_URI = 'sqlite:///site.db'
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
         CORS_HEADERS = 'Content-Type'
     else:
-        SECRET_KEY = "795849f0d2328258710ae9c71cb4b5ea"
+        SECRET_KEY = "795849f0d2328258710ae9c71cb795849f0d2328258710ae9c71cb4b5ea4b5ea"
         API_KEY = "795849f0d2328258710ae9c71cb4b5ea"
-        SQLALCHEMY_DATABASE_URI = 'postgres://ufiptzttzuntox:387caedfd883109ecc8be4445c7f6b8d24ade865c271a07d804ccba4d92a5be6@ec2-54-160-161-214.compute-1.amazonaws.com:5432/d4avvp9u9sf1n5'
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        SQLALCHEMY_DATABASE_URI = "postgres://tmezmgejayycxt:96acdc27bfed485a4d2b4533ac7455e2985763907c71a171edf79a9529c8e3a8@ec2-34-202-65-210.compute-1.amazonaws.com:5432/dbgri8ojt9m5pe"
         CORS_HEADERS = 'Content-Type'
-
