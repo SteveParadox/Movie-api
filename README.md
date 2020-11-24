@@ -43,4 +43,39 @@
 
 `/api/user/story`: getting current user's story
 
+`/api/friend/story`: list of current user's friend's story
+
 `/api/my/friend/<string:name>/suggest`: suggesting movies a user and his friend would like based on registered genre
+
+`/api/popular`: getting popular movies
+
+`/api/add/list/<string:movie_id> method=post`: add a movie to current_user's local list
+
+`/api/my/list`: list of all current user's stored movies
+
+`/api/action`: list of all action movies
+
+`/api/comedy`: list of all comedy movies
+
+`/api/horror`: list of all horror movies
+
+`/api/documentary`: list of all documentary movies
+
+`/api/thriller`: list of all thriller movies
+
+`/api/crime`: list of all crime movies
+
+`/api/animation`: list of all animation movies
+
+`/api/erotic`: list of all erotic movies
+
+`/api/romance`: list of all romance movies
+
+`/api/mystery`: list of all mystery movies
+
+`/api/fantasy`: list of all fantasy movies
+
+`/api/sci-fi`: list of all science fiction movies
+
+`/api/children`: list of all children movies
+
