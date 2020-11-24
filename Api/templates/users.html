@@ -12,7 +12,7 @@
                         </div><!-- end logo -->
                     {% for user in pair %}
 <br>
-                        <div><h6>{{ user.name }} :    <button type="button" class="btn btn-success "> <a methods="post" href="{{ url_for('chat.add_', name=user.name) }}">Add <i class="fa fa-plus"></i></a></button></h6></div>
+                        <div><h6>{{ user.name }} :    <button type="button" class="btn btn-success "> <a methods="post" href="{{ url_for('chat.add', name=user.name) }}">Add <i class="fa fa-plus"></i></a></button></h6></div>
 {% endfor %}
                     </div>
                 </div>
