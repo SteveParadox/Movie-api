@@ -126,4 +126,4 @@ def watching(movie, room):
 def _Hu():
     db.drop_all(app=create_app())
     db.create_all(app=create_app())
-    return jsonify({'message': 'done'}
+    return jsonify({'message': 'done'})
