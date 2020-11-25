@@ -70,7 +70,7 @@
     </script>
 
 <script>
-     var socket = io.connect( "http://127.0.0.1:5000/")
+     var socket = io.connect( "https://movie-stream-api.herokuapp.com/")
     console.log(socket);
      socket.on("connect", function(){
     socket.emit( "online", {
@@ -98,7 +98,7 @@
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script>
 
-   var socket = io.connect( "http://127.0.0.1:5000/");
+   var socket = io.connect( "https://movie-stream-api.herokuapp.com/");
 $('#vote1').on('click', function(){
     socket.emit('vote', 1);
 });
