@@ -142,36 +142,41 @@ def upload_series():
         for i in range(0, 1):
             # getting the id
             id = search[i].movieID
-    # getting information
-    series = ia.get_movie(id)
-    title = series.data['title']
-    writer = series.data['writer']
-    total_seasons = series.data['number of seasons'] + 1
-    runtimes = series.data['runtimes'][0]
-    genre = series.data['genres']
-    plot = series.data['plot outline']
-    first_aired = series.data['year']
-    ia.update(series, 'episodes')
-    episodes = series.data['episodes']
-    b = []
-    for i in episodes.keys():
+        # getting information
+        series = ia.get_movie(id)
+        title = series.data['title']
+        writer = series.data['writer']
+        total_seasons = series.data['number of seasons'] + 1
+        runtimes = series.data['runtimes'][0]
+        genre = series.data['genres']
+        plot = series.data['plot outline']
+        first_aired = series.data['year']
+        ia.update(series, 'episodes')
+        episodes = series.data['episodes']
+        b = []
+        for i in episodes.keys():
 
-        for j in episodes[i]:
-            title = episodes[i][j]['title']
-            b.append(title)
+            for j in episodes[i]:
+                title = episodes[i][j]['title']
+                b.append(title)
 
-    episodes_title = {'data': b}
-    series = Series()
-    series.name = title
-    series.overview = plot
-    series.runtime = runtimes
-    series.first_aired_on = first_aired
-    series.public_id = str(uuid.uuid4())
-    series.genre = {'data': genre}
-    series.total_seasons = total_seasons
-    series.writer = {'data': writer}
-    series.episode = episodes_title
-    db.session.add(series)
-    db.session.commit()
+        episodes_title = {'data': b}
+        series = Series()
+        series.name = title
+        series.overview = plot
+        series.runtime = runtimes
+        series.first_aired_on = first_aired
+        series.public_id = str(uuid.uuid4())
+        series.genre = {'data': genre}
+        series.total_seasons = total_seasons
+        series.writer = {'data': writer}
+        series.episode = episodes_title
+        db.session.add(series)
+        db.session.commit()
 
-    return render_template('')
+    c = ''
+    try:
+        c = Series.query.all()
+    except:
+        pass
+    return render_template('series.html',form=form, c=c)

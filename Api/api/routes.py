@@ -365,6 +365,8 @@ def trending():
 
 
 @api.route('/api/popular')
+@cross_origin()
+@login_required
 def popular():
     movies = Movie.query.order_by(Movie.popular.desc()).all()
     movie_schema = MovieSchema(many=True)
@@ -375,6 +377,8 @@ def popular():
 
 
 @api.route('/api/add/list/<string:movie_id>', methods=['POST'])
+@cross_origin()
+@login_required
 def add_to_list(movie_id):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     store = Store(saved=current_user)
@@ -387,11 +391,13 @@ def add_to_list(movie_id):
 
 
 @api.route('/api/my/list')
+@cross_origin()
+@login_required
 def my_list():
     store = Store.query.filter_by(saved=current_user).all()
     data = []
     for movie_id in store:
-        movies = Movie.query.filter_by(public_id=movie_id.saved_data).all()
+        movies = Movie.query.filter_by(public_id=movie_id.stored_data).all()
         for movie in movies:
             data.append({'name': movie.name,
                          'genre': movie.genre,
