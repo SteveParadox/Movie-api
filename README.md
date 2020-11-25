@@ -33,9 +33,9 @@
 
 `/api/my/rooms/delete/<string:room_id>, method=post` : current user deleting a room
 
-`/api/choice`: getting movie based on user's registered genre
+`/api/choice`: getting/analysing movies based on user's registered genre
 
-`/api/loved/movies`: getting movie based on movies a user likes
+`/api/loved/movies`: getting/analysing  movie based on movies a user likes
 
 `/api/user/profile` : user profile
 
@@ -49,9 +49,9 @@
 
 `/api/popular`: getting popular movies
 
-`/api/add/list/<string:movie_id> method=post`: add a movie to current_user's local list
+`/api/add/list/<string:movie_id> method=post`: add a movie to current_user's local list for later
 
-`/api/my/list`: list of all current user's stored movies
+`/api/my/list`: list of all current user's locally stored movies
 
 `/api/action`: list of all action movies
 
