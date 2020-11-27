@@ -219,3 +219,12 @@ class UsersSchema(ModelSchema):
 
 user_schema = UsersSchema
 users_schema = UsersSchema(many=True)
+
+
+class SeriesSchema(ModelSchema):
+    class Meta:
+        model = Series
+
+
+serie_schema = SeriesSchema
+series_schema = SeriesSchema(many=True)

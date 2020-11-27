@@ -157,7 +157,7 @@ def fantasy():
 @api.route('/api/sci-fi', methods=['GET'])
 @cross_origin()
 def sci_fi():
-    movies = Movie.query.filter_by(genre='Sci-fi').all()
+    movies = Movie.query.filter_by(genre='Science Fiction').all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
     return jsonify({
@@ -181,21 +181,20 @@ def children():
 @cross_origin()
 def search():
     data = request.get_json()
-    movie_name = Movie.query.filter_by(name=data['name']).first()
+    movie_name = Movie.query.filter_by(name=data['name']).all()
     if not movie_name:
-        movie_name = Movie.query.filter_by(genre=data['genre']).first()
+        movie_name = Movie.query.filter_by(genre=data['name']).all()
         if not movie_name:
-            movie_name = Movie.query.filter_by(creator=data['creator']).first()
+            movie_name = Movie.query.filter_by(creator=data['name']).all()
             if not movie_name:
                 return jsonify({
                     "message": " Could not find Name"
         }), 404
-    else:
-        movie_schema = MovieSchema()
-        result = movie_schema.dump(movie_name)
-        return jsonify({
-            'data': result
-        }), 200
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movie_name)
+    return jsonify({
+        'data': result
+    }), 200
 
 
 # link to redirect to selected movie
@@ -366,7 +365,6 @@ def trending():
 
 @api.route('/api/popular')
 @cross_origin()
-@login_required
 def popular():
     movies = Movie.query.order_by(Movie.popular.desc()).all()
     movie_schema = MovieSchema(many=True)

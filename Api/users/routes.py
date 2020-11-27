@@ -186,7 +186,7 @@ def profile():
 @login_required
 def upload_story():
     data = request.get_json()
-    file = request.files['movie']
+    file = request.files['story']
     socials = Activities(social=current_user)
     socials.story = data['name']
     socials.story_data = file.read()

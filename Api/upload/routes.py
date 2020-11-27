@@ -2,14 +2,14 @@ import json
 import uuid
 import os
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, jsonify
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 from Api import *
-from Api.models import Movie, Series
+from Api.models import Movie, Series, SeriesSchema
 from Api.utils import save_img
 import requests
 import imdb
@@ -128,7 +128,7 @@ def upload_movie():
 
 
 class Series_(FlaskForm):
-    movie = FileField('Video', validators=[FileAllowed(['mp4', 'webm', 'hd'])])
+
     name = StringField(validators=[DataRequired()])
     submit = SubmitField('Submit ')
 
@@ -145,8 +145,8 @@ def upload_series():
         # getting information
         series = ia.get_movie(id)
         title = series.data['title']
-        writer = series.data['writer']
-        total_seasons = series.data['number of seasons'] + 1
+        #writer = series.data['writer']
+        total_seasons = series.data['number of seasons']
         runtimes = series.data['runtimes'][0]
         genre = series.data['genres']
         plot = series.data['plot outline']
@@ -160,16 +160,17 @@ def upload_series():
                 title = episodes[i][j]['title']
                 b.append(title)
 
-        episodes_title = {'data': b}
+
+        episodes_title = b
         series = Series()
         series.name = title
         series.overview = plot
         series.runtime = runtimes
         series.first_aired_on = first_aired
         series.public_id = str(uuid.uuid4())
-        series.genre = {'data': genre}
+        series.genre = genre
         series.total_seasons = total_seasons
-        series.writer = {'data': writer}
+
         series.episode = episodes_title
         db.session.add(series)
         db.session.commit()
@@ -180,3 +181,11 @@ def upload_series():
     except:
         pass
     return render_template('series.html',form=form, c=c)
+
+
+@upload.route('/series')
+def seri():
+    series = Series.query.all()
+    series_schema = SeriesSchema(many=True)
+    result = series_schema.dump(series)
+    return jsonify({'data': result})

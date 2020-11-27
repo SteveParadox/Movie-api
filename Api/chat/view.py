@@ -153,24 +153,30 @@ def watch(movie, room):
 
             "movie": movie.movies,
             "movie name": movie.name,
-            'room': room.unique_id
+            'room': room.unique_id,
+            'image': movie.poster
         }
     )
 
 
-@chat.route('/api/active/', methods=['POST'])
+@chat.route('/api/active/', methods=['GET'])
 @login_required
 def active():
+    active_friend=[]
     active = []
     friends = Friend.query.filter_by(get=current_user).all()
     friend_schema = FriendSchema(many=True)
     result = friend_schema.dump(friends)
-    for key, value in result.items():
-        if key == 'u_friend':
-            active.append(value)
+    for value in result:
+        for i,v in value.items():
+            if i == 'u_friend':
+                active.append(v)
+    for f in active:
+        if 'jake' in f:
+            active_friend.append(f)
 
     return jsonify({
-        'active': active
+        'active': active_friend
     })
 
 
@@ -214,6 +220,7 @@ def delete_room(room_id):
 
 @io.on("connect", namespace='/chat')
 def on_connect(data):
+
     return jsonify({'message': 'connected'})
 
 
@@ -235,11 +242,28 @@ def handle_event(json):
 
 @io.on('online')
 def online(data):
-    print(data)
-    emit('status_change', {'username': data['data'], 'status': 'online'}, broadcast=True)
+    active = []
+    online_friend=[]
+    friends = Friend.query.filter_by(get=current_user).all()
+    friend_schema = FriendSchema(many=True)
+    result = friend_schema.dump(friends)
+    for value in result:
+        for i, v in value.items():
+            if i == 'u_friend':
+                active.append(v)
+    for f in active:
+        if data['data'] in f:
+            online_friend.append(f)
+
+    emit('status_change', {'username': online_friend, 'status': 'online'}, broadcast=True)
 
 
-@io.on('offline')
+
+
+
+
+
+@io.on("offline")
 def offline(data):
     emit('status_change', {'username': data['username'], 'status': 'offline'}, broadcast=True)
 
