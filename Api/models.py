@@ -141,13 +141,20 @@ class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     unique_id = db.Column(db.String(), unique=True, nullable=False)
     host = db.Column(db.String(), nullable=False)
-    vid_time = db.Column(db.String())
     admin = db.Column(db.Boolean, default=False)
     created = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    r_activity = db.relationship('Room_Activities', backref='activity', lazy=True)
+
 
     def __repr__(self):
         return f"Room('{self.unique_id}', '{self.host}', '{self.admin}')"
 
+
+class Room_Activities(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    movie = db.Column(db.String())
+    vid_time = db.Column(db.String())
+    room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
 
 class FriendSchema(ModelSchema):
     class Meta:

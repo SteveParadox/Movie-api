@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+  <form method="POST" action="" enctype="multipart/form-data" >
+                                {{ form.hidden_tag() }}
+    {{ form.name }}
+{{ form.description }}
+{{ form.review }}
+{{ form.photo }}
+{{ form.movie.label}}
+{{form.movie }}
+{{ form.submit }}
+</form>
+
+{% for x in c%}
+  <hr>
+    <br>
+  <br>
+  {{x.name}}
+  <br>
+  <br>
+{% for i in x.episode['data']%}
+  <br>
+  {{i}}
+  {% endfor %}
+  <br>
+  <br>
+  {{x.review}}
+ <br>
+  <br>
+    {{x.runtime}}
+  <br>
+  <br>
+  {{x.total_seasons}}
+<br>
+  <br>
+    {{x.overview}}
+  <br>
+  <br>
+  {% for i in x.genre['data']%}
+  <br>
+  {{i}}
+  {% endfor %}
+    <br>
+  <br>
+  {{x.first_aired_on}}
+{% endfor %}
+</body>
+</html>

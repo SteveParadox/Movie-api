@@ -12,16 +12,20 @@ from Api import *
 from Api.models import Movie, Series, SeriesSchema
 from Api.utils import save_img
 import requests
-import imdb
-
+try:
+    import imdb
+except ImportError:
+    pass
 try:
     r = requests.request("GET", "https://api.themoviedb.org/3/movie/550?api_key=03fe919b123d0ced4b33dd633638527a")
 except:
     pass
 
 # creating instance of IMDb
-ia = imdb.IMDb()
-
+try:
+    ia = imdb.IMDb()
+except:
+    pass
 api = Blueprint('api', __name__)
 CHUNK_SIZE = 512
 

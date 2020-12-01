@@ -8,7 +8,7 @@
 
 <div style="float:right;">
     <p>Online friends</p>
-
+    
 <div class="user-wrapper" ></div>
     <video class="vid"></video>
 </div>

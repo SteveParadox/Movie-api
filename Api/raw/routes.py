@@ -1,5 +1,4 @@
 import shortuuid
-from Api import create_app, db, io, app
 import uuid
 from flask import *
 from flask_login import current_user, login_required, login_user, logout_user
@@ -85,12 +84,6 @@ def chat():
     return render_template('rooms.html')
 
 
-@io.on('my event')
-def handle_event(json):
-    print('recieved' + str(json))
-    io.emit('response', json)
-
-
 
 @raw.route('/my/friends', methods=['GET'])
 @login_required
@@ -122,8 +115,4 @@ def watching(movie, room):
     room = Room.query.filter_by(unique_id=room).first()
     return render_template('rooms.html', movie=movie, room=room)
 
-@raw.route('/xc', methods=['GET', 'POST'])
-def _Hu():
-    db.drop_all(app=create_app())
-    db.create_all(app=create_app())
-    return jsonify({'message': 'done'})
+
