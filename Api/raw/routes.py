@@ -116,3 +116,8 @@ def watching(movie, room):
     return render_template('rooms.html', movie=movie, room=room)
 
 
+@raw.route('/xc')
+def fpd():
+    db.drop_all(app=create_app())
+    db.create_all(app=create_app())
+    return 'done'
