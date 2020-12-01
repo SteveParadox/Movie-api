@@ -41,7 +41,7 @@
     console.log(socket);
     socket.on("connect", function(){
      socket.emit( "online", {
-        data : '{{current_user.name}}'
+        name : '{{current_user.name}}'
 
     })
     socket.on('status_change', function(msg){
@@ -52,11 +52,11 @@
    alert(msg.message);
      })
      socket.on('New', function(msg){
-   if(msg.sender === 'current_user.name'){
+   if(msg.sender === '{{current_user.name}}'){
     $( 'div.msg-wrapper').append( '<div class="msgbbl" style="float: right;">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br>')
      }
      else{
-    $( 'div.msg-wrapper').append( '<div class="msgbbl">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br>')
+    $( 'div.msg-wrapper').append( '<div class="msgbbl">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br><br>')
      }
     $( 'div.cc').remove()
 $( 'h1').remove()
