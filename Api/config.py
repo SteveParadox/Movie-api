@@ -5,7 +5,7 @@ class Config:
     def __init__(self):
         pass
 
-    ENV = 'dev'
+    ENV = 'prod'
 
     if ENV == 'dev':
         SECRET_KEY = 'os.environ.ge'
