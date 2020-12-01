@@ -53,10 +53,10 @@
      })
      socket.on('New', function(msg){
    if(msg.sender === '{{current_user.name}}'){
-    $( 'div.msg-wrapper').append( '<div class="msgbbl" style="float: right;">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br>')
+    $( 'div.msg-wrapper').append( '<div class="msgbbl" style="float: right;">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br><br><br>')
      }
      else{
-    $( 'div.msg-wrapper').append( '<div class="msgbbl">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br><br>')
+    $( 'div.msg-wrapper').append( '<div class="msgbbl">'+msg.time+'<br><b>'+msg.sender+'</b> '+msg.data+' </div><br><br><br>')
      }
     $( 'div.cc').remove()
 $( 'h1').remove()
