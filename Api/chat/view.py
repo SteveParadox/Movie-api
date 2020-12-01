@@ -321,19 +321,8 @@ def chat_error_handler(e):
 
 @io.on('online')
 def online(data):
-    active = []
-    friends = Friend.query.filter_by(get=current_user).all()
-    friend_schema = FriendSchema(many=True)
-    result = friend_schema.dump(friends)
-    for value in result:
-        for i, v in value.items():
-            if i == 'u_friend':
-                active.append(v)
-    for f in active:
-        if data['data'] in f:
-            online_friend.append(f)
+    io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
 
-    emit('status_change', {'username': online_friend, 'status': 'online'}, broadcast=True)
 
 
 @io.on("offline")
