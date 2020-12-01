@@ -324,7 +324,6 @@ def online(data):
     io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
 
 
-
 @io.on("offline")
 def offline(data):
     active = []
