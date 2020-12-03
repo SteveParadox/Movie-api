@@ -3,6 +3,16 @@
 
          <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<style>
+    #video-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 300px);
+    grid-auto-rows: 300px;
+    height: 30px;
+    }
+
+</style>
+
 
 
 <div style="float:right;">
@@ -27,7 +37,24 @@
         <button type="submit" class="btn btn-success">Send</button>
     </form>
 </div>
+<div >
+    <video id="myVideo" autoplay controls >
+        <source src="/static/movies/{{movie.movies}}">
+    </video>
+    <p>{{movie.name}}</p>
+<p>{{movie.description}}</p>
 
+    <span id="currentTime"></span>
+</div>
+
+        <style>
+              video
+                {
+                height: 150px;
+            }
+        </style>
+
+        <div id="video-grid"></div>
 <!--var socket = io.connect( "http://127.0.0.1:5000/chat/" + {{room}})-->
                                          <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -37,17 +64,41 @@
 
 
 
-    var socket = io.connect( 'https://' + document.domain + ':' + location.port)
+    var socket = io.connect( 'http://' + document.domain + ':' + location.port)
     console.log(socket);
     socket.on("connect", function(){
-     socket.emit( "online", {
+     socket.emit( "joined", {
+        name : '{{current_user.name}}',
+        room_id: '{{room.unique_id}}'
+
+    })
+socket.emit( "join_user", {
+        name : '{{current_user.name}}',
+        room_id: '{{room.unique_id}}',
+        movie_id: '{{movie.public_id}}'
+
+        })
+   })
+    socket.on('disconnect', function(){
+    console.log('gff')
+socket.emit( "offline", {
         name : '{{current_user.name}}'
 
     })
-    socket.on('status_change', function(msg){
-    $( 'div.cc').append( '<div class="msgbbl"><b>'+msg.username+' is '+msg.status+'......</b> </div>')
-     $( 'div.user-wrapper').append( '<div class="msgbbl"><b>'+msg.username+' </b> </div>')
+
     })
+     socket.on('status_offline', function(msg){
+    $( 'div.cc').append( '<div class="msgbbl"><b>'+msg.username+' has '+msg.status+'......</b> </div>')
+        })
+    socket.on('joined_room', function(msg){
+    $( 'div.cc').append( '<div class="msgbbl"><b>'+msg.username+' has '+msg.status+'......</b> </div>')
+     $( 'div.user-wrapper').append( '<div class="msgbbl"><b>'+msg.username+' </b> </div>')
+
+
+
+
+    })
+
     socket.on('New_group_Message', function(msg){
    alert(msg.message);
      })
@@ -62,7 +113,7 @@
 $( 'h1').remove()
      })
 
-    })
+
         var form = $( 'form' ).on( 'submit' , function(e){
         e.preventDefault()
         var user_name= '{{current_user.name}}'
@@ -71,11 +122,65 @@ $( 'h1').remove()
         socket.emit( 'group_message', {
             name : user_name,
             message : message,
-            room: 'rtyfgds',
+            room_id: '{{room.unique_id}}',
             id: socket.id
         })
        $( "input.message" ).val('').focus()
+
+
         })
+         socket.on('Joined', function(msg){
+         console.log('vime' );
+ vid.currentTime = msg.time;
+console.log(vid.currentTime );
+})
+ socket.emit( 'watch_movie', {
+           movie_id: '{{movie.public_id}}',
+       room_id: '{{room.unique_id}}'
+        })
+
+    var vid = document.getElementById("myVideo");
+
+ socket.on('Watch', function(msg){
+console.log(msg.host);
+    var currentTime = vid.currentTime;
+
+ $('#myVideo').on('play', function(e) {
+     console.log(vid.currentTime);
+   socket.emit( 'get_time', {
+           movie_id: msg.movie_id,
+       room_id: msg.room_id,
+       current_time: vid.currentTime
+        })
+
+        });
+
+$('#myVideo').on('pause', function(e) {
+   socket.on('Watch', function(msg){
+
+   })
+})
+
+
+});
+
+const videoGrid=document.getElementById("video-grid");
+const Vchat=document.createElement("video");
+Vchat.muted= true
+
+navigator.mediaDevices.getUserMedia({ video: true,
+audio: true }).then(stream => {
+addVideoStream(Vchat, stream)
+})
+
+
+function addVideoStream(video, stream){
+video.srcObject = stream
+video.addEventListener('loadedmetadata', () => {
+video.play()
+})
+videoGrid.append(video)
+}
 
 
 
@@ -86,3 +191,20 @@ $( 'h1').remove()
     </body>
 
 
+
+<style>
+    socket.on('status_change', function(msg){
+connectToNewUser(msg.name, stream)
+})
+
+function  connectToNewUser(userId, stream){
+const call = myPeer.call(userId, stream)
+const video = document.createElement('video')
+call.on('stream', userVideoStream => {
+addVideoStream(video, userVideoStream)
+})
+call.on('close', () => {
+video.remove()
+})
+}
+</style>

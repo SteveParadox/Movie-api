@@ -165,6 +165,7 @@ def watch(movie_id, room):
             'message': 'Error... not found'
         }), 404
 
+
 @chat.route('/api/my/rooms', methods=['GET'])
 @cross_origin()
 @login_required
@@ -208,18 +209,52 @@ def on_connect():
     io.emit('resp', {'message': 'connected'})
 
 
+@io.on('online')
+def online(data):
+    friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
+
+    if friend:
+        print(friend.u_friend)
+        io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
+    elif current_user.name == data['name']:
+        print(current_user.name)
+        io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
+
+    else:
+        print('dick')
+        pass
+
+
 # join room
 @io.on("join_user")
 def on_new_user(data):
-    room = data['room']
-    print(data)
+    room = data['room_id']
     active_ = Room.query.filter_by(unique_id=room).first()
-    print(active_.unique_id)
-    name = current_user.name
     join_room(active_.unique_id)
-    io.emit("new_user",
-         {"name": name, 'room': active_.unique_id},
-         room=active_.unique_id, broadcast=True)
+
+
+@io.on('joined')
+def joined_room(data):
+    room=data['room_id']
+    active = Room.query.filter_by(unique_id=room).first()
+    io.emit('joined_room', {'username': data['name'], 'status': 'joined'}, room= active.unique_id, broadcast=True)
+
+# send message
+@io.on("group_message")
+def on_new_message(message):
+    room = message['room_id']
+    print(str(message))
+    active = Room.query.filter_by(unique_id=room).first()
+    if active:
+        io.emit('New_group_Message', {'message': f'New message from {message["name"]}'}, room=active.unique_id,
+                broadcast=True)
+        io.emit("New", {
+            "sender": message['name'],
+            "time": datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
+            "data": message['message'],
+        }, room=active.unique_id, broadcast=True)
+    else:
+        io.emit('New_group_Message', {'message': f'Room not found'})
 
 
 # leave room
@@ -232,7 +267,7 @@ def on_leave_room(data):
         close_room(active.unique_id)
         db.session.delete(active.unique_id)
         return redirect(url_for("api.home"))
-    leave_room(active.unique_id)
+    io.leave_room(active.unique_id)
     io.emit("Left_user", {"message": f"{name} has left the room"}, room=active.unique_id, broadcast=True)
     return redirect(url_for("api.home"))
 
@@ -244,7 +279,7 @@ def on_close_room(data):
     active = Room.query.filter_by(host=current_user.name) \
         .filter_by(admin=True) \
         .filter_by(unique_id=room).first()
-    close_room(active.unique_id)
+    io.close_room(active.unique_id)
     db.session.delete(active.unique_id)
     return redirect(url_for("api.home"))
 
@@ -255,18 +290,39 @@ def on_video_stream(data):
     room = data['room_id']
     movie = data['movie_id']
     active = Room.query.filter_by(unique_id=room).first()
+    movies = Movie.query.filter_by(public_id=movie).first()
     r_activities = Room_Activities(activity=active)
-    r_activities.movie = movie
+    r_activities.movie = movies.name
     db.session.add(r_activities)
     db.session.commit()
     host = active.host
-    movie_ = Movie.query.filter_by(public_id=movie).first()
+    movie_ = Room_Activities.query.filter_by(activity=active).filter_by(movie=movies.name).first()
     io.emit("Watch", {
         "host": host,
-        "movie": movie_.movies,
+        'movie': movie_.movie,
+        'movie_id': movie,
+        'room_id': room,
         'room': active.unique_id
     }, room=active.unique_id, broacast=True)
 
+
+@io.on('get_time')
+def get_time_(data):
+    room = data['room_id']
+    movie = data['movie_id']
+    active = Room.query.filter_by(unique_id=room).first()
+    movies = Movie.query.filter_by(public_id=movie).first()
+    r_activities = Room_Activities(activity=active)
+    r_activities.movie = movies.name
+    print(f"time is {data['current_time']}")
+    r_activities.vid_time = data['current_time']
+    db.session.commit()
+    print(r_activities.vid_time)
+    io.emit("Joined", {
+        'movie_id': movie,
+        'room_id': room,
+        'time': r_activities.vid_time
+    }, room=active.unique_id, broacast=True)
 
 
 @io.on('paused')
@@ -290,28 +346,10 @@ def paused(data):
         pass
 
 
-# send message
-@io.on("group_message")
-def on_new_message(message):
-    room = message['room']
-    print(str(message))
-    active = Room.query.filter_by(unique_id=room).first()
-    if not active:
-        io.emit('New_group_Message', {'message': f'New message from {message["name"]}'}, broadcast=True)
-        io.emit("New", {
-            "sender": message['name'],
-            "time": datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y"),
-            "data": message['message'],
-        },  broadcast=True)
-    else:
-        io.emit('New_group_Message', {'message': f'Room not found'})
-
-
-
 @io.on('disconnect')
 def disconnect():
     io.emit("disconnected",
-         {"message": 'Disconnected'})
+            {"message": 'Disconnected'})
 
 
 @io.on_error(namespace='/room')
@@ -319,25 +357,11 @@ def chat_error_handler(e):
     print('An error has occurred: ' + str(e))
 
 
-@io.on('online')
-def online(data):
-    io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
 
 
 @io.on("offline")
 def offline(data):
-    active = []
-    friends = Friend.query.filter_by(get=current_user).all()
-    friend_schema = FriendSchema(many=True)
-    result = friend_schema.dump(friends)
-    for value in result:
-        for i, v in value.items():
-            if i == 'u_friend':
-                active.append(v)
-    for f in active:
-        if data['data'] in f:
-            online_friend.remove(f)
-    emit('status_change', {'username': online_friend, 'status': 'offline'}, broadcast=True)
+    emit('status_offline', {'username': data['name'], 'status': 'offline'}, broadcast=True)
 
 
 @io.on("video_chat", namespace='/chat')

@@ -10,8 +10,10 @@
     <p>Online friends</p>
 
 <div class="user-wrapper" ></div>
-    <video class="vid"></video>
+
 </div>
+
+
 <div class="col-sm-8" style="border: 2px solid black;">
     <div id="nomsg">
         <h1 style="color: #ccc">No message Yet</h1>
@@ -19,6 +21,7 @@
          <div class="msg-wrapper"></div>
     </div>
 </div>
+
 <div class="col-sm-8">
     <form action="" method="POST" >
         <div class="form-group">
@@ -30,7 +33,7 @@
         <button type="submit" class="btn btn-success">Send</button>
     </form>
 </div>
-
+<div id="videoWrapper"></div>
 <!--var socket = io.connect( "http://127.0.0.1:5000/chat/" + {{room}})-->
                                          <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
@@ -56,8 +59,9 @@
        movie: '2d6df003c6b69cf3.mp4'
        })
        socket.on('Watch', function(msg){
-$( 'video.vid').append( '<source >/static/'+msg.movie+'</source>')
-
+$("#videoWrapper").append($("<video id='myVideo' />"));
+$("#myVideo").attr('src', msg.movie);
+    console.log(msg.movie);
      })
     socket.on('New_group_Message', function(msg){
   alert(msg.message);
@@ -95,3 +99,12 @@ $( 'h1').remove()
 
     </script>
 
+socket.emit('watch_movie',{
+       movie_id: '{{movie.public_id}}',
+       room_id: '{{room.unique_id}}'
+       })
+       socket.on('Watch', function(msg){
+$("#videoWrapper").append($("<video id='myVideo' />"));
+$("#myVideo").attr('src', '/static/movies/'+msg.movie);
+    console.log(msg.movie);
+     })
