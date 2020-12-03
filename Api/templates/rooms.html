@@ -64,7 +64,7 @@
 
 
 
-    var socket = io.connect( 'http://' + document.domain + ':' + location.port)
+    var socket = io.connect( 'https://' + document.domain + ':' + location.port)
     console.log(socket);
     socket.on("connect", function(){
      socket.emit( "joined", {
