@@ -20,12 +20,15 @@ def home():
         name = current_user.name
         profile = current_user.profile
         email = current_user.email
+        friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
+        friend = len(friends)
         return jsonify({
             "data": result,
             "user_id": id,
             "user_name": name,
             'user_image': profile,
-            "email": email
+            "email": email,
+            'friends': friend
         }), 200
     return jsonify({
         "data": result,
@@ -168,7 +171,7 @@ def sci_fi():
 @api.route('/api/children', methods=['GET'])
 @cross_origin()
 def children():
-    movies = Movie.query.filter_by(genre='para-normal').all()
+    movies = Movie.query.filter_by(genre='Children').all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
     return jsonify({
@@ -181,7 +184,8 @@ def children():
 @cross_origin()
 def search():
     data = request.get_json()
-    movie_name = Movie.query.filter_by(name=data['name']).all()
+    print(str(data['name']).lower())
+    movie_name = Movie.query.filter(str(Movie.name).lower() == str(data['name']).lower()).all()
     if not movie_name:
         movie_name = Movie.query.filter_by(genre=data['name']).all()
         if not movie_name:
@@ -283,7 +287,7 @@ def choice():
                                      'overview': z.description})
             random.shuffle(suggested_movies)
     return jsonify({
-        "preference": suggested_movies
+        "data": suggested_movies
     })
 
 
@@ -309,7 +313,7 @@ def loved_movies():
                       'overview': movie.description,
                       'image': movie.poster})
     return jsonify({
-        'loved': t
+        'data': t
     })
 
 
@@ -358,14 +362,19 @@ def i_and_my_friend(name):
     return jsonify({"message": f"{name} not registered"})
 
 
-@api.route('/api/trending')
-def trending():
-    pass
-
-
 @api.route('/api/popular')
 @cross_origin()
 def popular():
+    movies = Movie.query.order_by(Movie.review.desc()).all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        "data": result,
+    }), 200
+
+@api.route('/api/trending')
+@cross_origin()
+def trending():
     movies = Movie.query.order_by(Movie.popular.desc()).all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
