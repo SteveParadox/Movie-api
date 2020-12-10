@@ -98,10 +98,10 @@ position: absolute;
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-     var socket = io.connect( 'http://' + document.domain + ':' + location.port)
+     var socket = io.connect( 'https://' + document.domain + ':' + location.port)
 
       socket.on('status_change', function(data) {
-      console.log('http://' + document.domain + ':' + location.port)
+      console.log('https://' + document.domain + ':' + location.port)
         console.log('Status changed: ', data)
     });
     socket.emit( "online", {
