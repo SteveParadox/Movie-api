@@ -52,3 +52,4 @@ textblob==0.15.1
 shortuuid==0.5.0
 IMDbPY==6.8
 eventlet==0.29.1
+cloudinary==1.23.0
