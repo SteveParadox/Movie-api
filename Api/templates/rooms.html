@@ -45,9 +45,12 @@
     </form>
 </div>
 <div >
-    <video id="myVideo" autoplay controls >
-        <source src="/static/movies/{{movie.movies}}">
-    </video>
+  
+    <video id="myVideo" autoplay controls poster="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie.name}}.jpg">
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie.name}}" type="video/webm"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie.name}}" type="video/mp4"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/name}}" type="video/ogg"/>
+</video>
     <p>{{movie.name}}</p>
 <p>{{movie.description}}</p>
 
