@@ -108,10 +108,10 @@ def crt_room(movie):
     return redirect(url_for('raw.watching', movie=movie.name, room=created_room))
 
 
-@raw.route('/watch/<movie>/in/room/<string:room>', methods=['GET', 'POST'])
+@raw.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
 @login_required
-def watching(movie, room):
-    movie = Movie.query.filter_by(name=movie).first()
+def watching(movie_id, room):
+    movie = Movie.query.filter_by(public_id=movie_id).first()
     room = Room.query.filter_by(unique_id=room).first()
     return render_template('rooms.html', movie=movie, room=room)
 
