@@ -311,10 +311,7 @@ def on_video_stream(data):
 @io.on('send_invite')
 def invite(data):
     friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
-    if friend:
-        io.emit('Invited', {'data': data['link'], 'name': data['name'], 'movie': data['movie']}, broadcast=True)
-    else:
-        pass
+    io.emit('Invited', {'data': data['link'], 'name': data['name'], 'movie': data['movie']}, broadcast=True)
 
 @io.on('get_time')
 def get_time_(data):
