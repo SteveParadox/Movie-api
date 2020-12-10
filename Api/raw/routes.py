@@ -105,7 +105,7 @@ def crt_room(movie):
     room.admin = True
     db.session.add(room)
     db.session.commit()
-    return redirect(url_for('raw.watching', movie=movie.name, room=created_room))
+    return redirect(url_for('raw.watching', movie_id=movie.public_id, room=created_room))
 
 
 @raw.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
