@@ -34,7 +34,7 @@ h1 {
   <br>
   {{movies.review}}
 
-  <img alt="" height="400" width='300' src="{{  url_for('static', filename= 'movies/' + movies.poster) }}">
+  <img alt="" height="400" width='300' src="https://res.cloudinary.com/dc1qkmsr0/image/upload/{{movies.name}}.jpg">
 {%endfor%}
 {%endblock content%}
 </body>
@@ -56,7 +56,7 @@ welcome  <b>{{current_user.name}}</b>, Stream your favourite movies &nbsp;&nbsp;
                                 <div class="blog-box">
                                     <div class="post-media">
                                         <a href="single.html" title="">
-                                            <img alt="" height="400" width='300' src="{{  url_for('static', filename= 'movies/' + movie6.poster) }}" class="img-fluid">
+                                            <img alt="" height="400" width='300' src="https://res.cloudinary.com/dc1qkmsr0/image/upload/{{movie6.name}}.jpg" class="img-fluid">
 
                                             <div class="hovereffect">
                                                 <span></span>
