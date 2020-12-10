@@ -134,9 +134,23 @@ def upload_movie():
         movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name
+
+        Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
+                              chunk_size=6000000,
+                              public_id=str(dict_movie['original_title']),
+                              overwrite=True,
+                              eager=[
+                                  {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
+                                  {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
+                                   "audio_codec": "none"}],
+                              eager_async=True,
+                              notification_url="https://mysite.example.com/notify_endpoint",
+                              resource_type="image")
+
+
         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), movie_name)}",
                               chunk_size=6000000,
-                              public_id=movie_name,
+                              public_id=str(dict_movie['original_title']),
                               overwrite=True,
                               eager=[
                                   {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
