@@ -51,10 +51,12 @@ right: -12rem;
 </div>
 <section class="section">
 
-                                         <video class="VideoCard" autoplay controls height="450" width="1340" >
-	 <source src="{{ url_for('static', filename= 'movies/' + movie.movies) }}" type="video/mp4">
 
- </video>
+    <video class="VideoCard" autoplay controls height="450" width="1340" poster="https://res.cloudinary.com/demo/video/upload/{{movie.name}}">
+  <source src="https://res.cloudinary.com/demo/video/upload/{{movie.name}}" type="video/webm"/>
+  <source src="https://res.cloudinary.com/demo/video/upload/{{movie.name}}" type="video/mp4"/>
+  <source src="https://res.cloudinary.com/demo/video/upload/name}}" type="video/ogg"/>
+</video>
 
             <div class="container">
 
