@@ -107,7 +107,7 @@ socket.emit( "offline", {
 var name = '{{movie.name}}'
  socket.emit( 'send_invite', {
 
-      link:  'http://' + document.domain + ':' + location.port + '/watch/' + name + '/in/room/{{room.unique_id}}',
+      link:  'https://' + document.domain + ':' + location.port + '/watch/' + name + '/in/room/{{room.unique_id}}',
       name: '{{current_user.name}}',
       movie: '{{movie.name}}'
         })
