@@ -104,10 +104,10 @@ socket.emit( "offline", {
         })
 
  $('#invite').on('click', function(e) {
-var name = '{{movie.name}}'
+
  socket.emit( 'send_invite', {
 
-      link:  'https://' + document.domain + ':' + location.port + '/watch/' + name + '/in/room/{{room.unique_id}}',
+      link:  'https://' + document.domain + ':' + location.port + '/watch/{{movie.public_id}}/in/room/{{room.unique_id}}',
       name: '{{current_user.name}}',
       movie: '{{movie.name}}'
         })
