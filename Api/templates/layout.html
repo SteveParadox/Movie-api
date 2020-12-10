@@ -45,8 +45,27 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
 </head>
     <body >
+
+<style>
+
+        Movie {
+
+        }
+    </style>
+<div style="
+
+position: absolute;
+    width: 400px;
+    left: 31%;
+    height: 300px;
+    border: 3px solid purple;
+    background: #fff;
+    border-radius: 1rem;
+    padding: 3px 48px;" class="Movie" ></div>
+
 
 
 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -75,22 +94,34 @@
 
 
 {% if current_user.is_authenticated%}
-    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-    var socket = io();
+     var socket = io.connect( 'http://' + document.domain + ':' + location.port)
 
       socket.on('status_change', function(data) {
+      console.log('http://' + document.domain + ':' + location.port)
         console.log('Status changed: ', data)
     });
     socket.emit( "online", {
         name : '{{current_user.name}}'
 
     })
+socket.on('Invited', function(msg){
+console.log(msg.data)
+ $('div.Movie').append( '<div style="height: 300px;">'+msg.name+' invited you to watch '+msg.movie+' <br> <a class="btn btn-success" href= '+msg.data+' >Accept!</a> </div>')
+
+	$('div.Movie').css.display ='block';
+
+ })
 
 </script>
 
     {% endif %}
 </body>
+
+
 
 </html>
 
