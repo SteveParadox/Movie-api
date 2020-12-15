@@ -8,24 +8,41 @@
 
 ## How-to
 
+
+##For local Host
 **Install packages with**
 ```gitignore
 $ pip3 install -r requirements.txt
 ```
 
-**For local Host**
+
 ```
 $ python3 run.py
  on terminal 
 will run on  http://localhost:5000/
 ```
 
-**Hosted on:**
+##Hosted on:
 ```
 $ movie-stream-api.herokuapp.com
 ```
 
+**fetching images from storage**
 ```
+$ <img src="https://res.cloudinary.com/dc1qkmsr0/image/upload/movie name.jpg"
+```
+**fetching movies from storage**
+```
+$ <video poster="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name.jpg">
+ <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/webm"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/mp4"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/ogg"/>
+</video>
+
+```
+**Note**
+```
+All data fetched from the storage must be in the database except it returns empty
 Database tables can be found in models.py
 ```
 
