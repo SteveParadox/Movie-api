@@ -29,14 +29,14 @@ $ movie-stream-api.herokuapp.com
 
 **fetching images from storage**
 ```
-$ <img src="https://res.cloudinary.com/dc1qkmsr0/image/upload/movie name.jpg"
+$ <img src="https://res.cloudinary.com/dc1qkmsr0/image/upload/{{movie name}}.jpg"
 ```
 **fetching movies from storage**
 ```
-$ <video poster="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name.jpg">
- <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/webm"/>
-  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/mp4"/>
-  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name" type="video/ogg"/>
+$ <video poster="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie name}}.jpg">
+ <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie name}}" type="video/webm"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie name}}" type="video/mp4"/>
+  <source src="https://res.cloudinary.com/dc1qkmsr0/video/upload/{{movie name}}" type="video/ogg"/>
 </video>
 
 ```
