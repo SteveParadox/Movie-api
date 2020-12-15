@@ -1,4 +1,35 @@
-# Movie Api
+# FILBA Api
+- Front-end Framework: **React, React-dom**
+- Front-end Ajax communication: **axios, socket.io-client**
+- Front-end Web RWD Design:
+- Back-end: **Python-Flask**
+- Database: **SQLITE, POSTGRESQL**
+- Bundle: 
+
+## How-to
+
+**Install packages with**
+```gitignore
+$ pip3 install -r requirements.txt
+```
+
+**For local Host**
+```
+$ python3 run.py
+ on terminal 
+will run on  http://localhost:5000/
+```
+
+**Hosted on:**
+```
+$ movie-stream-api.herokuapp.com
+```
+
+```
+Database tables can be found in models.py
+```
+
+
 
 **Routes**
 
@@ -20,7 +51,6 @@
 
 `/api/dislike/movie/<string:u_id>, method=post` : thumbs down a movie
 
-
 `/api/add/friend/<string:name>, method=post` : adding friend
 
 `/api/my/friends` : list of current user's friends
@@ -33,9 +63,9 @@
 
 `/api/my/rooms/delete/<string:room_id>, method=post` : current user deleting a room
 
-`/api/choice`: getting/analysing movies based on user's registered genre
+`/api/choice`: getting movie based on user's registered genre
 
-`/api/loved/movies`: getting/analysing  movie based on movies a user likes
+`/api/loved/movies`: getting movie based on movies a user likes
 
 `/api/user/profile` : user profile
 
@@ -49,9 +79,11 @@
 
 `/api/popular`: getting popular movies
 
-`/api/add/list/<string:movie_id> method=post`: add a movie to current_user's local list for later
+`/api/trending`: getting trending movies
 
-`/api/my/list`: list of all current user's locally stored movies
+`/api/add/list/<string:movie_id> method=post`: add a movie to current_user's watchlist
+
+`/api/my/list`: list of all current user's stored movies
 
 `/api/action`: list of all action movies
 
@@ -79,3 +111,34 @@
 
 `/api/children`: list of all children movies
 
+# Socket Routes
+
+**on**
+```hgignore
+$ send_invite: host of the room invites friends
+```
+**emits**
+```hgignore
+$ Invited: 'data' the link of the room, the host 'name' and 'movie' watched in the room
+```
+
+**on**
+```
+$ join_user: gets the room id and adds the invited user to the room
+```
+**emits**
+Nothing
+
+**on**
+```
+$ group_message: getting the 'name', 'room_id' and 'message' a user typed
+```
+
+**emits**
+```
+$ New_group_Message: An alert 'message' to the members of the room 
+```
+**emits**
+```
+$ New: sends the 'sender' of the message, 'time' message was sent, message 'data' that was sent
+```
