@@ -42,8 +42,9 @@ $ <video poster="https://res.cloudinary.com/dc1qkmsr0/video/upload/movie name.jp
 ```
 **Note**
 ```
-All data fetched from the storage must be in the database except it returns empty
-Database tables can be found in models.py
+$ All data fetched from the storage must be in the database except it returns empty
+$ Database tables can be found in models.py
+$ movie name is the name of the movie in database
 ```
 
 
