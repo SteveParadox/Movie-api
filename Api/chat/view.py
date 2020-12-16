@@ -226,7 +226,7 @@ def online(data):
         pass
 
 
-# join room
+# joining room
 @io.on("join_user")
 def on_new_user(data):
     room = data['room_id']
@@ -242,7 +242,7 @@ def joined_room(data):
             room=active.unique_id, broadcast=True)
 
 
-# send message
+# send message to joined room
 @io.on("group_message")
 def on_new_message(message):
     room = message['room_id']
@@ -311,7 +311,9 @@ def on_video_stream(data):
 @io.on('send_invite')
 def invite(data):
     friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
+
     io.emit('Invited', {'data': data['link'], 'name': data['name'], 'movie': data['movie']}, broadcast=True)
+
 
 @io.on('get_time')
 def get_time_(data):

@@ -26,13 +26,15 @@ def home():
             "data": result,
             "user_id": id,
             "user_name": name,
-            'user_image': profile,
+            'user_image': name,
             "email": email,
-            'friends': friend
+            'friends': friend,
+            'logged in': True
         }), 200
     return jsonify({
         "data": result,
-        "message": "user not logged in"
+        "message": "user not logged in",
+        'logged in': False
     })
 
 
@@ -193,7 +195,7 @@ def search():
             if not movie_name:
                 return jsonify({
                     "message": " Could not find Name"
-        }), 404
+                }), 404
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movie_name)
     return jsonify({
@@ -280,8 +282,6 @@ def choice():
 
         for z in movie:
             suggested_movies.append({'name': z.name,
-                                     'movie': z.movies,
-                                     'image': z.poster,
                                      'id': z.public_id,
                                      "genre": z.genre,
                                      'overview': z.description})
@@ -307,11 +307,10 @@ def loved_movies():
         # get movies related to liked movies
         for movie in movies:
             t.append({'name': movie.name,
-                      'movie': movie.movies,
                       'genre': movie.genre,
                       'id': movie.public_id,
                       'overview': movie.description,
-                      'image': movie.poster})
+                      })
     return jsonify({
         'data': t
     })
@@ -342,10 +341,9 @@ def i_and_my_friend(name):
                 movie = Movie.query.filter_by(genre=f'{genres[0].upper() + genres[1:]}').all()
 
                 for i in movie:
-                    suggested_movies.append({'name': i.name,
+                    suggested_movies.append({
+                                            'name': i.name,
                                              'id': i.public_id,
-                                             'movie': i.movies,
-                                             'image': i.poster,
                                              'genre': i.genre,
                                              'runtime ': i.runtime,
                                              "overview": i.description
@@ -371,6 +369,7 @@ def popular():
     return jsonify({
         "data": result,
     }), 200
+
 
 @api.route('/api/trending')
 @cross_origin()
@@ -410,7 +409,7 @@ def my_list():
                          'genre': movie.genre,
                          'id': movie.public_id,
                          'overview': movie.description,
-                         'image': movie.poster})
+                         })
     return jsonify({
         "data": data,
     }), 200

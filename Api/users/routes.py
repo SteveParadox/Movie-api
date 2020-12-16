@@ -1,4 +1,5 @@
 import datetime
+import os
 
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
@@ -6,7 +7,8 @@ from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchem
     Exciting, ExcitingSchema
 from Api import db, bcrypt
 from flask_cors import cross_origin
-
+import cloudinary as Cloud
+import cloudinary.uploader
 from Api.utils import save_img
 
 users = Blueprint('users', __name__)
@@ -109,7 +111,7 @@ def genre():
         user.drama = drama
         user.thriller = thriller
         user.children = children
-        user.crime=crime
+        user.crime = crime
         user.family = family
         db.session.add(user)
         db.session.commit()
@@ -157,25 +159,46 @@ def logout():
 def profile():
     try:
         profile_pics = save_img(request.files['picture'])
+        user_photo = str(profile_pics).partition('.')
+        if user_photo[-1] == 'jpg':
+            Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
+                                  chunk_size=6000000,
+                                  public_id=current_user.name,
+                                  overwrite=True,
+                                  eager=[
+                                      {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
+                                      {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
+                                       "audio_codec": "none"}],
+                                  eager_async=True,
+                                  notification_url="https://mysite.example.com/notify_endpoint",
+                                  resource_type="image")
+        else:
+            Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
+                                  chunk_size=6000000,
+                                  public_id=current_user.name,
+                                  overwrite=True,
+                                  eager=[
+                                      {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
+                                      {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
+                                       "audio_codec": "none"}],
+                                  eager_async=True,
+                                  notification_url="https://mysite.example.com/notify_endpoint",
+                                  resource_type="video")
         current_user.profile = profile_pics
         db.session.commit()
     except:
         pass
     name = current_user.name
     email = current_user.email
-    dob= current_user.dob
-    try:
-        image_file = url_for('static', filename='movies/' + current_user.profile)
-    except:
-        pass
+    dob = current_user.dob
     friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
     total = len(friends)
 
     return jsonify({
         "name": name,
         'email': email,
-        "dob" : dob,
-        #'image': image_file,
+        "dob": dob,
+        # 'image' : getting cloudinary link / current user's name,
         'friends': total
     })
 
@@ -188,6 +211,11 @@ def upload_story():
     data = request.get_json()
     file = request.files['story']
     socials = Activities(social=current_user)
+    try:
+        # add text as a table to the database
+        socials.text= data['text']
+    except:
+        pass
     socials.story = data['name']
     socials.story_data = file.read()
     socials.time_uploaded = datetime.datetime.now()
@@ -252,7 +280,6 @@ def s():
     datas_schema = ExcitingSchema(many=True)
     result = datas_schema.dump(pair)
     return jsonify(result)
-
 
 
 # deleting all users
