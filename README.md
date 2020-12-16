@@ -6,21 +6,8 @@
 - Database: **SQLITE, POSTGRESQL**
 - Bundle: 
 
-## How-to
 
-
-##For local Host
-**Install packages with**
-```gitignore
-$ pip3 install -r requirements.txt
-```
-
-
-```
-$ python3 run.py
- on terminal 
-will run on  http://localhost:5000/
-```
+# Back-end
 
 ##Hosted on:
 ```
