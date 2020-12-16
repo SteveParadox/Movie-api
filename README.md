@@ -1,4 +1,4 @@
-# FILBA Api
+# FILBA
 - Front-end Framework: **React, React-dom**
 - Front-end Ajax communication: **axios, socket.io-client**
 - Front-end Web RWD Design:
