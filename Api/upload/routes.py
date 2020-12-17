@@ -171,14 +171,15 @@ def upload_movie():
     return render_template('_.html', form=form, c=c)
 
 
-class Series_(FlaskForm):
 
+class Series_(FlaskForm):
     name = StringField(validators=[DataRequired()])
     submit = SubmitField('Submit ')
 
+
 @upload.route('/upload/series', methods=['GET', 'POST'])
 def upload_series():
-    form = Movies_()
+    form = Series_()
     id = ''
     if form.validate_on_submit():
         name = str(form.name.data)
@@ -189,23 +190,12 @@ def upload_series():
         # getting information
         series = ia.get_movie(id)
         title = series.data['title']
-        #writer = series.data['writer']
+        # writer = series.data['writer']
         total_seasons = series.data['number of seasons']
         runtimes = series.data['runtimes'][0]
         genre = series.data['genres']
         plot = series.data['plot outline']
         first_aired = series.data['year']
-        ia.update(series, 'episodes')
-        episodes = series.data['episodes']
-        b = []
-        for i in episodes.keys():
-
-            for j in episodes[i]:
-                title = episodes[i][j]['title']
-                b.append(title)
-
-
-        episodes_title = b
         series = Series()
         series.name = title
         series.overview = plot
@@ -214,8 +204,6 @@ def upload_series():
         series.public_id = str(uuid.uuid4())
         series.genre = genre
         series.total_seasons = total_seasons
-
-        series.episode = episodes_title
         db.session.add(series)
         db.session.commit()
 
@@ -224,7 +212,71 @@ def upload_series():
         c = Series.query.all()
     except:
         pass
-    return render_template('series.html',form=form, c=c)
+    return render_template('series.html', form=form, c=c)
+
+
+
+@upload.route('/upload/season/<string:series_name>', methods=['GET', 'POST'])
+def upload_season(series_name):
+    series_ = Series.query.filter_by(name=series_name).first()
+    id = ''
+    name = str(series_.name)
+    search = ia.search_movie(name)
+    for i in range(0, 1):
+        # getting the id
+        id = search[i].movieID
+    # getting information
+    series = ia.get_movie(id)
+    ia.update(series, 'episodes')
+    episodes = series.data['episodes']
+    for season_list in episodes.keys():
+        s_ep = Series_Season(season=series)
+        s_ep.season = season_list
+        db.session.add(s_ep)
+        db.session.commit()
+    return jsonify({
+
+        "message": 'Added'
+    })
+
+
+class Episode(FlaskForm):
+    movie = FileField('Video', validators=[FileAllowed(['mp4', 'webm', 'hd'])])
+    name = StringField(validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+@upload.route('/upload/episode/<string:series_name>/<string:season_id>', methods=['GET', 'POST'])
+def upload_episode(series_name, season_id):
+    series_ = Series.query.filter_by(name=series_name).first()
+    s_season= Series_Season.query.filter_by(season=series_).filter_by(season_id=season_id).first()
+    form= Episode()
+    if form.validate_on_submit():
+        episode_number = int(form.name.data)
+        id = ''
+        name = str(series_.name)
+        search = ia.search_movie(name)
+        for i in range(0, 1):
+            # getting the id
+            id = search[i].movieID
+        # getting information
+        series = ia.get_movie(id)
+        ia.update(series, 'episodes')
+        episodes = series.data['episodes']
+        for episode_list in episodes:
+            if episode_number in episodes[episode_list]:
+                episode__ = Series_Episodes(episodes=s_season)
+                episode__.episode_name =  episodes[episode_list]['name']
+                episode__.movies= save_img(form.movie.data)
+                episode__.movie_data = (request.files['movie']).read()
+                db.session.add(episode__)
+                db.session.commit()
+
+    return jsonify({
+
+        'message': 'Added'
+    })
+
 
 
 @upload.route('/series')
