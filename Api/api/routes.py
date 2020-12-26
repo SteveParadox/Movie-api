@@ -38,142 +38,10 @@ def home():
     })
 
 
-@api.route('/api/action', methods=['GET'])
+@api.route('/api/genre/<string:genre>', methods=['GET'])
 @cross_origin()
-def action():
-    movies = Movie.query.filter_by(genre='Action').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/comedy', methods=['GET'])
-@cross_origin()
-def comedy():
-    movies = Movie.query.filter_by(genre='Comedy').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/horror', methods=['GET'])
-@cross_origin()
-def horror():
-    movies = Movie.query.filter_by(genre='Horror').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/documentary', methods=['GET'])
-@cross_origin()
-def documentary():
-    movies = Movie.query.filter_by(genre='Documentary').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/thriller', methods=['GET'])
-@cross_origin()
-def thriller():
-    movies = Movie.query.filter_by(genre='Thriller').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/crime', methods=['GET'])
-@cross_origin()
-def crime():
-    movies = Movie.query.filter_by(genre='Crime').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/animation', methods=['GET'])
-@cross_origin()
-def animation():
-    movies = Movie.query.filter_by(genre='Animation').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/erotic', methods=['GET'])
-@cross_origin()
-def erotic():
-    movies = Movie.query.filter_by(genre='Erotic').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/romance', methods=['GET'])
-@cross_origin()
-def romance():
-    movies = Movie.query.filter_by(genre='Romance').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/mystery', methods=['GET'])
-@cross_origin()
-def mystery():
-    movies = Movie.query.filter_by(genre='Mystery').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/fantasy', methods=['GET'])
-@cross_origin()
-def fantasy():
-    movies = Movie.query.filter_by(genre='Fantasy').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/sci-fi', methods=['GET'])
-@cross_origin()
-def sci_fi():
-    movies = Movie.query.filter_by(genre='Science Fiction').all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
-    return jsonify({
-        "data": result,
-    }), 200
-
-
-@api.route('/api/children', methods=['GET'])
-@cross_origin()
-def children():
-    movies = Movie.query.filter_by(genre='Children').all()
+def genres(genre):
+    movies = Movie.query.filter_by(genre=f"{str(genre[0]).upper()+str(genre[1:]).lower()}").all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
     return jsonify({
@@ -226,6 +94,19 @@ def get_movie(u_id):
         return jsonify({
             'message': "could not load data"
         })
+
+
+@api.route('/api/similar/movie/<string:u_id>', methods=['GET'])
+@cross_origin()
+@login_required
+def similar_movie(u_id):
+    movie_name = Movie.query.filter_by(public_id=u_id).first()
+    movies = Movie.query.filter_by(genre=movie_name.genre).all()
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies)
+    return jsonify({
+        'data': result
+    }), 200
 
 
 # thumbs up a movie

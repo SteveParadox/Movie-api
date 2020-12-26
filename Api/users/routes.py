@@ -158,34 +158,54 @@ def logout():
 @login_required
 def profile():
     try:
-        profile_pics = save_img(request.files['picture'])
-        user_photo = str(profile_pics).partition('.')
-        if user_photo[-1] == 'jpg':
-            Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
-                                  chunk_size=6000000,
-                                  public_id=current_user.name,
-                                  overwrite=True,
-                                  eager=[
-                                      {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
-                                      {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
-                                       "audio_codec": "none"}],
-                                  eager_async=True,
-                                  notification_url="https://mysite.example.com/notify_endpoint",
-                                  resource_type="image")
-        else:
-            Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
-                                  chunk_size=6000000,
-                                  public_id=current_user.name,
-                                  overwrite=True,
-                                  eager=[
-                                      {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
-                                      {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
-                                       "audio_codec": "none"}],
-                                  eager_async=True,
-                                  notification_url="https://mysite.example.com/notify_endpoint",
-                                  resource_type="video")
-        current_user.profile = profile_pics
-        db.session.commit()
+        # changing profile name
+        data = request.get_json()
+        if data:
+            name = Users.query.filter_by(name=data['name']).first()
+            if name and name != current_user:
+                return jsonify({
+                    "message": "This name is already used by another user",
+
+                })
+            elif current_user.name == data['name']:
+                return jsonify({
+                    "message": "You are currently using this name",
+
+                })
+
+            else:
+                current_user.name = data['name']
+                db.session.commit()
+        # uploading photo
+        try:
+            profile_pics = save_img(request.files['picture'])
+            current_user.profile = profile_pics
+            db.session.commit()
+            user_photo = str(profile_pics).partition('.')
+            if user_photo[-1] == 'jpg' or user_photo[-1] == 'png':
+                Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
+                                      chunk_size=6000000,
+                                      public_id=current_user.name,
+                                      overwrite=True,
+                                      eager=[
+                                          {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
+                                          {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
+                                           "audio_codec": "none"}],
+                                      eager_async=True,
+                                      notification_url="https://mysite.example.com/notify_endpoint",
+                                      resource_type="image")
+                return jsonify({
+
+                    "message": 'Uploaded'
+                })
+            else:
+
+                return jsonify({
+
+                    "message": 'Only image extensions allowed'
+                })
+        except:
+            pass
     except:
         pass
     name = current_user.name
@@ -213,7 +233,7 @@ def upload_story():
     socials = Activities(social=current_user)
     try:
         # add text as a table to the database
-        socials.text= data['text']
+        socials.text = data['text']
     except:
         pass
     socials.story = data['name']

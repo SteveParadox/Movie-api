@@ -155,10 +155,10 @@ def watch(movie_id, room):
         return jsonify(
             {
 
-                "movie": movie.movies,
+
                 "movie name": movie.name,
                 'room': room.unique_id,
-                'image': movie.poster
+
             }
         )
     else:
@@ -201,6 +201,7 @@ def delete_room(room_id):
     )
 
 
+
 ## socket server
 ##########################################
 
@@ -222,7 +223,6 @@ def online(data):
         io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
 
     else:
-        print('dick')
         pass
 
 
