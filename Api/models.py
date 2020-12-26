@@ -67,8 +67,25 @@ class Series(db.Model):
     total_seasons = db.Column(db.Integer)
     first_aired_on = db.Column(db.String())
     writer = db.Column(db.JSON)
-    episode = db.Column(db.JSON)
     genre = db.Column(db.JSON)  # , dimensions=1))
+    thumbs_up = db.Column(db.Integer, default=0)
+    thumbs_down = db.Column(db.Integer, default=0)
+    season_list = db.relationship('Series_Season', backref='season', lazy=True)
+
+
+class Series_Season(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    season_id = db.Column(db.String())
+    name = db.Column(db.String())
+    episode = db.Column(db.String())
+    series_id = db.Column(db.Integer, db.ForeignKey('series.id'))
+    ep_list = db.relationship('Series_Episodes', backref='episodes', lazy=True)
+
+
+class Series_Episodes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    episode_name = db.Column(db.String())
+    overview = db.Column(db.String())
     movies = db.Column(db.String)
     movie_data = db.Column(db.LargeBinary)
     poster = db.Column(db.String)
@@ -76,6 +93,7 @@ class Series(db.Model):
     date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
     thumbs_up = db.Column(db.Integer, default=0)
     thumbs_down = db.Column(db.Integer, default=0)
+    series_season_id = db.Column(db.Integer, db.ForeignKey('series__season.id'))
 
 
 class Friend(db.Model):
@@ -145,7 +163,6 @@ class Room(db.Model):
     created = db.Column(db.DateTime, nullable=False, default=datetime.now)
     r_activity = db.relationship('Room_Activities', backref='activity', lazy=True)
 
-
     def __repr__(self):
         return f"Room('{self.unique_id}', '{self.host}', '{self.admin}')"
 
@@ -156,6 +173,7 @@ class Room_Activities(db.Model):
     vid_time = db.Column(db.String())
     room_id = db.Column(db.Integer, db.ForeignKey('room.id'))
 
+
 class FriendSchema(ModelSchema):
     class Meta:
         model = Friend
@@ -163,6 +181,8 @@ class FriendSchema(ModelSchema):
 
 friend_schema = FriendSchema
 friends_schema = FriendSchema(many=True)
+
+
 
 
 class StoreSchema(ModelSchema):
