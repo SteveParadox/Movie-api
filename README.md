@@ -42,7 +42,7 @@ $ movie name is the name of the movie in database
 
 `/api/login` : login to app
 
-`/api/select/genre, method=post` : select preferred movie genres
+`/api/select/genre, method=post` : register preferred movie genres
 
 `/api/logout, method=post` : logout from app
 
@@ -52,6 +52,10 @@ $ movie name is the name of the movie in database
 
 `/api/get/movie/<string:u_id>/` : route to selected movie
 
+`/api/genre/<string:genre>` : getting movies of an individual genre 
+
+`/api/similar/movie/<string:u_id>`: getting similar movies to a currently viewed movie
+
 `/api/like/movie/<string:u_id>, method=post` : thumbs up a movie
 
 `/api/dislike/movie/<string:u_id>, method=post` : thumbs down a movie
@@ -60,7 +64,7 @@ $ movie name is the name of the movie in database
 
 `/api/my/friends` : list of current user's friends
 
-`/api/create/room/for/<string:movie, method=post` : creating room for movie
+`/api/create/room/for/<string:movie>, method=post` : creating room for movie
 
 `/api/watch/<string:movie>/in/room/<string:room>` : watching movie in created room
 
@@ -90,31 +94,7 @@ $ movie name is the name of the movie in database
 
 `/api/my/list`: list of all current user's stored movies
 
-`/api/action`: list of all action movies
 
-`/api/comedy`: list of all comedy movies
-
-`/api/horror`: list of all horror movies
-
-`/api/documentary`: list of all documentary movies
-
-`/api/thriller`: list of all thriller movies
-
-`/api/crime`: list of all crime movies
-
-`/api/animation`: list of all animation movies
-
-`/api/erotic`: list of all erotic movies
-
-`/api/romance`: list of all romance movies
-
-`/api/mystery`: list of all mystery movies
-
-`/api/fantasy`: list of all fantasy movies
-
-`/api/sci-fi`: list of all science fiction movies
-
-`/api/children`: list of all children movies
 
 # Socket Routes
 
