@@ -255,3 +255,12 @@ class SeriesSchema(ModelSchema):
 
 serie_schema = SeriesSchema
 series_schema = SeriesSchema(many=True)
+
+
+class Series_SeasonSchema(ModelSchema):
+    class Meta:
+        model = Series_Season
+
+
+serie_season_schema = Series_SeasonSchema
+series_season_schema = Series_SeasonSchema(many=True)
