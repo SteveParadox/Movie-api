@@ -216,9 +216,11 @@ def upload_series():
 
 
 
-@upload.route('/upload/season/<string:series_name>', methods=['GET', 'POST'])
+
+@upload.route('/upload/series/<string:series_name>/season', methods=['GET', 'POST'])
 def upload_season(series_name):
     series_ = Series.query.filter_by(name=series_name).first()
+
     id = ''
     name = str(series_.name)
     search = ia.search_movie(name)
@@ -230,8 +232,8 @@ def upload_season(series_name):
     ia.update(series, 'episodes')
     episodes = series.data['episodes']
     for season_list in episodes.keys():
-        s_ep = Series_Season(season=series)
-        s_ep.season = season_list
+        s_ep = Series_Season(season=series_)
+        s_ep.season_id = season_list
         db.session.add(s_ep)
         db.session.commit()
     return jsonify({
@@ -242,17 +244,17 @@ def upload_season(series_name):
 
 class Episode(FlaskForm):
     movie = FileField('Video', validators=[FileAllowed(['mp4', 'webm', 'hd'])])
-    name = StringField(validators=[DataRequired()])
+    number = StringField(validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
-@upload.route('/upload/episode/<string:series_name>/<string:season_id>', methods=['GET', 'POST'])
-def upload_episode(series_name, season_id):
+@upload.route('/upload/series/<string:series_name>/season/<string:season_id>/episode/<int:ep_no>', methods=['GET', 'POST'])
+def upload_episode(series_name, season_id, ep_no):
     series_ = Series.query.filter_by(name=series_name).first()
-    s_season= Series_Season.query.filter_by(season=series_).filter_by(season_id=season_id).first()
-    form= Episode()
+    s_season = Series_Season.query.filter_by(season=series_).filter_by(season_id=season_id).first()
+    form = Episode()
     if form.validate_on_submit():
-        episode_number = int(form.name.data)
+        episode_number = int(form.number.data)
         id = ''
         name = str(series_.name)
         search = ia.search_movie(name)
@@ -263,25 +265,30 @@ def upload_episode(series_name, season_id):
         series = ia.get_movie(id)
         ia.update(series, 'episodes')
         episodes = series.data['episodes']
+        files = request.files['movie']
+        episodes_data={}
         for episode_list in episodes:
             if episode_number in episodes[episode_list]:
-                episode__ = Series_Episodes(episodes=s_season)
-                episode__.episode_name =  episodes[episode_list]['name']
-                episode__.movies= save_img(form.movie.data)
-                episode__.movie_data = (request.files['movie']).read()
-                db.session.add(episode__)
-                db.session.commit()
+                episodes_data.update({'name':episodes[episode_list]['name'], 'no': episodes[episode_list][ep_no]})
+        episode__ = Series_Episodes(episodes=s_season)
+        episode__.episode_name = episodes_data['name']
+        episode__.poster = episodes_data['no']
+        episode__.movies = save_img(form.movie.data)
+        episode__.movie_data = files.read()
+        db.session.add(episode__)
+        db.session.commit()
 
-    return jsonify({
+        return jsonify({
 
-        'message': 'Added'
-    })
-
-
-
+            'message': 'Added'
+        })
+    return render_template('episode.html', form=form)
 @upload.route('/series')
 def seri():
     series = Series.query.all()
     series_schema = SeriesSchema(many=True)
     result = series_schema.dump(series)
-    return jsonify({'data': result})
+    series_ = Series_Season.query.all()
+    series_season_schema = Series_SeasonSchema(many=True)
+    res = series_season_schema.dump(series_)
+    return jsonify({'data': result, 'season': res })
