@@ -9,7 +9,7 @@ from flask_wtf.file import FileAllowed
 from wtforms import FileField, StringField, SubmitField
 from wtforms.validators import DataRequired
 from Api import *
-from Api.models import Movie, Series, SeriesSchema
+from Api.models import Movie, Series, SeriesSchema, Series_Season, Series_Episodes, Series_SeasonSchema
 from Api.utils import save_img
 import requests
 try:
@@ -28,9 +28,9 @@ import cloudinary.uploader
 import cloudinary.api
 
 Cloud.config(
-    cloud_name = 'dc1qkmsr0',
-    api_key= '223398319444964',
-    api_secret= 'ZzoX3c3Y2mn2PiALJ8RgljfezuM'
+    cloud_name = 'du05mneox',
+    api_key= '371873492641178',
+    api_secret= 'MdVOWo1ZXyAO9OgLJZ1DokqPgQk'
 )
 
 
