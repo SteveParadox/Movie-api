@@ -12,6 +12,7 @@ from Api import *
 from Api.models import Movie, Series, SeriesSchema, Series_Season, Series_Episodes, Series_SeasonSchema
 from Api.utils import save_img
 import requests
+
 try:
     import imdb
 except ImportError:
@@ -21,19 +22,15 @@ try:
 except:
     pass
 
-
-
 import cloudinary as Cloud
 import cloudinary.uploader
 import cloudinary.api
 
 Cloud.config(
-    cloud_name = 'du05mneox',
-    api_key= '371873492641178',
-    api_secret= 'MdVOWo1ZXyAO9OgLJZ1DokqPgQk'
+    cloud_name='dc1qkmsr0',
+    api_key='223398319444964',
+    api_secret='ZzoX3c3Y2mn2PiALJ8RgljfezuM'
 )
-
-
 
 # creating instance of IMDb
 try:
@@ -134,8 +131,8 @@ def upload_movie():
         movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name
-
-        Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
+        '''
+         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
                               chunk_size=6000000,
                               public_id=str(dict_movie['original_title']),
                               overwrite=True,
@@ -146,7 +143,6 @@ def upload_movie():
                               eager_async=True,
                               notification_url="https://mysite.example.com/notify_endpoint",
                               resource_type="image")
-
 
         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), movie_name)}",
                               chunk_size=6000000,
@@ -159,6 +155,7 @@ def upload_movie():
                               eager_async=True,
                               notification_url="https://mysite.example.com/notify_endpoint",
                               resource_type="video")
+        '''
 
         movies.movie_data = video_file.read(CHUNK_SIZE)
         db.session.add(movies)
@@ -169,7 +166,6 @@ def upload_movie():
     except:
         pass
     return render_template('_.html', form=form, c=c)
-
 
 
 class Series_(FlaskForm):
@@ -190,14 +186,27 @@ def upload_series():
         # getting information
         series = ia.get_movie(id)
         title = series.data['title']
-        # writer = series.data['writer']
         total_seasons = series.data['number of seasons']
         runtimes = series.data['runtimes'][0]
         genre = series.data['genres']
         plot = series.data['plot outline']
         first_aired = series.data['year']
+        sound_mix = series.data['sound mix'][0]
+        aspect_ratio = series.data['aspect ratio']
+        rating = series.data['rating']
+        languages = series.data['languages']
+        kind = series.data['kind']
+        series_years = series.data['series years']
+        production_companies = series.data['production companies']
         series = Series()
         series.name = title
+        series.sound_mix = sound_mix
+        series.aspect_ratio = aspect_ratio
+        series.rating = rating
+        series.languages = languages
+        series.kind = kind
+        series.series_years = series_years
+        series.production_companies = production_companies
         series.overview = plot
         series.runtime = runtimes
         series.first_aired_on = first_aired
@@ -215,8 +224,6 @@ def upload_series():
     return render_template('series.html', form=form, c=c)
 
 
-
-
 @upload.route('/upload/series/<string:series_name>/season', methods=['GET', 'POST'])
 def upload_season(series_name):
     series_ = Series.query.filter_by(name=series_name).first()
@@ -229,11 +236,10 @@ def upload_season(series_name):
         id = search[i].movieID
     # getting information
     series = ia.get_movie(id)
-    ia.update(series, 'episodes')
-    episodes = series.data['episodes']
-    for season_list in episodes.keys():
-        s_ep = Series_Season(season=series_)
-        s_ep.season_id = season_list
+    episodes = series.data['seasons']
+    s_ep = Series_Season(season=series_)
+    for season_list in episodes:
+        s_ep.season_id = int(season_list)
         db.session.add(s_ep)
         db.session.commit()
     return jsonify({
@@ -267,9 +273,9 @@ def upload_episode(series_name, season_id, ep_no):
         episodes = series.data['episodes']
         files = request.files['movie']
         episodes_data={}
-        for episode_list in episodes:
-            if episode_number in episodes[episode_list]:
-                episodes_data.update({'name':episodes[episode_list]['name'], 'no': episodes[episode_list][ep_no]})
+        for episode_list in episodes.keys():
+            if episode_number in episodes[episode_list].keys():
+                episodes_data.update({'name':episodes[episode_list]['title'], 'no':episodes[episode_list][ep_no]})
         episode__ = Series_Episodes(episodes=s_season)
         episode__.episode_name = episodes_data['name']
         episode__.poster = episodes_data['no']
