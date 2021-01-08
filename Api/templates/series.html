@@ -10,6 +10,9 @@
   <form method="POST" action="" enctype="multipart/form-data" >
                                 {{ form.hidden_tag() }}
     {{ form.name }}
+{{ form.description }}
+{{ form.review }}
+{{ form.photo }}
 {{ form.submit }}
 </form>
 
@@ -18,12 +21,6 @@
     <br>
   <br>
   {{x.name}}
-  <br>
-  <br>
-{% for i in x.episode['data']%}
-  <br>
-  {{i}}
-  {% endfor %}
   <br>
   <br>
   {{x.review}}
