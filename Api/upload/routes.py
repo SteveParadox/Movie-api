@@ -201,7 +201,6 @@ def upload_series():
         languages = series.data['languages']
         kind = series.data['kind']
         series_years = series.data['series years']
-        production_companies = series.data['production companies']
         series = Series()
         series.name = title
         series.sound_mix = sound_mix
@@ -210,7 +209,6 @@ def upload_series():
         series.languages = languages
         series.kind = kind
         series.series_years = series_years
-        series.production_companies = production_companies
         series.overview = plot
         series.runtime = runtimes
         series.first_aired_on = first_aired
