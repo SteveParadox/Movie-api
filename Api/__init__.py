@@ -18,10 +18,7 @@ db = SQLAlchemy()
 ma = Marshmallow()
 bcrypt = Bcrypt()
 login_manager = LoginManager()
-try:
-    login_manager.login_view = 'raw.login_users'
-except:
-    login_manager.login_view = 'users.login'
+login_manager.login_view = 'users.login'
 login_manager.login_message = None
 io.manage_session= False
 login_manager.session_protection = "strong"
@@ -47,10 +44,12 @@ def create_app(config_class=Config):
     from .chat.view import chat
     from .raw.routes import raw
 
+
     app.register_blueprint(api)
     app.register_blueprint(raw)
     app.register_blueprint(users)
     app.register_blueprint(upload)
     app.register_blueprint(chat)
+
 
     return app
