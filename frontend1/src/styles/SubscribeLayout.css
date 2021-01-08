@@ -1,0 +1,119 @@
+/* Styles For the subscribe layout */
+.subscribelayout {
+  background: #242426;
+  width: 100%;
+  min-height: 320px;
+  color: white;
+  display: flex;
+}
+
+.subscribelayout > div {
+  width: 50%;
+  min-width: 250px;
+  height: 250px;
+  /* background: red;
+  border: 1px solid green; */
+}
+
+.form-part {
+  padding: 10px;
+  text-align: center;
+}
+
+.form-part > div {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#subscribe-tag {
+  font-size: 40px;
+  margin-top: 30px;
+}
+
+#subscribe-tag + p:first-of-type {
+  margin: 11px 0;
+  font-size: 22px;
+}
+
+.input-part {
+  border-radius: 22px;
+  padding: 7px 10px;
+  background: #373637;
+  width: 295px;
+  margin: 30px auto;
+}
+
+.input-part #email {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+}
+/* 
+.input-part .send {
+  position: relative;
+  top: 0;
+  left: 3px;
+} */
+
+/* The slide part */
+.carousel-container {
+  width: 50%;
+  height: 250px;
+}
+
+.rec-arrow {
+  background: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.rating {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+
+.rating div:nth-child(1) {
+  margin-right: 5px;
+}
+
+.rating img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+}
+
+.rating h3 {
+  font-size: 15px;
+}
+
+.rating .movie-top {
+  display: flex;
+  justify-content: space-between;
+}
+
+.rating .movie-title {
+  font-weight: bold;
+}
+
+.rating > div:nth-child(2) {
+  transform: translateY(5px);
+}
+
+@media screen and (max-width: 820px){
+  .subscribelayout {
+    display: block;
+  }
+  .subscribelayout > div {
+    width: 100%;
+  }
+  
+  .carousel-container {
+    width: 100%;
+    height: 900px;
+  }
+}

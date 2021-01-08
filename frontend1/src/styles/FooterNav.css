@@ -1,0 +1,19 @@
+/* Styles For FooterNav */
+.footernav {
+  font-size: 25px;
+  display: flex;
+  width: 50%;
+  justify-content: space-between;
+}
+
+@media screen and (max-width: 820px) {
+  .footernav {
+    display: block;
+    width: 100%;
+    font-size: 15.5px;
+    margin-bottom: 10px;
+  }
+  .footernav > p {
+    margin: 5px 0;
+  }
+}

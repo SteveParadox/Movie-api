@@ -1,0 +1,36 @@
+/* CSS For the footer */
+footer {
+  background: #16151a;
+  width: 100%;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.logo  {
+  font-size: 28px;
+  font-weight: bold;
+  margin-left: 18px;
+}
+
+.copyrights {
+  font-size: 19px;
+  margin-right: 18px;
+}
+
+@media screen and (max-width: 820px) {
+  footer {
+    display: block;
+    height: auto;
+    padding: 15px;
+  }
+  .logo {
+    margin: 30px 0;
+  }
+  .copyrights {
+    font-size: 14px;
+    margin: 15px 0 5px 0;
+  }
+}
