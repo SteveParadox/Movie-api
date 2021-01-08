@@ -21,6 +21,8 @@ def sign_up():
     data = request.get_json()
     name = data['name']
     dob = data['dob']
+    phone_no = data['phone_no']
+    country= data['country']
     email = data['email']
     password = data['password']
     user = Users.query.filter_by(email=email).first()
@@ -34,6 +36,8 @@ def sign_up():
         users.name = name
         users.dob = dob
         users.email = email
+        users.phone_no = phone_no
+        users.country= country
         users.password = hashed_password
         try:
             db.session.add(users)
