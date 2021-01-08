@@ -12,7 +12,6 @@ from Api import *
 from Api.models import Movie, Series, SeriesSchema, Series_Season, Series_Episodes, Series_SeasonSchema
 from Api.utils import save_img
 import requests
-
 try:
     import imdb
 except ImportError:
@@ -22,15 +21,19 @@ try:
 except:
     pass
 
+
+
 import cloudinary as Cloud
 import cloudinary.uploader
 import cloudinary.api
 
 Cloud.config(
-    cloud_name='dc1qkmsr0',
-    api_key='223398319444964',
-    api_secret='ZzoX3c3Y2mn2PiALJ8RgljfezuM'
+    cloud_name = 'du05mneox',
+    api_key= '371873492641178',
+    api_secret= 'MdVOWo1ZXyAO9OgLJZ1DokqPgQk'
 )
+
+
 
 # creating instance of IMDb
 try:
@@ -131,8 +134,8 @@ def upload_movie():
         movies.runtime = str(dict_movie['runtime'])
         movies.poster = filename
         movies.movies = movie_name
-        '''
-         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
+
+        Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
                               chunk_size=6000000,
                               public_id=str(dict_movie['original_title']),
                               overwrite=True,
@@ -143,6 +146,7 @@ def upload_movie():
                               eager_async=True,
                               notification_url="https://mysite.example.com/notify_endpoint",
                               resource_type="image")
+
 
         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), movie_name)}",
                               chunk_size=6000000,
@@ -155,7 +159,6 @@ def upload_movie():
                               eager_async=True,
                               notification_url="https://mysite.example.com/notify_endpoint",
                               resource_type="video")
-        '''
 
         movies.movie_data = video_file.read(CHUNK_SIZE)
         db.session.add(movies)
@@ -166,6 +169,7 @@ def upload_movie():
     except:
         pass
     return render_template('_.html', form=form, c=c)
+
 
 
 class Series_(FlaskForm):
