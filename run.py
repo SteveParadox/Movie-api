@@ -1,4 +1,5 @@
-from Api import create_app, db, io, app
+from dev import create_app, db
+
 
 app = create_app()
 app.app_context().push()
@@ -9,8 +10,10 @@ if ENV == 'dev':
     app.debug = True
 else:
     app.debug = False
+    threaded = True
+
 
 if __name__ == '__main__':
-    io.run(app, debug=True, port=5000)
+    app.run(debug=True)
     #db.drop_all(app=create_app())
     #db.create_all(app=create_app())
