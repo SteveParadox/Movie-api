@@ -7,8 +7,37 @@
 }
 
 body, html {
-  height: 100%;
+  min-height: 100%;
   width: 100%;
   background-color: #16151a;
   color: white;
+  overflow-x: hidden;
 }
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+}
+
+button {
+  cursor: pointer;
+}
+
+.active {
+  border-bottom: 2px solid red;
+}
+
+.App {
+  width: 100%;
+}
+
+/* .children {
+  width: 100% !important;
+  height: 100% !important;
+  background: dodgerblue;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

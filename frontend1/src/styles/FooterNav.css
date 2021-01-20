@@ -4,6 +4,13 @@
   display: flex;
   width: 50%;
   justify-content: space-between;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.footernav a {
+  color: white;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 820px) {

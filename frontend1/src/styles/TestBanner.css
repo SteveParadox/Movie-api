@@ -1,0 +1,110 @@
+.slick-dots li button {
+  padding: 0 !important;
+  background: white !important;
+  color: red !important;
+  width: 80px !important;
+  height: 10px !important;
+  border-radius: 5px !important;
+  transform: scaleY(0.6);
+  z-index: 3 !important;
+}
+
+.slick-dots li {
+  /* background: black !important; */
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  margin: 0px 10px !important;
+  border-radius: 5px !important;
+  /* transform: scaleY(0.8); */
+  z-index: 3 !important;
+  display: block;
+}
+
+.slick-dots li button::before {
+  display: none;
+}
+
+.slick-dots li .slick-active {
+  background: white !important;
+}
+
+button.slick-arrow.slick-next {
+  display: none !important;
+}
+
+ul.slick-dots {
+  transform: translateY(-2rem);
+}
+
+/* Details Styling */
+.details .main-details {
+  position: relative;
+  width: 80%;
+  min-height: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.details .main-details > p {
+  padding: 25px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.details .main-details .genre {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.details .main-details #star {
+  transform: translate(5px, 2px);
+}
+
+.details .main-details h3.title {
+  font-size: 65px;
+  font-weight: bold;
+}
+
+.details .main-details p.desc {
+  width: 90%;
+}
+
+.details .main-details .buttons button {
+  border: none;
+  border-radius: 25px;
+  outline: none;
+  padding: 10px 25px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.details .main-details .watch {
+  background: red;
+  margin-right: 70px;
+
+}
+
+.details .main-details .addlist {
+  background: black;
+}
+
+.details #watch-icon, .details #add-icon {
+  transform: translateY(3.5px);
+}
+
+
+@media screen and (max-width: 970px) {
+  .details .main-details .desc {
+    max-height: 40px;
+    overflow-y: hidden;
+    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)); */
+    /* filter: opacity(80%); */
+  }
+
+  .details .buttons button {
+    font-size: 12px;
+    padding: 3px 12px;
+  }
+}

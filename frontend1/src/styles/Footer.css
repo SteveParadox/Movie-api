@@ -12,7 +12,6 @@ footer {
 .logo  {
   font-size: 28px;
   font-weight: bold;
-  margin-left: 18px;
 }
 
 .copyrights {
@@ -27,7 +26,9 @@ footer {
     padding: 15px;
   }
   .logo {
-    margin: 30px 0;
+    display: block;
+    width: 100%;
+    margin: 20px -2px;
   }
   .copyrights {
     font-size: 14px;

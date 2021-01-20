@@ -1,0 +1,80 @@
+/* Styles for the recommendation */
+.recommendations {
+  margin-bottom: 60px;
+}
+.recommendations .top1 {
+  display: none;
+}
+
+.recommendations .top {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  min-width: 200px;
+  max-width: 50%;
+  margin-bottom: 10px;
+}
+
+.recommendations .top .title {
+  font-size: 23px;
+  font-weight: 500;
+  border-bottom: 3px solid grey;
+  padding: 10px 20px 7px 5px;
+}
+
+.recommendations .top .filter {
+  display: flex;
+  font-size: 22px;
+  font-weight: bold;
+  position: relative;
+  transform: translateX(50%);
+}
+
+.recommendations .top .filter > p {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 3px solid grey;
+}
+
+.recommendations .top .filter > p.active {
+  border-bottom: 3px solid red;
+}
+
+.recommendations .top .inner .filter > p:not(.active) {
+  border-bottom: 3px solid grey;
+}
+
+@media screen and (max-width: 660px) {
+  .recommendations .top {
+    display: none;
+  }
+
+  .recommendations .top1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 18px;
+    margin-top: 20px;
+  }
+
+  .recommendations .top1 .filter {
+    display: flex;
+    font-size: 17px;
+    font-weight: bold;
+    margin: 15px 0;
+  }
+  
+  .recommendations .top1 .filter > p {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 3px solid grey;
+  }
+  
+  .recommendations .top1 .filter > p.active {
+    border-bottom: 3px solid red;
+  }
+  
+  .recommendations .top1 .inner .filter > p:not(.active) {
+    border-bottom: 3px solid grey;
+  }
+}

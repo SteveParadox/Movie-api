@@ -1,0 +1,187 @@
+/* Shared Styles For the signin and signup pages */
+
+.sign-body {
+  width: 100%;
+  min-height: 100vh;
+  height: auto;
+  /* filter: sepia(200%); */
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.6), black), url("../joker_movie.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.sign-body nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 35px 30px;
+}
+
+.sign-body nav .logo .name {
+    transform: translateX(5px);
+}
+
+
+.sign-body nav .signBtn button {
+  background: red;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  padding: 7px 20px;
+  color: white;
+}
+
+.sign-body input, .sign-body button {
+  border: none;
+  outline: none;
+}
+
+.sign-body .main {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  font-size: 28px;
+  transition: 3s ease-in-out all;
+  /* border: 1px solid red; */
+}
+
+.sign-body .main .center > p {
+  text-align: center;
+}
+
+.sign-body .main .center .red {
+  font-size: 24px;
+  margin: 17px 0;
+  color: red;
+}
+
+/* Styles Specific to signup form */
+.sign-body .main form {
+  width: 340px;
+}
+.sign-body .main form input {
+  width: 100%;
+  background: white;
+  color: black;
+  border: none;
+  border-radius: 3px;
+  outline: none;
+  padding: 10px 15px;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+.sign-body .main form #username {
+  width: 80%;
+}
+
+.sign-body .main form .submit {
+  text-align: right;
+}
+
+.sign-body .main form [type=password] {
+  font-size: 16px !important;
+}
+
+.sign-body .main form .submit > button {
+  background: red;
+  padding: 8px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 4px;
+}
+
+.sign-body .main .btns button {
+  background: none;
+  border: none;
+}
+
+.sign-body .signin-form {
+  display: flex;
+  height: 50px;
+  width: 100%;
+}
+
+.sign-body .signin-form input {
+  width: 95%;
+  margin: 0 15px;
+  font-size: 23px;
+  padding: 4px 10px;
+  background: white;
+  border-radius: 4px;
+  color: black;
+}
+
+.sign-body .signin-form button {
+  border: none;
+  border-radius: 4px;
+  background: red;
+  padding: 2px 25px;
+}
+
+.sign-body .nice-dates-popover {
+  transform: translateY(-380px) scale(1, 0.85);
+  /* display: inline; */
+}
+
+@media screen and (max-width: 420px) {
+  .sign-body nav {
+    padding: 5px 20px;
+  }
+
+  .sign-body .signin-form {
+    flex-direction: column;
+  }
+
+  .sign-body .signin-form input {
+    width: 300px;
+    margin: 10px 0;
+  }
+
+  .sign-body .main form {
+    margin: 0;
+    padding: 0;
+    width: 90vw;
+  }
+  .sign-body .main form input {
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 379px) {
+  .sign-body .nice-dates-popover {
+    transform: translateY(-380px) scale(1, 0.85);
+    /* display: inline; */
+  }
+  
+}
+
+.sign-body .main form .select-css {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  text-indent: 1px;
+  text-overflow: "";
+  background: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 19px;
+  color: black;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-position: right;
+  background-size: 13px;
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 10px);
+}
+
+.sign-body .main form .select-css option {
+  background: white;
+  color: black;
+}
+
+.sign-body .main form .select-css::ms-expand {
+  display: none;
+}

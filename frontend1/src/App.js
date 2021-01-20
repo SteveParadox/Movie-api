@@ -1,33 +1,29 @@
 import React, { Component } from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 
 import { MovieProvider } from "./MovieContext";
-
-// The components
-import AppNavBar from "./components/AppNavBar";
-import Banner from "./components/Banner";
-import Watching from "./components/Watching";
-import Recommendations from "./components/Recommendations";
-import Movies from "./components/Movies";
-import SubscribeLayout from "./components/SubscribeLayout";
-import Footer from "./components/Footer";
+import Home from "./components/Home";
+import MoviesSection from "./components/MoviesSection";
+import Signin from "./components/Signin";
+import Signup from "./components/Signup";
+import NotFoundPage from "./components/NotFound";
 
 class App extends Component {
   render() {
     return (
       <MovieProvider>
-        <div className="App">
-          {/* <AppNavBar /> */}
-          {/* <Banner /> */}
-
-          {/* <Watching />
-          <Recommendations />
-          <Movies /> */}
-
-          {/* Finished components */}
-          {/* <SubscribeLayout /> */}
-          {/* <Footer /> */}
-        </div>
+        <Router>
+          <div className="App">
+            <Route path="/" exact={true} component={Home} />
+            <Switch>
+              <Route path="/movies" exact={true} component={MoviesSection} />
+              <Route path="/signin" exact={true} component={Signin} />
+              <Route path="/signup" exact={true} component={Signup} />
+              <Route path="/:unknown" exact={true} component={NotFoundPage} />
+            </Switch>
+          </div>
+        </Router>
       </MovieProvider>
     );
   }

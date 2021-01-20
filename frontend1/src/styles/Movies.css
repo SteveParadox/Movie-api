@@ -1,0 +1,133 @@
+/* Styles For Movies */
+
+.movies {
+  padding: 30px;
+}
+
+.movies .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.movies .top > h3 {
+  padding: 5px 15px;
+  border-bottom: 3px solid darkgrey;
+  min-width: 150px;
+  text-align: center;
+}
+
+.movies .top > h3.active {
+  border-bottom: 3px solid red;
+  font-size: 25px;
+  font-size: bold;
+}
+
+
+/* Sort By Styles */
+#sortAlphabet {
+  background: red;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 4px 10px;
+  margin-left: 5px;
+}
+
+.sort {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sort > div {
+  display: inline;
+}
+
+.sort div:last-child {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sort div:last-child > * {
+  margin: 3px;
+}
+
+
+.progress {
+  display: block;
+  background: grey;
+  width: 280px;
+  height: 4.5px;
+  border-radius: 15px;
+}
+
+.progress .value {
+  background: yellow;
+  width: 70%;
+  height: 100%;
+  border-radius: 15px;
+}
+
+
+/* The styles for the plus area */
+.plus-area {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px 0;
+}
+
+.plus {
+  border-radius: 50%;
+  border: 5px solid grey;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.movies .displayMovies {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.movies .displayMovies > div {
+  width: 251px;
+}
+
+.movies .category {
+  background: grey;
+  padding: 10px 0px;
+  border-radius: 20px;
+  margin: 15px 20px;
+  max-width: 120px;
+  text-align: center;
+}
+
+.movies .details {
+  position: absolute;
+  width: 100vw;
+  background: red;
+}
+
+
+@media screen and (max-width: 560px) {
+  .movies .displayMovies > div {
+    width: 100%;
+  }
+
+  .movies {
+    padding: 30px 0;
+  }
+
+  .movies .sort {
+    font-size: 17px;
+    padding: 0 15px;
+  }
+  .movies .sort .progress {
+    width: 100px;
+  }
+}

@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
@@ -68,28 +69,45 @@ const AppNavBar = () => {
         {/* The logo */}
         <div className="logo" style={ appState.friendsDisplay ? logoVisibility1 : logoVisibility2 }>
           <img src={logo} id="cam-logo" width={25} height={25} alt="logo" onClick={openFindFriends} />
+          {/* <BsFillCameraVideoFill size={22} color="white" onClick={openFindFriends} id="cam-logo" /> */}
           <h3>Filba</h3>
         </div>
 
         {/* The links */}
         <ul className="nav-links">
-          <li className="active">Home</li>
-          <li>Movies</li>
-          <li>Series</li>
-          <li>Live</li>
-          <li>My List</li>
+          <NavLink exact activeClassName="active" to="/">
+            <li>Home</li>
+          </NavLink>
+          <NavLink activeClassName="active" to="/movies">
+            <li>Movies</li>
+          </NavLink>
+          <NavLink activeClassName="active" to="/series">
+            <li>Series</li>
+          </NavLink>
+          <NavLink activeClassName="active" to="/live">
+            <li>Live</li>
+          </NavLink>
+          <NavLink activeClassName="active" to="/list">
+            <li>My List</li>
+          </NavLink>
         </ul>
 
         {/* The search, notification and user */}
         <div className="snu">
-          <button className="search">
-            <FaSearch size={27} />
-          </button>
-          <button className="notification">
-            <FaBell size={27} />
-            <span id="notification-number">2</span>
-          </button>
-          <UserAvatar numberOfUsers={2} />
+          <Link to="/search">
+            <button className="search">
+              <FaSearch size={27} color="white" />
+            </button>
+          </Link>
+          <Link to="/notification">
+            <button className="notification">
+              <FaBell size={27} color="white"/>
+              <span id="notification-number">2</span>
+            </button>
+          </Link>
+          <Link to="/user">
+            <UserAvatar numberOfUsers={2} />
+          </Link>
         </div>
       </div>
     </nav>

@@ -1,0 +1,129 @@
+/* Styles for watching.js */
+.watching {
+  width: 100%;
+  padding: 30px;
+}
+
+.watching .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.watching .top .continue {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 15px 20px 15px 0;
+  border-bottom: 3px solid grey;
+}
+
+.watching .top .filter {
+  display: flex;
+  font-size: 21px;
+}
+
+.watching .top .filter > p {
+  padding: 15px;
+}
+
+.watching .top .filter > p:not(.active) {
+  border-bottom: 2px solid grey;
+}
+
+.watching .top .history {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: #eee;
+  width: 150px;
+  cursor: pointer
+}
+
+.watching .cards {
+  padding: 35px 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.watching .cards .card {
+  width: 270px;
+  border-radius: 4px;
+  height: 180px;
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: flex-end;
+  margin: 10px 5px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.watching .cards .card .details {
+  width: 100%;
+}
+
+.watching .cards .card .details .title {
+  margin-left: 15px;
+  font-size: 20px;
+}
+
+.watching .cards .card .details .percentage {
+  background: grey;
+  width: 80%;
+  height: 3px;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 15px;
+}
+
+.watching .value {
+  background: #0f36ff;
+  height: 100%;
+}
+
+.watching .history {
+  display: none;
+}
+
+@media screen and (max-width: 660px) {
+
+  .watching .top {
+    display: block;
+  }
+
+  .watching .top .continue {
+    font-size: 16px;
+    min-width: 100%;
+    border: none;
+    text-align: center;
+  }
+
+  .watching .top .filter {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .watching .top .history {
+    display: none;
+  }
+
+  .watching .history {
+    display: flex;
+    justify-content: center;
+  }
+
+  .watching .cards {
+    padding: 20px 1px;
+  }
+  .watching  .cards .card {
+    width: 100%;
+    height: 15rem;
+  }
+
+}

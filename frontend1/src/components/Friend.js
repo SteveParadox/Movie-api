@@ -18,11 +18,11 @@ const Live = () => {
   const spanStyle = {
     "background": "red",
     "padding": "0 8px",
-    "font-weight": "bold",
+    "fontWeight": "bold",
     "position": "relative",
     "bottom": "17px",
-    "font-size": "9.5px",
-    "border-radius": "3px",
+    "fontSize": "9.5px",
+    "borderRadius": "3px",
   };
   return <span style={spanStyle}>Live</span>
 }
@@ -31,18 +31,18 @@ function Friend({ avatar, name, status, title, into }) {
   const background = status ? "linear-gradient(180deg, red, purple)" : "linear-gradient(180deg, dodgerblue, rgb(16, 16, 53))"
   const avatarStyle = {
     "background": background,
-    "border-radius": "50%",
+    "borderRadius": "50%",
     "width": "66px",
     "height": "66px",
     // "display": "flex",
     // "justify-content": "center",
     // "align-items": "center",
     // "flex-direction": "column",
-    "text-align": "center",
+    "textAlign": "center",
     "padding": "1.1px"
   }
   const imageStyle = {
-    "border-radius": "50%",
+    "borderRadius": "50%",
     "border": "4px solid #16151a",
     // "transform": "translateY(6px)"
   };
@@ -54,17 +54,17 @@ function Friend({ avatar, name, status, title, into }) {
 
   const detailsStyles = {
     "margin": "10px",
-    "line-height": "1"
+    "lineHeight": "1"
   };
 
   const statusStyles = {
     "color": "red",
-    "font-size": "12px"
+    "fontSize": "12px"
   };
 
   const pStyles = {
-    "font-size": "13px",
-    "font-weight": "bold"
+    "fontSize": "13px",
+    "fontWeight": "bold"
   };
 
   const h3Styles = {

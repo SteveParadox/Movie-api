@@ -1,0 +1,5 @@
+1. https://movie-stream-api.herokuapp.com/api/popular - for popular movies
+2. https://movie-stream-api.herokuapp.com/api/trending - for trending movies
+3. https://movie-stream-api.herokuapp.com/api - for movies home page
+4. https://movie-stream-api.herokuapp.com/api/search/movie - for search movies
+5. https://res.cloudinary.com/du05mneox/image/upload/{{movie name}}.jpg - for image/thumbnail of movies

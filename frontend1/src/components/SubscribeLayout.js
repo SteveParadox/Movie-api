@@ -1,11 +1,48 @@
 import React, { useContext } from "react";
 import "../styles/SubscribeLayout.css";
-import Carousel from 'react-elastic-carousel'
+// import Carousel from 'react-elastic-carousel';
+import Slider from "react-slick";
 import { MovieContext } from "../MovieContext";
-import Item from "./Item2";
+// import Item from "./Item2";
 import Joker from "../joker_movie.jpg";
 import MovieRating from "./MovieRating";
 import { FaArrowRight } from "react-icons/fa"
+
+const SlideShow = () => {
+    const settings = {
+        infinite: true,
+        enableAutoPlay: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1
+      };
+      return (
+        <div>
+          <Slider {...settings}>
+            <div className="Items">
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+            </div>
+            <div className="Items">
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+            </div>
+            <div className="Items">
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+            </div>
+            <div className="Items">
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+            </div>
+            <div className="Items">
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+              <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
+            </div>
+          </Slider>
+        </div>
+      );
+}
 
 const SubscribeLayout = () => {
     const {appState, setAppState} = useContext(MovieContext);
@@ -23,25 +60,7 @@ const SubscribeLayout = () => {
                 </div>
             </div>
             <div className="slide-part">
-            <Carousel 
-              itemsToShow={1}
-              className="carousel-container"
-              enableAutoPlay={true} 
-              pagination={false}
-            >
-                <Item>
-                    <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                    <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                </Item>
-                <Item>
-                <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                    <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                </Item>
-                <Item>
-                  <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                    <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
-                </Item>
-            </Carousel>
+                <SlideShow />
             </div>
         </div>
     );

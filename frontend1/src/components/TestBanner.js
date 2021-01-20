@@ -1,0 +1,93 @@
+import React, { useEffect, useState, useContext } from "react";
+import { MovieContext } from "../MovieContext";
+import axios from "axios";
+import urls from "../apiEndPoints";
+import { GoPrimitiveDot } from "react-icons/go";
+import { FaStar, FaPlus, FaPlay } from "react-icons/fa";
+ 
+// Import styles
+import Slider from "react-slick";
+import "../styles/TestBanner.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+// Helper Component
+const Details = ({ year, genre, time, review, movieName, desc, link }) => {
+  const [appState] = useContext(MovieContext);
+
+  const detailStyle = {
+    "backgroundImage": `url("https://res.cloudinary.com/du05mneox/image/upload/${movieName}.jpg")`,
+    "backgroundRepeat": "no-repeat",
+    "backgroundPosition": "center",
+    // "backgroundSize": "100% 100%",
+    "backgroundSize": "cover",
+    "width": "100%",
+    "height": "calc(100vh - 0.1rem)",
+    "opacity": appState.friendsDisplay ? "0.4" : "1",
+  }
+  return (
+    <div className="details" style={detailStyle}>
+      <div className="main-details">
+        <p>Details: {(new Date(year)).getFullYear()} <GoPrimitiveDot size={13} /> <span className="genre">{genre}</span> <GoPrimitiveDot size={13} /> {Math.floor(time/60)}h {Math.floor(time % 60)}m</p>
+        <p>Reviews: <span className="genre">IMDB</span> <GoPrimitiveDot size={13} /> {review}/10 <GoPrimitiveDot size={13} /> User rating <FaStar color="yellow" size={20} id="star" /> </p>
+        <h3 className="title">{movieName}</h3>
+        <p className="desc">{desc}</p>
+        <div className="buttons">
+          <button className="watch"> <FaPlay size={20} id="watch-icon" /> Watch</button>
+          <button className="addlist"> <FaPlus size={20} id="add-icon" /> Add List</button>
+        </div>
+      </div>
+    </div>
+  )
+};
+
+export default function Banner() {
+  const [movies, setMovies] = useState([]);
+
+  useEffect(() => {
+    axios.get(urls.trending)
+      .then(res => {
+        console.log(res.data.data.slice(0, 3));
+        setMovies(res.data.data.slice(0, 3));
+      })
+      .catch(error => console.log(error));
+  }, []);
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    autoplaySpeed: 3000,
+    autoplay: true,
+    slidesToShow: 1,
+    slidesToScroll: 1
+  };  
+
+  return (
+    <div>
+      <Slider {...settings}>
+        {movies.map((movie, idx) => {
+          return <Details year={movie.created_on} genre={movie.genre} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review}/>
+        })}
+        {/* <div>
+          <h3>1</h3>
+        </div>
+        <div>
+          <h3>2</h3>
+        </div>
+        <div>
+          <h3>3</h3>
+        </div>
+        <div>
+          <h3>4</h3>
+        </div>
+        <div>
+          <h3>5</h3>
+        </div>
+        <div>
+          <h3>6</h3>
+        </div> */}
+      </Slider>
+    </div>
+  );
+}

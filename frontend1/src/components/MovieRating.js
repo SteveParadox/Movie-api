@@ -1,4 +1,5 @@
 import React from "react";
+import { FaStar } from "react-icons/fa";
 
 const MovieRating = ({ avatar, name, title, detail, rating }) => {
   return (
@@ -10,7 +11,7 @@ const MovieRating = ({ avatar, name, title, detail, rating }) => {
       <div>
         <div className="movie-top">
           <p className="movie-title">{title}</p>
-          <p className="movie-rating">🌟{rating}/10</p>
+          <p className="movie-rating"><FaStar color="yellow" />{" "}{rating}/10</p>
         </div>
         <p>{detail}</p>
       </div>
