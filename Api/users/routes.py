@@ -10,6 +10,8 @@ from flask_cors import cross_origin
 import cloudinary as Cloud
 import cloudinary.uploader
 from Api.utils import save_img
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+
 
 users = Blueprint('users', __name__)
 
@@ -57,7 +59,7 @@ def sign_up():
 # logging in
 @users.route('/api/login', methods=['POST'])
 @cross_origin()
-def login():
+def login(expires_sec=1800):
     data = request.get_json()
     email = data['email']
     user = Users.query.filter_by(email=email).first()
@@ -65,12 +67,14 @@ def login():
         login_user(user)
         user.logged_in = True
         db.session.commit()
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
         return jsonify({
             "status": "success",
             "message": "login successful",
             "data": {
                 "id": user.id,
-                "name": user.name
+                "name": user.name,
+                "token": "Bearer " + s.dumps(payload).decode('utf-8')
             }
         }), 200
     return jsonify({
