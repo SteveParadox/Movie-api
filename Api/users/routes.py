@@ -55,7 +55,7 @@ def sign_up():
 
 
 # logging in
-@users.route('/api/login')
+@users.route('/api/login', methods=['POST'])
 @cross_origin()
 def login():
     data = request.get_json()
