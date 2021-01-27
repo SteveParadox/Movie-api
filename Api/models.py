@@ -28,8 +28,6 @@ class Users(db.Model, UserMixin):
     activity = db.relationship('Activities', backref='social', lazy=True)
     save_ = db.relationship('Store', backref='saved', lazy=True)
     admin = db.Column(db.Boolean, default=False)
-    profile = db.Column(db.String)
-    profile_data = db.Column(db.LargeBinary)
 
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
@@ -49,10 +47,6 @@ class Movie(db.Model):
     cast3 = db.Column(db.String())
     cast4 = db.Column(db.String())
     genre = db.Column(db.String())
-    movies = db.Column(db.String)
-    movie_data = db.Column(db.LargeBinary)
-    poster = db.Column(db.String)
-    poster_data = db.Column(db.LargeBinary)
     date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
     thumbs_up = db.Column(db.Integer, default=0)
     thumbs_down = db.Column(db.Integer, default=0)
