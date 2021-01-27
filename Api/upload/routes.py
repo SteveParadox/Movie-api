@@ -132,8 +132,7 @@ def upload_movie():
         movies.creator = com[0]
         movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
-        movies.poster = filename
-        movies.movies = movie_name
+
 
         Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), filename)}",
                               chunk_size=6000000,
@@ -160,7 +159,7 @@ def upload_movie():
                               notification_url="https://mysite.example.com/notify_endpoint",
                               resource_type="video")
 
-        movies.movie_data = video_file.read(CHUNK_SIZE)
+        
         db.session.add(movies)
         db.session.commit()
     c = ''
@@ -256,7 +255,7 @@ class Episode(FlaskForm):
     submit = SubmitField('Submit')
 
 
-@upload.route('/upload/series/<string:series_name>/season/<string:season_id>/episode/<int:ep_no>', methods=['GET', 'POST'])
+@upload.route('/upload/series/<string:series_name>/season/<string:season_id>/episode', methods=['GET', 'POST'])
 def upload_episode(series_name, season_id, ep_no):
     series_ = Series.query.filter_by(name=series_name).first()
     s_season = Series_Season.query.filter_by(season=series_).filter_by(season_id=season_id).first()
