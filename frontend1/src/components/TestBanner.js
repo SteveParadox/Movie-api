@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import { Link } from "react-router-dom";
 import { MovieContext } from "../MovieContext";
 import axios from "axios";
 import urls from "../apiEndPoints";
@@ -14,6 +15,12 @@ import "slick-carousel/slick/slick-theme.css";
 // Helper Component
 const Details = ({ year, genre, time, review, movieName, desc, link }) => {
   const [appState] = useContext(MovieContext);
+  function AddList() {
+    axios
+      .post(`https://movie-stream-api.herokuapp.com/api/add/list/${link}`)
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+  }
 
   const detailStyle = {
     "backgroundImage": `url("https://res.cloudinary.com/du05mneox/image/upload/${movieName}.jpg")`,
@@ -33,8 +40,8 @@ const Details = ({ year, genre, time, review, movieName, desc, link }) => {
         <h3 className="title">{movieName}</h3>
         <p className="desc">{desc}</p>
         <div className="buttons">
-          <button className="watch"> <FaPlay size={20} id="watch-icon" /> Watch</button>
-          <button className="addlist"> <FaPlus size={20} id="add-icon" /> Add List</button>
+          <Link to={`/watch/${link}/`}><button className="watch-btn"> <FaPlay id="watch-icon" className="icon" /> Watch</button></Link>
+          <button className="addlist" onClick={AddList}> <FaPlus id="add-icon" className="icon" /> Add List</button>
         </div>
       </div>
     </div>
@@ -47,7 +54,6 @@ export default function Banner() {
   useEffect(() => {
     axios.get(urls.trending)
       .then(res => {
-        console.log(res.data.data.slice(0, 3));
         setMovies(res.data.data.slice(0, 3));
       })
       .catch(error => console.log(error));
@@ -67,26 +73,9 @@ export default function Banner() {
     <div>
       <Slider {...settings}>
         {movies.map((movie, idx) => {
-          return <Details year={movie.created_on} genre={movie.genre} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review}/>
+          console.log(movie);
+          return <Details year={movie.created_on} genre={movie.genre} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review} link={movie.public_id} />
         })}
-        {/* <div>
-          <h3>1</h3>
-        </div>
-        <div>
-          <h3>2</h3>
-        </div>
-        <div>
-          <h3>3</h3>
-        </div>
-        <div>
-          <h3>4</h3>
-        </div>
-        <div>
-          <h3>5</h3>
-        </div>
-        <div>
-          <h3>6</h3>
-        </div> */}
       </Slider>
     </div>
   );

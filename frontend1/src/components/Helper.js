@@ -3,36 +3,15 @@ import axios from "axios";
 import urls from "../apiEndPoints";
 
 export const register = async obj => {
-  // const options = {
-  //   "name": obj.firstName + " " + obj.lastName,
-  //   "email": obj.email,
-  //   "dob": obj.dob,
-  //   "password": obj.password,
-  //   "country": obj.country,
-  //   "phone_no": obj.number
-  //   // Please add the preferred genre to the list and make a special request but that should be after registration is successful.
-  // };
-
-  const res = await axios.post(urls.signup, { ...obj });
-  console.log(res);
-  // if res is ok, do:
-    // return special made object with success = true
-  if(res.status === 200 && res.statusText === "OK") {
-    return {
-      success: true,
-      data: res.data,
-    }
-  }
-
-  // else do:
-    // return special object with success = false
-  else {
+  try {
+    const res = await axios.post(urls.signup, {
+      ...obj
+    });
+    console.log(res);
+  } catch {
     console.log("Sorry, Signup was not successful");
-    return {
-      success: false,
-      data: {},
-    }
   }
+  // return to login page
 };
 
 export const login = async obj => {
@@ -41,32 +20,56 @@ export const login = async obj => {
     "password": obj.password,
   };
 
-  const res = axios.post(urls.login, { body: options });
-  console.log(res);
-  // if res is ok, do:
-    // return special made object with success = true
-    if(res.status === 200 && res.statusText === "OK") {
-      return {
-        success: true,
-        data: res.data,
-      }
-    }
+  try {
+    const res = await axios.post(urls.login, options)
+    console.log(res);
   
-    // else do:
-      // return special object with success = false
-    else {
-      console.log("Sorry, Login was not successful");
-      return {
-        success: false,
-        data: {},
-      }
-    }
+  } catch {
+    console.log("Something went wrong");
+  }
+  
+  // Now redirect to user page.
+  // make sure to set AppState's logged_in to true 
+  // return;
 };
 
-export const logout = obj => {
-  axios.post(urls.logout, {})
-    .then(res => {
-      // Remove the already stored token from local storage
-      console.log(res);
-    })
+export const logout = async () => {
+  try {
+    const res = axios.post(urls.logout)
+    console.log(res);
+  } catch {
+    console.log("Something went wrong");
+  }
+
+  // Now redirect to login page
+  // Make sure to set appState's logged_in to false
+  return;
 }
+
+// Add a friend
+export const AddFriend = async (friendName) => {
+  let success = false;
+  try {
+    const res = await axios.post(`https://movie-stream-api.herokuapp.com/api/add/friend/${friendName}`);
+    console.log(res);
+    // if successful then
+    // success = true;
+  } catch(err) {
+    console.log(err);
+  }
+  return success;
+}
+
+// Get similar movie
+export const GetSimilarMovies = async (u_id) => {
+  let similarMovies = [];
+  try {
+    const res = axios.get(`https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`);
+    console.log(res);
+    // set the value of similarMovies variable to the response
+  } catch(err) {
+    console.log(err);
+  }
+  return similarMovies;
+};
+

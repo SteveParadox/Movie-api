@@ -21,16 +21,17 @@
 
 .sign-body nav .logo .name {
     transform: translateX(5px);
+    color: var(--font-color);
 }
 
 
 .sign-body nav .signBtn button {
-  background: red;
+  background: var(--apps-red);
   border: none;
   border-radius: 5px;
   font-size: 18px;
   padding: 7px 20px;
-  color: white;
+  color: var(--font-color);
 }
 
 .sign-body input, .sign-body button {
@@ -55,7 +56,7 @@
 .sign-body .main .center .red {
   font-size: 24px;
   margin: 17px 0;
-  color: red;
+  color: var(--apps-red);
 }
 
 /* Styles Specific to signup form */
@@ -80,6 +81,11 @@
 
 .sign-body .main form .submit {
   text-align: right;
+  color: var(--font-color);
+}
+
+.sign-body .main form [type=submit] {
+  color: var(--font-color);
 }
 
 .sign-body .main form [type=password] {
@@ -87,7 +93,7 @@
 }
 
 .sign-body .main form .submit > button {
-  background: red;
+  background: var(--apps-red);
   padding: 8px 20px;
   font-size: 18px;
   border: none;
@@ -118,7 +124,7 @@
 .sign-body .signin-form button {
   border: none;
   border-radius: 4px;
-  background: red;
+  background: var(--apps-red);
   padding: 2px 25px;
 }
 
@@ -137,7 +143,8 @@
   }
 
   .sign-body .signin-form input {
-    width: 300px;
+    /* width: 300px; */
+    width: 95vw;
     margin: 10px 0;
   }
 

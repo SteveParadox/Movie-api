@@ -1,0 +1,23 @@
+/* Movies Section Styles */
+
+.movies .searchInput {
+  width: 95%;
+  padding: 10px;
+  margin: 10px auto;
+  display: flex;
+  /* background: red; */
+  align-items: center;
+  border-bottom: 1px solid grey;
+}
+
+.movies .searchInput input {
+  flex-grow: 1;
+  background: none;
+  outline: none;
+  border: none;
+}
+
+.movies .searchInput:nth-child(2) {
+  font-size: 19px;
+
+}

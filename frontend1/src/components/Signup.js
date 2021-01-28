@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import { BsFillCameraVideoFill } from "react-icons/bs";
@@ -32,8 +32,9 @@ function Signup() {
     password1: "",
     password2: "",
     number: "",
-    country: ""
   });
+  
+  const [redirect, setRedirect] = useState(false);
   
   const [date, setDate] = useState(new Date(2020, 1, 24, 18, 15));
   
@@ -63,13 +64,19 @@ function Signup() {
     return { ...n, [e.target.name]: e.target.value }
   });
   
+  // function to format phone number.
+  const formatPhoneNumber = n => n.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'); 
+  
   const updateNumber = (phone) => updateForm(n => {
-    return { ...n, number: phone }
+    console.log(form);
+    let formatted = formatPhoneNumber(phone);
+    return { ...n, number: formatted }
   });
   
   // const updateCountry = e => updateForm(n => {
   //   return { ...n, country: e.target.value };
   // });
+
 
   const [country, updateCountry] = useState("");
   const changeCountry = e => updateCountry(e.target.value);
@@ -79,18 +86,12 @@ function Signup() {
     useEffect(() => {
       // Note if you want to make this process/function async it's better to write a seperate async function else you get a cleanup warning from react.js
       // don't don this useEffect(async () => ...) but you can call an async function from inside it.
-      let isCancelled = false;
-      axios.get("https://trial.mobiscroll.com/content/countries.json")
-      .then(res => {
-        if(!isCancelled) {
-          setCountries(res.data)
-        }
-      })
-      .catch(err => {
-        if(!isCancelled) {
-          console.log("Sorry an error occured :(");
-        }
-      });
+      async function fetchCountries() {
+        const res = await axios.get("https://trial.mobiscroll.com/content/countries.json");
+        setCountries(res.data)
+      }
+
+      fetchCountries();
     }, []);
     return (
       <select name="country" className="select-css" id="countries" value={country} onChange={changeCountry}>
@@ -102,39 +103,34 @@ function Signup() {
   
   useEffect(() => {
     form["dob"] = `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`;
-    console.log(form);
-  }, [date]);
+    // console.log(form, country);
+  }, [date, form]);
+  
+  
   // Register function to submit the values
   const submit = e => {
     e.preventDefault();
     updateForm(n => {
       return { ...n, dob: toString(date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear()) };
     });
-    // console.log(form);
     const body = {
       name: form.firstName + " " + form.lastName,
       email: form.email,
       dob: form.dob,
       password: form.password1,
-      country: form.country, // Please make sure to change this conditional statement later.
-      phone_no: form.number,
+      country: country, // Please make sure to change this conditional statement later.
+      phone_no: formatPhoneNumber(form.number),
     }
 
-    console.log(body);
-    let registeredSuccess = register(form); // register function should return an object
-    if(registeredSuccess.success) {
-      // then redirect to home
-    } else if (registeredSuccess.customErr) {
-      // State the problem message on top of the form
-    } else {
-      console.log("Sorry an error occurred :(");
-      // Please use a good custom modal box to display this message.
-    }
+    // console.log(body);
+    register(body); // register function should return an object
+    setRedirect(true);
   }
 
   const [count, setCount] = useState(1);
   return (
     <div className="sign-body">
+      {redirect ? <Redirect to="/signin" /> : null}
       <Nav />
       <div className="main">
         <form onSubmit={submit}>

@@ -1,19 +1,22 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { NavLink, Link } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
 import { FaSearch, FaAngleDown, FaBell } from "react-icons/fa";
 import Friend from "./Friend";
+import axios from "axios";
+import urls from "../apiEndPoints";
 
 // Bring in img for testing purpose
 import Joker from "../joker_movie.jpg";
+import User from "../user.jpg";
 
 
 const UserAvatar = (props) => {
   return (
     <div className="user-avatar">
-      <img src={Joker} alt="User Avatar" />
+      <img src={User} alt="User Avatar" />
       {/* <span className="number-of-users"> {props.numberOfUsers} </span> */}
       <FaAngleDown size={18} color={"grey"} />
     </div>
@@ -22,6 +25,23 @@ const UserAvatar = (props) => {
 
 const AppNavBar = () => {
   const [appState, setAppState] = useContext(MovieContext);
+
+  useEffect(() => {
+    function fetchData() {
+      axios(urls.all)
+        .then(res => {
+          setAppState(n => {
+            return {
+              ...n,
+              logged_in: res.data["logged in"],
+              user_name: res.data["name"] ? res.data["name"] : ""
+            }
+          })
+        })
+        .catch(() => console.log("Something went wrong!"));
+    }
+    fetchData();
+  })
 
   // Helper functions
   function openFindFriends() {
@@ -81,12 +101,12 @@ const AppNavBar = () => {
           <NavLink activeClassName="active" to="/movies">
             <li>Movies</li>
           </NavLink>
-          <NavLink activeClassName="active" to="/series">
+          {/* <NavLink activeClassName="active" to="/series">
             <li>Series</li>
           </NavLink>
           <NavLink activeClassName="active" to="/live">
             <li>Live</li>
-          </NavLink>
+          </NavLink> */}
           <NavLink activeClassName="active" to="/list">
             <li>My List</li>
           </NavLink>

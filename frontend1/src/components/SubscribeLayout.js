@@ -19,7 +19,7 @@ const SlideShow = () => {
       return (
         <div>
           <Slider {...settings}>
-            <div className="Items">
+            <div className="Items" style={{"background": "#373637"}}>
               <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
               <MovieRating avatar={Joker} name={"Sharon"} title={"The Avengers End Game"} detail={"lorem isp dum text that i kwek nwanwe a dey for you"} rating={8} />
             </div>

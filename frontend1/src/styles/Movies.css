@@ -13,21 +13,43 @@
 
 .movies .top > h3 {
   padding: 5px 15px;
-  border-bottom: 3px solid darkgrey;
+  border-bottom: 1.5px solid darkgrey;
   min-width: 150px;
   text-align: center;
 }
 
 .movies .top > h3.active {
-  border-bottom: 3px solid red;
+  border-bottom: 1.5px solid var(--apps-red);
   font-size: 25px;
   font-size: bold;
+}
+
+/* Styles for genre selection area */
+.movies .genres {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.movies .genres button {
+  display: block;
+  background: #2b2a30;
+  padding: 9px 18px;
+  margin: 10px 25px;
+  outline: none;
+  border: none;
+  border-radius: 3rem;
+  color: white;
+}
+
+.movies .genres button:hover {
+  filter: grayscale(70%);
 }
 
 
 /* Sort By Styles */
 #sortAlphabet {
-  background: red;
+  background: var(--apps-red);
   outline: none;
   border: none;
   border-radius: 5px;
@@ -38,6 +60,10 @@
 .sort {
   display: flex;
   justify-content: space-between;
+}
+
+.sort select {
+  color: var(--font-color);
 }
 
 .sort > div {
@@ -98,21 +124,55 @@
   width: 251px;
 }
 
-.movies .category {
-  background: grey;
-  padding: 10px 0px;
-  border-radius: 20px;
-  margin: 15px 20px;
-  max-width: 120px;
-  text-align: center;
-}
-
 .movies .details {
   position: absolute;
-  width: 100vw;
-  background: red;
+  left: 50%;
+  transform: translateX(-51.5%) translateY(315px);
+  border-radius: 4px;
+  width: 89%;
+  height: 370px;
+  background: #242426;
+  box-shadow: 0 5px 10px -3px rgba(14,13,26,.12),0 3px 16px 2px rgba(0,0,0,.12),0 8px 12px 1px rgba(34,0,51,.04);
+  z-index: 120;
+  display: flex;
+  flex-wrap: wrap;
 }
 
+.movies .details #arrow {
+  /* background: #242426; */
+  position: absolute;
+  width: 45px;
+  height: 45px;
+  fill: #242426;
+  transform: translateY(-45px);
+}
+
+
+.movies .details .thumb {
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  width: 50rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.movies .details .all-details {
+  padding: 10px;
+  max-width: 360px;
+}
+
+.movies .details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  /* background-blend-mode: overlay; */
+  background: rgba(230, 253, 253, 0.7);
+  filter: sepia(10px);
+}
 
 @media screen and (max-width: 560px) {
   .movies .displayMovies > div {
@@ -129,5 +189,17 @@
   }
   .movies .sort .progress {
     width: 100px;
+  }
+
+  .movies .details {
+    height: auto;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .movies .genres button {
+    padding: 5px 9px;
+    font-size: 14.5px;
+    margin: 5px 8px;
   }
 }

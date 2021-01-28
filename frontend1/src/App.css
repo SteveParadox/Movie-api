@@ -1,17 +1,24 @@
 /* General styles */
 
+:root {
+  --font-color: rgb(252, 252, 252);
+  --background: #16151a;
+  --apps-red: rgb(221, 30, 30);
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  outline: none;
 }
 
 body, html {
   min-height: 100%;
   width: 100%;
-  background-color: #16151a;
-  color: white;
-  overflow-x: hidden;
+  background-color: var(--background);
+  color: var(--font-color);
+  overflow: hidden;
 }
 
 a {
@@ -25,7 +32,7 @@ button {
 }
 
 .active {
-  border-bottom: 2px solid red;
+  border-bottom: 2px solid var(--apps-red);
 }
 
 .App {

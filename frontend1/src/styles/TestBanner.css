@@ -71,6 +71,10 @@ ul.slick-dots {
   width: 90%;
 }
 
+.details .main-details .buttons {
+  height: 0px;
+}
+
 .details .main-details .buttons button {
   border: none;
   border-radius: 25px;
@@ -78,12 +82,12 @@ ul.slick-dots {
   padding: 10px 25px;
   font-weight: bold;
   cursor: pointer;
+  color: var(--font-color);
 }
 
-.details .main-details .watch {
+.details .main-details .watch-btn {
   background: red;
   margin-right: 70px;
-
 }
 
 .details .main-details .addlist {
@@ -97,14 +101,32 @@ ul.slick-dots {
 
 @media screen and (max-width: 970px) {
   .details .main-details .desc {
-    max-height: 40px;
+    max-height: 90px;
     overflow-y: hidden;
     /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)); */
     /* filter: opacity(80%); */
   }
 
-  .details .buttons button {
-    font-size: 12px;
-    padding: 3px 12px;
+  .details .main-details > p {
+    padding: 12px 0;
+    font-size: 14px;
   }
+
+  .details .main-details > p > .genre {
+    font-size: 15px;
+  }
+
+  .details .main-details h3.title {
+    font-size: 28px;
+  }
+
+  .details .main-details .buttons > button {
+    padding: 7px 9px;
+    margin: 18px 5px;
+    font-size: 16px;
+  }
+  
+  /* .details .main-details .buttons .icon {
+    font-size: 13px;
+  } */
 }

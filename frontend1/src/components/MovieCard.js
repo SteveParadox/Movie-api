@@ -30,9 +30,9 @@ const MovieCard = ({ title, like, viewed, friends, adPic }) => {
             <ThreePic /> 
           </div>
           <p>
-            <FaHeart size={15} color={like ? "#2b2a30" : "red"} />
+            <FaHeart size={15} color={like ? "#2b2a30" : "var(--apps-red)"} />
             {" "}
-            <FaEye size={15} color={viewed ? "red" : "#2b2a30"} />
+            <FaEye size={15} color={viewed ? "var(--apps-red)" : "#2b2a30"} />
           </p>
         </div>
       </div>

@@ -35,7 +35,8 @@
 
 .nav-links {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  justify-content: space-around;
   width: 45%;
   list-style: none;
 }
@@ -92,7 +93,7 @@
 .snu #notification-number {
   position: relative;
   font-size: 10px;
-  background: red;
+  background: var(--apps-red);
   padding: 2px 5px; 
   border-radius: 50%;
   top: -13px;
@@ -101,7 +102,7 @@
 
 .user-avatar  > img {
   border-radius: 50%;
-  border: 1px solid red;
+  border: 1px solid var(--apps-red);
   width: 37px;
   height: 37px;
 }

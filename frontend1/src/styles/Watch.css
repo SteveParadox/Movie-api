@@ -1,0 +1,185 @@
+/* Styles For Watch.js */
+.watch {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.watch .watch-body {
+  flex-grow: 1;
+  /* background: red; */
+  padding: 10px;
+}
+
+.watch .watch-body .movieShow {
+  padding-top: 70px;
+  width: 100%;
+  /* background: red; */
+  padding-left: 15px;
+}
+
+.watch .watch-body .vid {
+  width: 60%;
+  /* background: dodgerblue; */
+}
+
+.watch .watch-body .vid > video {
+  border-radius: 4px !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.watch .watch-body .movieShow .vid-btns {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* background: dodgerblue; */
+}
+
+.watch .watch-body .movieShow .vid-btns button {
+  background: none;
+  border: none;
+  margin: 10px 5px;
+  padding: 5px 20px;
+  font-size: 20px;
+  border-bottom: 1px solid var(--apps-red);
+}
+
+/* Styles for cast */
+.watch .watch-body .display {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+  color: grey;
+  font-weight: bold;
+}
+
+.watch .watch-body .title {
+  font-size: 22px;
+  padding: 18px 0;
+}
+
+.watch .watch-body .cast {
+  flex-grow: 1;
+}
+
+.watch .watch-body .cast>p:only-of-type {
+  color: grey;
+  font-size: 16px;
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+.watch .watch-body .cast-item img {
+  width: 100%;
+  max-height: 130px;
+  padding: 5px;
+  border-radius: 8px;
+}
+
+.watch .watch-body .cast-item>div>p {
+  margin: 5px 10px;
+}
+
+.watch .watch-body .others {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.watch .watch-body .friends {
+  max-width: 360px;
+  margin-top: 70px;
+  margin-left: 10px;
+  /* background: red; */
+  position: relative;
+  margin: 70px auto;
+}
+
+.watch .watch-body .friend {
+  display: flex;
+  font-size: 14px;
+  color: #eee;
+}
+
+.watch .watch-body .friend .detail {
+  padding: 5px 15px;
+}
+
+.watch .watch-body .friends .bordered {
+  border: 2.5px solid rgba(73, 73, 75, 0.9);
+  border-radius: 4px;
+  min-width: 280px;
+  position: relative;
+  margin: 0 auto;
+}
+
+.watch .watch-body .friends .show {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.watch .watch-body .friends .show > p:last-of-type {
+  color: #eee;
+  font-weight: bold;
+  margin: 13px 0;
+}
+
+.watch .watch-body .friends > p:last-of-type.title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #eee;
+}
+
+.watch .watch-body .friend img {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+}
+
+/* Recommendations */
+.watch .watch-body .recommended {
+  display: 100%;
+  margin-bottom: 15px;
+}
+.watch .watch-body .recommended .show .moviecard {
+  max-width: 260px !important;
+}
+
+/* .watch .watch-body .movieShow .player video {
+  width: 100% !important;
+} */
+
+@media screen and (max-width: 580px) {
+  .watch .watch-body .cast-item img {
+    min-height: 140px;
+    min-width: 150px;
+  }
+
+  .watch .watch-body .friends {
+    margin: 0;
+  }
+  .watch .watch-body .friends .show .friend {
+    width: 100%;
+  }
+
+  .watch .watch-body .friends .show .friend .detail {
+    flex-grow: 3;
+  }
+}
+
+@media screen and (max-width: 492px) {
+  .watch .watch-body .cast-item {
+    width: 100%;
+    height: auto;
+  }
+
+  .watch .watch-body .cast-item>img {
+    min-height: 190px;
+  }
+}

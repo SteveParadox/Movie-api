@@ -1,6 +1,6 @@
 /* CSS For the footer */
 footer {
-  background: #16151a;
+  background: var(--background);
   width: 100%;
   height: 65px;
   display: flex;

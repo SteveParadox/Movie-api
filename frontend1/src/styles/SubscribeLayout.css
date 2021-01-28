@@ -74,6 +74,9 @@
   display: flex;
   flex-wrap: no-wrap;
   padding: 12px;
+  background-color: #373637;
+  max-width: 560px;
+  height: 115px;
 }
 
 .rating div:nth-child(1) {
@@ -108,7 +111,7 @@
 @media screen and (max-width: 820px){
   .subscribelayout {
     display: block;
-    height: 650px;
+    height: 550px;
   }
   .subscribelayout > div {
     width: 100%;
@@ -120,7 +123,8 @@
     top: 75%;
   }
   .subscribelayout .slide-part .rating {
-    margin: 15px 0;
+    /* margin: 15px 0; */
+    padding: 12px 0 12px 2px;
   }
   .subscribelayout .slide-part .rating > div:nth-of-type(2) {
     flex-grow: 1;

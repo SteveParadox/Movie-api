@@ -37,7 +37,7 @@
 }
 
 .recommendations .top .filter > p.active {
-  border-bottom: 3px solid red;
+  border-bottom: 3px solid var(--apps-red);
 }
 
 .recommendations .top .inner .filter > p:not(.active) {
@@ -71,7 +71,7 @@
   }
   
   .recommendations .top1 .filter > p.active {
-    border-bottom: 3px solid red;
+    border-bottom: 3px solid var(--apps-red);
   }
   
   .recommendations .top1 .inner .filter > p:not(.active) {
