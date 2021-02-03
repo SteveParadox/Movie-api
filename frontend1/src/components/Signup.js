@@ -16,7 +16,7 @@ import 'react-nice-dates/build/style.css'
 const Nav = () => {
   return (
     <nav>
-      <div className="logo"><BsFillCameraVideoFill /> {" "}<Link to="/" className="name">Filba</Link></div>
+      <div className="logo">{/*<BsFillCameraVideoFill />*/} {" "}<Link to="/" className="name">Filba</Link></div>
       <div className="signBtn"><Link to="/signin"><button>Signin</button></Link></div>
     </nav>
   );

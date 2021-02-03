@@ -99,12 +99,10 @@ ul.slick-dots {
 }
 
 
-@media screen and (max-width: 970px) {
+/* @media screen and (max-width: 970px) {
   .details .main-details .desc {
     max-height: 90px;
     overflow-y: hidden;
-    /* background: linear-gradient(180deg, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.8)); */
-    /* filter: opacity(80%); */
   }
 
   .details .main-details > p {
@@ -126,7 +124,30 @@ ul.slick-dots {
     font-size: 16px;
   }
   
-  /* .details .main-details .buttons .icon {
-    font-size: 13px;
+} */
+
+@media screen and (max-width: 970px) {
+  .details {
+    max-height: 90vh;
+  }
+  .details .main-details p {
+    display: none;
+  }
+  .details .main-details h3.title {
+    text-align: center;
+    font-size: 45px;
+  }
+  .details .main-details .buttons {
+    display: flex;
+    margin-top: 60px;
+    justify-content: space-between;
+  }
+  .details .main-details .buttons > a button {
+    padding: 7px 9px;
+    margin: 18px 0;
+    font-size: 16px;
+  }
+  /* .details .main-details .buttons > a button.addlist {
+    background: dodgerblue;
   } */
 }

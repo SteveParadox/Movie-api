@@ -6,6 +6,9 @@
   width: 100%;
   /* background: red; */
 }
+.navbar .mobile {
+  display: none;
+}
 .logo {
   display: flex;
   align-items: center;
@@ -28,8 +31,7 @@
 .navbar {
   position: absolute;
   width: 100%;
-  height: 10vh;
-  /* background: red; */
+  min-height: 70px;
   z-index: 10;
 }
 
@@ -64,6 +66,7 @@
   justify-content: space-between;
   align-items: center;
   width: calc(40% - 20% - 40px);
+  transform: scale(0.94);
 }
 
 .snu > * {
@@ -111,10 +114,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.user-avatar > * {
-  margin: 0 3px;
+  transform: scale(0.9);
 }
 
 .user-avatar .number-of-users {
@@ -165,4 +165,58 @@
   font-size: 27px;
   color: grey;
   cursor: pointer;
+}
+
+
+/* Styles for mobile Nav */
+@media screen and (max-width: 830px) {
+  .navbar {
+    /* background: red; */
+    min-height: 50px;
+    padding: 0 5px;
+  }
+
+  .navbar > *:not(.mobile) {
+    display: none;
+  }
+
+  .navbar .mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+  }
+
+  .mobile .actions {
+    display: flex;
+    /* background: dodgerblue; */
+  }
+
+  .mobile .actions > * {
+    cursor: pointer;
+  }
+
+  .mobile .icon {
+    font-size: 26px;
+    margin: 0 3px;
+  }
+
+  .mobile .burger {
+    transform: translateY(3px);
+    margin-right: 3px;
+  }
+
+  .mobile .burger > div {
+    background: var(--font-color);
+    width: 30px;
+    height: 2.5px;
+    border-radius: 15px;
+    margin-bottom: 6px;
+  }
+
+  .mobile > .logo {
+    /* background: dodgerblue; */
+    text-align: center;
+    height: auto;
+  }
 }

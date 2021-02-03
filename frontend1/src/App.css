@@ -4,6 +4,8 @@
   --font-color: rgb(252, 252, 252);
   --background: #16151a;
   --apps-red: rgb(221, 30, 30);
+  --apps-grey: #242222;
+  --apps-black: #0d0d0d;
 }
 
 * {
@@ -19,6 +21,7 @@ body, html {
   background-color: var(--background);
   color: var(--font-color);
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 a {
@@ -33,6 +36,11 @@ button {
 
 .active {
   border-bottom: 2px solid var(--apps-red);
+}
+
+.noborder {
+  border: none;
+  outline: none;
 }
 
 .App {

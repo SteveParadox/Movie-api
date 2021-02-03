@@ -35,7 +35,7 @@ export const login = async obj => {
 
 export const logout = async () => {
   try {
-    const res = axios.post(urls.logout)
+    const res = await axios.post(urls.logout)
     console.log(res);
   } catch {
     console.log("Something went wrong");
@@ -64,7 +64,7 @@ export const AddFriend = async (friendName) => {
 export const GetSimilarMovies = async (u_id) => {
   let similarMovies = [];
   try {
-    const res = axios.get(`https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`);
+    const res = await axios.get(`https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`);
     console.log(res);
     // set the value of similarMovies variable to the response
   } catch(err) {

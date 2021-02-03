@@ -203,3 +203,9 @@
     margin: 5px 8px;
   }
 }
+
+@media screen and (max-width: 750px) {
+  .movies .top {
+    display: none;
+  }
+}

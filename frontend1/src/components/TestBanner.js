@@ -41,7 +41,7 @@ const Details = ({ year, genre, time, review, movieName, desc, link }) => {
         <p className="desc">{desc}</p>
         <div className="buttons">
           <Link to={`/watch/${link}/`}><button className="watch-btn"> <FaPlay id="watch-icon" className="icon" /> Watch</button></Link>
-          <button className="addlist" onClick={AddList}> <FaPlus id="add-icon" className="icon" /> Add List</button>
+          <Link to={`/#`}><button className="addlist" onClick={AddList}> <FaPlus id="add-icon" className="icon" /> Add List</button></Link>
         </div>
       </div>
     </div>

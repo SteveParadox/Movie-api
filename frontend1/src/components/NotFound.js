@@ -3,19 +3,6 @@ import { Link } from "react-router-dom";
 import NavBar from "./AppNavBar";
 import "../styles/NotFound.css";
 import Film from "../white-film.png";
-// import ReactPlayer from "react-player";
-
-
-// An example of video rendering in react.js
-// const NotFound = () => {
-  //   return (
-//     <div className="center">
-//       <ReactPlayer controls url="http://localhost/vid.mp4" />
-//     </div>
-//   );
-// }
-
-
 
 const NotFound = ({ match }) => {
   return (

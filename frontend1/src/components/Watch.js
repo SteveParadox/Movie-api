@@ -6,8 +6,19 @@ import Footer from "./Footer";
 import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
 import ReactPlayer from "react-player";
-import { GetSimilarMovies } from "./Helper";
-import { FaThumbsUp, FaThumbsDown, FaShareAlt, FaRegSave } from "react-icons/fa";
+import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
+import { MdPlaylistAdd } from "react-icons/md";
+
+import {
+  FaThumbsUp,
+  FaThumbsDown,
+  FaShareAlt,
+  FaRegSave,
+  FaPlay,
+} from "react-icons/fa";
+import axios from "axios";
+import { GoPrimitiveDot } from "react-icons/go";
+import urls from "../apiEndPoints";
 
 /* Some small components */
 const Cast = ({ pic, actorName, name }) => {
@@ -38,14 +49,62 @@ const SimilarMovies = ({ u_id }) => {
   // fetch data from api using u_id
   const [movies, setMovies] = useState([]);
   useEffect(() => {
-    setMovies(GetSimilarMovies(u_id));
-    console.log(movies);
+    const GetSimilarMovies = async (u_id) => {
+      let similarMovies = [];
+      try {
+        const res = await axios.get(
+          `https://movie-stream-api.herokuapp.com/api/similar/movie/${u_id}`
+        );
+        console.log(res);
+        // set the value of similarMovies variable to the response
+        setMovies(similarMovies);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    GetSimilarMovies();
   }, [movies, u_id]);
 
   return (
     <div className="recommended">
-      <p className="title">Recommended</p>
+      <p className="title">You might also like</p>
       <div className="show">
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
+        <MovieCard
+          title="The Lord"
+          liked={false}
+          viewed={false}
+          adPic={Joker}
+        />
         <MovieCard
           title="The Lord"
           liked={false}
@@ -61,40 +120,71 @@ const SimilarMovies = ({ u_id }) => {
 const Watch = ({ match }) => {
   console.log(match.params.movie_id);
   const u_id = match.params.movie_id;
+  // const [data, setData] = useEffect();
+  // useEffect(() => {
+  //   // Check if logged in
+  //   axios.get(urls.all)
+  //     .then(res => {
+  //       setData(res.data);
+  //     })
+  //     .catch(err => console.log("There might be a network error"));
+  // }, []);
+  // useEffect(() => {
+  //   function fetchDetail() {
+  //     axios.get(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`)
+  //       .then(res => console.log(res))
+  //       .catch(err => console.log("Sorry, can't fetch movie detail!"));
+  //   }
+  //   fetchDetail();
+  // }, []);
   return (
     <div className="watch">
+      {/* {
+        !data.logged_in ? <Redirect to="/signin" /> : null
+      } */}
       <AppNavBar />
       <div className="watch-body">
         <div className="movieShow">
           <div className="vid">
-            <ReactPlayer
-              url={`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`}
-              controls={true}
-              width="100%"
-              height="auto"
-            />
-            {/* <video
-            src={`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`}
-          ></video> */}
-            <div className="vid-btns">
-              <button>
-                <FaThumbsUp color="var(--font-white)" /> <br/>
-                Like
-              </button>
-              <button>
-                <FaThumbsDown color="var(--font-white)" />
-              </button>
-              <button>
-                <FaShareAlt color="var(--font-white)" />
-              </button>
-              <button>
-                <FaRegSave color="var(--font-white)" />
-              </button>
+            <div className="main">
+              <ReactPlayer 
+                url="http://filba.com/vid.mp4"
+                // url="http://192.168.43.157/vid.mp4"
+                lazy="true"
+                controls
+              />
             </div>
+            <div className="actions">
+              <p className="title">The Joker</p>
+              <div className="btns">
+                <div>
+                  <FaHeart className="icons" /> <br />
+                  <span>10 Likes</span>
+                </div>
+                <div>
+                  <FaEye className="icons" /> <br />
+                  <span>60m Views</span>
+                </div>
+                <div>
+                  <FaPlus className="icons" /> <br />
+                  <span>Add to list</span>
+                </div>
+              </div>
+            </div>
+            <div className="ratings">
+                <p>Rating</p>
+                <div className="stars">
+                  <FaStar color="yellow"/>
+                  <FaStar color="yellow"/>
+                  <FaStar color="yellow"/>
+                  <FaStar />
+                  <FaStar />
+                </div>
+              </div>
           </div>
         </div>
         <div className="others">
-          <div className="cast">
+          {/* <div className="cast">
             <h3 className="title">Cast</h3>
             <div className="display">
               <Cast pic={Joker} actorName="Elizabeth Debicki" name="Kat" />
@@ -103,9 +193,9 @@ const Watch = ({ match }) => {
               <Cast pic={Joker} actorName="Elizabeth Debicki" name="Kat" />
             </div>
             <p>See More...</p>
-          </div>
-          <div className="friends">
-            <div className="bordered">
+          </div> */}
+          {/* <div className="friends">
+            <p className="title">Friends</p>
               <div className="show">
                 <Friend pic={Joker} name="Justin Tik" address="@justti" />
                 <Friend pic={Joker} name="Justin Tik" address="@justti" />
@@ -113,9 +203,7 @@ const Watch = ({ match }) => {
                 <Friend pic={Joker} name="Justin Tik" address="@justti" />
                 <p>See More..</p>
               </div>
-            </div>
-            <p className="title">Friends</p>
-          </div>
+          </div> */}
         </div>
         <SimilarMovies u_id={u_id} />
       </div>

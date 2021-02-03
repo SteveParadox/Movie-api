@@ -12,38 +12,50 @@
   padding: 10px;
 }
 
-.watch .watch-body .movieShow {
-  padding-top: 70px;
-  width: 100%;
-  /* background: red; */
-  padding-left: 15px;
-}
-
-.watch .watch-body .vid {
-  width: 60%;
-  /* background: dodgerblue; */
-}
-
-.watch .watch-body .vid > video {
-  border-radius: 4px !important;
-  width: 100% !important;
-  height: auto !important;
-}
-
-.watch .watch-body .movieShow .vid-btns {
+/* Styles for videos */
+.watch .movieShow .actions {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  align-items: center;
   /* background: dodgerblue; */
 }
 
-.watch .watch-body .movieShow .vid-btns button {
-  background: none;
-  border: none;
-  margin: 10px 5px;
-  padding: 5px 20px;
-  font-size: 20px;
-  border-bottom: 1px solid var(--apps-red);
+.watch .movieShow .actions .btns {
+  display: flex;
+  padding-right: 15px;
+}
+
+.watch .movieShow .actions .btns > div {
+  padding: 3px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.watch .movieShow .actions .btns .icons {
+  font-size: 17.5px;
+}
+
+.watch .movieShow .actions .btns .icons:nth-of-type(2) {
+  color: red !important;
+}
+
+.watch .movieShow .vid {
+  width: 650px;
+  /* background: red; */
+  margin-top: 55px;
+}
+
+.watch .movieShow .ratings {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 20px;
+  margin-bottom: 10px;
+}
+
+.watch .movieShow .ratings > .stars > * {
+  margin: 0 4px;
+  font-size: 19px;
 }
 
 /* Styles for cast */
@@ -92,7 +104,7 @@
   max-width: 360px;
   margin-top: 70px;
   margin-left: 10px;
-  /* background: red; */
+  background: #242222;
   position: relative;
   margin: 70px auto;
 }
@@ -107,13 +119,13 @@
   padding: 5px 15px;
 }
 
-.watch .watch-body .friends .bordered {
+/* .watch .watch-body .friends .bordered {
   border: 2.5px solid rgba(73, 73, 75, 0.9);
   border-radius: 4px;
   min-width: 280px;
   position: relative;
   margin: 0 auto;
-}
+} */
 
 .watch .watch-body .friends .show {
   display: flex;
@@ -125,10 +137,10 @@
 .watch .watch-body .friends .show > p:last-of-type {
   color: #eee;
   font-weight: bold;
-  margin: 13px 0;
+  margin: 13px 0 20px 0;
 }
 
-.watch .watch-body .friends > p:last-of-type.title {
+.watch .watch-body .friends p.title {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
@@ -144,11 +156,23 @@
 
 /* Recommendations */
 .watch .watch-body .recommended {
-  display: 100%;
+  width: 100%;
   margin-bottom: 15px;
 }
+.watch .watch-body .recommended .show {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: center;
+}
 .watch .watch-body .recommended .show .moviecard {
-  max-width: 260px !important;
+  max-width: 215px !important;
+  flex-shrink: 1;
+  margin: 2.5px 5px;
+}
+.watch .watch-body .recommended .title {
+  font-size: 1.3rem;
+  margin-left: 15px;
 }
 
 /* .watch .watch-body .movieShow .player video {
@@ -171,6 +195,16 @@
   .watch .watch-body .friends .show .friend .detail {
     flex-grow: 3;
   }
+
+  .watch .watch-body .recommended .show {
+    /* background: red; */
+    flex-direction: column;
+  }
+  .watch .watch-body .recommended .show > .moviecard {
+    /* background: dodgerblue; */
+    min-width: 85vw;
+    margin: 15px auto !important;
+  }
 }
 
 @media screen and (max-width: 492px) {
@@ -181,5 +215,27 @@
 
   .watch .watch-body .cast-item>img {
     min-height: 190px;
+  }
+
+  .watch .watch-body .movieShow .vid {
+    width: 100vw;
+    padding-left: 0px;
+  }
+  
+  .watch .watch-body .movieShow .vid  .main {
+    width: 100vw;
+    /* height: 500px; */
+    position: relative;
+    left: -10px;
+  }
+
+  .watch .watch-body .movieShow .vid video {
+    width: 100vh !important;
+    height: auto;
+    /* object-fit: scale-down; */
+    /* object-fit: fill; */
+    object-fit: cover;
+    vertical-align: middle;
+    /* object-fit: contain; */
   }
 }

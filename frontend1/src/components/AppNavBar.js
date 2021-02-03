@@ -4,6 +4,7 @@ import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
 import { FaSearch, FaAngleDown, FaBell } from "react-icons/fa";
+import { BsFillCameraVideoFill } from "react-icons/bs";
 import Friend from "./Friend";
 import axios from "axios";
 import urls from "../apiEndPoints";
@@ -11,7 +12,6 @@ import urls from "../apiEndPoints";
 // Bring in img for testing purpose
 import Joker from "../joker_movie.jpg";
 import User from "../user.jpg";
-
 
 const UserAvatar = (props) => {
   return (
@@ -26,69 +26,104 @@ const UserAvatar = (props) => {
 const AppNavBar = () => {
   const [appState, setAppState] = useContext(MovieContext);
 
-  useEffect(() => {
-    function fetchData() {
-      axios(urls.all)
-        .then(res => {
-          setAppState(n => {
-            return {
-              ...n,
-              logged_in: res.data["logged in"],
-              user_name: res.data["name"] ? res.data["name"] : ""
-            }
-          })
-        })
-        .catch(() => console.log("Something went wrong!"));
-    }
-    fetchData();
-  })
+  // useEffect(() => {
+  //   function fetchData() {
+  //     axios(urls.all)
+  //       .then(res => {
+  //         setAppState(n => {
+  //           return {
+  //             ...n,
+  //             logged_in: res.data["logged in"],
+  //             user_name: res.data["name"] ? res.data["name"] : ""
+  //           }
+  //         })
+  //       })
+  //       .catch(() => console.log("Something went wrong!"));
+  //   }
+  //   fetchData();
+  // })
 
   // Helper functions
   function openFindFriends() {
-    setAppState(prevState => ({...prevState, friendsDisplay: true }));
+    setAppState((prevState) => ({ ...prevState, friendsDisplay: true }));
   }
-  
+
   function closeFindFriends() {
-    setAppState(prevState => ({...prevState, friendsDisplay: false }));
+    setAppState((prevState) => ({ ...prevState, friendsDisplay: false }));
   }
 
   const friendDisplay1 = {
-    "transform": "translateX(-290px)",
+    transform: "translateX(-290px)",
   };
 
   const friendDisplay2 = {
-    "transform": "translateX(0px)",
+    transform: "translateX(0px)",
   };
 
   const logoVisibility1 = {
-    "visibility": "hidden",
+    visibility: "hidden",
   };
 
   const logoVisibility2 = {
-    "visibility": "visible",
+    visibility: "visible",
   };
 
   return (
     <nav className="navbar">
-      <div className="find-friends" style={appState.friendsDisplay ? friendDisplay2 : friendDisplay1 }>
+      <div
+        className="find-friends"
+        style={appState.friendsDisplay ? friendDisplay2 : friendDisplay1}
+      >
         <div className="find-input">
           <span>
-            <FaSearch size={20} color="grey"/>
+            <FaSearch size={20} color="grey" />
           </span>
-          <input type="text" name="find_friends" id="find_friends" placeholder="find friends" />
-          <span className="closeFindFriends" onClick={closeFindFriends}>&times;</span>
+          <input
+            type="text"
+            name="find_friends"
+            id="find_friends"
+            placeholder="find friends"
+          />
+          <span className="closeFindFriends" onClick={closeFindFriends}>
+            &times;
+          </span>
         </div>
 
         <div className="friend-results">
-          <Friend avatar={Joker} name="Nonso" status={true} title="The Avengers" />
-          <Friend avatar={Joker} name="Jane" status={true} title="The Avengers" />
-          <Friend avatar={Joker} name="Anita" status={false} into="Actions, thriller, Horror" />
+          <Friend
+            avatar={Joker}
+            name="Nonso"
+            status={true}
+            title="The Avengers"
+          />
+          <Friend
+            avatar={Joker}
+            name="Jane"
+            status={true}
+            title="The Avengers"
+          />
+          <Friend
+            avatar={Joker}
+            name="Anita"
+            status={false}
+            into="Actions, thriller, Horror"
+          />
         </div>
       </div>
       <div className="top-bar">
         {/* The logo */}
-        <div className="logo" style={ appState.friendsDisplay ? logoVisibility1 : logoVisibility2 }>
-          <img src={logo} id="cam-logo" width={25} height={25} alt="logo" onClick={openFindFriends} />
+        <div
+          className="logo"
+          style={appState.friendsDisplay ? logoVisibility1 : logoVisibility2}
+        >
+          <img
+            src={logo}
+            id="cam-logo"
+            width={25}
+            height={25}
+            alt="logo"
+            onClick={openFindFriends}
+          />
           {/* <BsFillCameraVideoFill size={22} color="white" onClick={openFindFriends} id="cam-logo" /> */}
           <h3>Filba</h3>
         </div>
@@ -121,12 +156,28 @@ const AppNavBar = () => {
           </Link>
           <Link to="/notification">
             <button className="notification">
-              <FaBell size={27} color="white"/>
+              <FaBell size={27} color="white" />
               <span id="notification-number">2</span>
             </button>
           </Link>
           <Link to="/user">
             <UserAvatar numberOfUsers={2} />
+          </Link>
+        </div>
+      </div>
+      <div className="mobile">
+        <div className="actions">
+          <div className="burger">
+            <div className="line1"></div>
+            <div className="line1"></div>
+            <div className="line1"></div>
+          </div>
+          <BsFillCameraVideoFill className="icon" />
+        </div>
+        <div className="logo">Filba</div>
+        <div className="search">
+          <Link to="/search">
+            <FaSearch className="icon" onClick={openFindFriends} />
           </Link>
         </div>
       </div>
