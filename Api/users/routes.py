@@ -11,7 +11,7 @@ import cloudinary as Cloud
 import cloudinary.uploader
 from Api.utils import save_img
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-
+from .config import Config
 
 users = Blueprint('users', __name__)
 
@@ -67,7 +67,7 @@ def login(expires_sec=1800):
         login_user(user)
         user.logged_in = True
         db.session.commit()
-        s = Serializer("jfhdklf;dknjuorlenfvkvubrlvjortiougifjvnvimvlvm", expires_sec)
+        s = Serializer(Config.SECRET_KEY , expires_sec)
         payload= {
                 "id": user.id,
                 "name": user.name
