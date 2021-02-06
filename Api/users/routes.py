@@ -67,7 +67,7 @@ def login(expires_sec=1800):
         login_user(user)
         user.logged_in = True
         db.session.commit()
-        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        s = Serializer("jfhdklf;dknjuorlenfvkvubrlvjortiougifjvnvimvlvm", expires_sec)
         return jsonify({
             "status": "success",
             "message": "login successful",
