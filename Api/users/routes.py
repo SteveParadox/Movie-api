@@ -68,6 +68,10 @@ def login(expires_sec=1800):
         user.logged_in = True
         db.session.commit()
         s = Serializer("jfhdklf;dknjuorlenfvkvubrlvjortiougifjvnvimvlvm", expires_sec)
+        payload= {
+                "id": user.id,
+                "name": user.name
+            }
         return jsonify({
             "status": "success",
             "message": "login successful",
