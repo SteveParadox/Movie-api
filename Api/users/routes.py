@@ -11,7 +11,7 @@ import cloudinary as Cloud
 import cloudinary.uploader
 from Api.utils import save_img
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from .config import Config
+from Api.config import Config
 
 users = Blueprint('users', __name__)
 
