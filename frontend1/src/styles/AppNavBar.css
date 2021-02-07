@@ -191,17 +191,17 @@
     display: flex;
     /* background: dodgerblue; */
   }
-
-  .mobile .actions > * {
-    cursor: pointer;
-  }
-
+  
   .mobile .icon {
-    font-size: 26px;
-    margin: 0 3px;
+    font-size: 23px;
   }
-
+  
+  .mobile .logo .icon {
+    transform: translate(-3px, 1px);
+  }
+  
   .mobile .burger {
+    cursor: pointer;
     transform: translateY(3px);
     margin-right: 3px;
   }
@@ -213,10 +213,52 @@
     border-radius: 15px;
     margin-bottom: 6px;
   }
+/* 
+  .mobile .burger:hover > div {
+    background: var(--apps-red);
+  } */
 
   .mobile > .logo {
     /* background: dodgerblue; */
     text-align: center;
     height: auto;
+    color: var(--apps-red);
+  }
+
+  .mobile .actions {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--apps-black);
+    width: 100%;
+    min-height: 100vh;
+    z-index: 100;
+  }
+
+  .mobile .actions {
+    display: block;
+  }
+
+  .mobile .actions .top {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    width: 100%;
+    height: 40px;
+    cursor: pointer;
+  }
+  .mobile .actions .top .title {
+    text-align: center;
+    width: 100%;
+  }
+  .mobile .actions .top .icon:hover {
+    color: var(--apps-red);
+  }
+
+  .mobile .actions .nav-body > div {
+    background: var(--apps-grey);
+    margin: 20px 0;
+    padding: 10px;
+    min-height: 50px;
   }
 }

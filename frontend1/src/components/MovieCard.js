@@ -23,7 +23,8 @@ const MovieCard = ({ title, like, viewed, friends, adPic }) => {
   return (
     <div className="moviecard">
       <div>
-        <img src={Joker} alt="." id="adPic" />
+        <img src={`https://res.cloudinary.com/du05mneox/image/upload/${title}.jpg`} alt="." id="adPic" />
+        {/* <img src={Joker} alt="." id="adPic" /> */}
         <h3>{ title }</h3>
         <div className="end">
           <div className="picsOfFriends">

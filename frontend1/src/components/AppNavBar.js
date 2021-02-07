@@ -1,9 +1,9 @@
-import React, { useEffect, useContext } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useEffect, useContext, useState } from "react";
+import { NavLink, Link, Redirect } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
-import { FaSearch, FaAngleDown, FaBell } from "react-icons/fa";
+import { FaSearch, FaAngleDown, FaBell, FaArrowLeft } from "react-icons/fa";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import Friend from "./Friend";
 import axios from "axios";
@@ -25,11 +25,17 @@ const UserAvatar = (props) => {
 
 const AppNavBar = () => {
   const [appState, setAppState] = useContext(MovieContext);
+  const [navOpen, setNavOpen] = useState(false);
+  const [logged_in, setLogged] = useState(false);
 
+  // Check and store logged in
   // useEffect(() => {
   //   function fetchData() {
-  //     axios(urls.all)
+  //     axios.get(urls.all)
   //       .then(res => {
+  //         console.log(res);
+  //         setLogged(res.data["logged in"]);
+  //         console.log(res.data["logged in"]);
   //         setAppState(n => {
   //           return {
   //             ...n,
@@ -41,7 +47,7 @@ const AppNavBar = () => {
   //       .catch(() => console.log("Something went wrong!"));
   //   }
   //   fetchData();
-  // })
+  // }, []);
 
   // Helper functions
   function openFindFriends() {
@@ -68,8 +74,28 @@ const AppNavBar = () => {
     visibility: "visible",
   };
 
+  const closeMobileNav = () => {
+    try {
+      setNavOpen(false);
+    } catch(err) {
+      console.log(err);
+    }
+    console.log(navOpen);
+    console.log(setNavOpen.toString());
+  }
+
+  const openMobileNav = () => {
+    try {
+      setNavOpen(true);
+    } catch(err) {
+      console.log(err);
+    }
+    console.log(navOpen);
+  }
+  
   return (
     <nav className="navbar">
+      {/* { !logged_in ? <Redirect to="/signin" /> : null} */}
       <div
         className="find-friends"
         style={appState.friendsDisplay ? friendDisplay2 : friendDisplay1}
@@ -165,16 +191,43 @@ const AppNavBar = () => {
           </Link>
         </div>
       </div>
-      <div className="mobile">
-        <div className="actions">
+      <div className="mobile" onClick={openMobileNav}>
           <div className="burger">
             <div className="line1"></div>
             <div className="line1"></div>
             <div className="line1"></div>
           </div>
-          <BsFillCameraVideoFill className="icon" />
+        <div className="actions" style={{"display": navOpen ? "block" : "none"}}>
+          <div className="top">
+            <FaArrowLeft className="icon" onClick={closeMobileNav}/>
+            <h3 className="title">Activity</h3>
+          </div>
+          <div className="nav-body">
+            <div className="profile">
+              Profile
+            </div>
+            <div className="Movies">
+              Movies
+            </div>
+            <div className="My List">
+              My List
+            </div>
+            <div className="Settings">
+              Settings
+            </div>
+            <div className="Friend Request">
+              Friend Request
+            </div>
+            <div className="Messages">
+              Messages
+            </div>
+          </div>
         </div>
-        <div className="logo">Filba</div>
+          
+        <div className="logo">
+          <BsFillCameraVideoFill className="icon" />
+          <span>Filba</span>
+        </div>
         <div className="search">
           <Link to="/search">
             <FaSearch className="icon" onClick={openFindFriends} />

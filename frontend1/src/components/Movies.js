@@ -1,19 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { MovieContext } from "../MovieContext";
 import MovieCard from "./MovieCard";
 import "../styles/MovieCard.css";
-import { FaPlus, FaStar, FaFilm, FaFire, FaPlayCircle } from "react-icons/fa";
-import { BiTrendingUp } from "react-icons/bi";
+import { FaPlus, FaStar, FaFilm, FaPlayCircle } from "react-icons/fa";
+// import { BiTrendingUp } from "react-icons/bi";
 import { GiAerialSignal } from "react-icons/gi";
+import { GoPrimitiveDot } from "react-icons/go";
 import { MdMovie } from "react-icons/md";
 import "../styles/Movies.css";
-import Joker from "../joker_movie.jpg";
+import axios from "axios";
+import urls from "../apiEndPoints";
 
-// Import slider and related stuff
-import Slider from "react-slick";
-import "../styles/TestBanner.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 const PlusMovies = () => {
   return (
@@ -27,6 +25,7 @@ const PlusMovies = () => {
 
 const Movies = () => {
   const [state, updateState] = useContext(MovieContext);
+  const [MoviesState, setMovieState] = useState([]);
   // movies state should hold data to be mapped(displayed) to the screen
   // @todo -> using the useEffect hook, update the movies state based
   // on the genre state, by making calls to the server
@@ -47,10 +46,36 @@ const Movies = () => {
     family: true,
     crime: true,
   });
+
+  // Fetch movies for display
+  useEffect(() => {
+    function fetchMovies() {
+      axios.get(urls.popular)
+        .then(res => {
+          setMovieState(res.data.data);
+        })
+        .catch(err => console.log("Sorry fetch movies failed", err));
+    }
+    fetchMovies();
+  },[]);
+
+  window.addEventListener("click", (e) => {
+    window.test = e.target;
+    if(e.target.nodeName === "svg") return;
+    if(!e.target.className.includes("specX")) {
+      updateState((n) => {
+        return {
+          ...n,
+          detailsDisplay: false,
+        };
+      });
+    }
+  });
+
   // get the ui_id from the state and do a fetch call to get the movie data
   const MovieDetails = () => {
     const closeDetails = (e) => {
-      console.log(e);
+      // console.log(e);
 
       updateState((n) => {
         return {
@@ -59,80 +84,95 @@ const Movies = () => {
         };
       });
     };
-
-    useEffect(() => {
-      window.addEventListener("click", closeDetails);
-    });
     
     const place = {
       top: state.details.top,
-      display: state.detailsDisplay ? "block" : "none",
+      display: state.detailsDisplay ? "flex" : "none",
     };
     const svgCenter = {
       left: state.details.left,
     };
     const bg = {
-      background: `url(${Joker})`,
+      background: `url("https://res.cloudinary.com/du05mneox/image/upload/${state.details.title}.jpg")`,
+      // background: `url(${Joker})`,
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
-      backgroundSize: "cover",
+      backgroundSize: "100% 150%",
       height: "100%",
       borderTopRadius: "4px",
       borderBottomRadius: "4px",
     };
     return (
-      <div className="details-overlay" style={{"display": state.detailsDisplay ? "block" : "none" }}>
-        <div className="details" style={place}>
+        <div className="details specX" style={place}>
           <svg
             id="arrow"
             baseProfile="full"
             zmlns="http://www.w3.org/2000/svg"
             style={svgCenter}
+            className="specX"
           >
-            <polygon width="45" height="45" points="22.5,0 45,45 0,45" />
+            <polygon width="45" height="45" points="22.5, 0 45,45 0,45" />
           </svg>
-          <div className="thumb" style={bg}>
-            {/* display play button here at the center */}
-            <FaPlayCircle size={60} color="lightgrey" />
+          <div className="vidShow specX" style={bg}>
+            {/* <img src={`https://res.cloudinary.com/du05mneox/image/upload/${state.details.title}.jpg`} alt="."/> */}
+            <Link to={`/watch/${state.details.u_id}`}>
+              <FaPlayCircle className="icon specX" />
+            </Link>
           </div>
-          {/* <p>{state.details.ui_id}</p> */}
-          <div className="all-details">
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet
-              quam enim, dolorum repudiandae error id eum autem? Delectus eum
-              earum ipsum itaque nam. Assumenda ipsum adipisci itaque nihil
-              porro nam, quas reprehenderit suscipit deleniti molestiae mollitia
-              architecto aliquid libero odio provident voluptatibus ipsa fugit
-              excepturi!
-            </p>
-            <p> {state.details.ui_id} </p>
+          <div className="all-details specX">
+            <div className="title specX">
+              <h3>{state.details.title}</h3>
+              <span><FaStar color="yellow" /> {state.details.rating}/10</span>
+            </div>
+            <div className="year-genre specX">
+              <span className="year">{state.details.year}</span>
+              <GoPrimitiveDot className="dot" />
+              <span className="genre specX">{state.details.genre}</span>
+            </div>
+            <p className="desc specX">{state.details.desc.slice(0, 300)}</p>
+            <p className="director specX"><span>Director:</span> {state.details.director}</p>
+            <Link to="/watch/dkjdk" className="relMovies specX">Related Movies</Link>
+            <span className="closeBtn specX" onClick={closeDetails}>
+              {/* <FaWindowClose /> */}
+              &times;
+            </span>
           </div>
         </div>
-      </div>
     );
   };
 
   const showDetails = (e) => {
-    if (e.target.nodeName === "IMG") {
-      let elem = e.target.parentNode.parentNode.parentNode;
-      let movie_id = elem.attributes["data-movie-id"].value;
-      console.log(elem);
-      console.log("Movie ID:", movie_id);
-      updateState((n) => {
-        return {
-          ...n,
-          details: {
-            top: elem.offsetTop,
-            left: elem.offsetLeft,
-            ui_id: movie_id,
-          },
-          detailsDisplay: true,
-        };
-      });
-      console.log(state);
+    e.stopPropagation();
+    let elem = e.target;
+    let movie_id = elem.attributes["data-movie-id"].value;
+    let movie_desc = elem.attributes["data-movie-desc"].value;
+    let movie_name = elem.attributes["data-movie-title"].value;
+    let movie_genre = elem.attributes["data-movie-genre"].value;
+    let movie_review = elem.attributes["data-movie-review"].value;
+    let movie_director = elem.attributes["data-movie-director"].value;
+    let movie_year = elem.attributes["data-movie-year"].value;
+
+    // console.log(elem);
+    updateState((n) => {
+      return {
+        ...n,
+        details: {
+          top: elem.offsetTop,
+          left: elem.offsetLeft,
+          u_id: movie_id,
+          title: movie_name,
+          desc: movie_desc,
+          genre: movie_genre,
+          rating: movie_review,
+          director: movie_director,
+          year: movie_year
+        },
+        detailsDisplay: true,
+      };
+    });
+    // console.log(state);
       // the movie id
       // use the movie id to fetch the movie data from the api
-    }
   };
 
   const addGenre = (e) => {
@@ -301,21 +341,35 @@ const Movies = () => {
       </div>
       <MovieDetails />
       <div className="displayMovies">
-        <div onClick={showDetails} data-movie-id={"1"}>
+        {/* <div 
+          onClick={showDetails} 
+          data-movie-id={"5"}
+          data-movie-desc={"blah ".repeat(40)}
+          data-movie-title={"The Nun"}
+          data-movie-genre={"Horror"}
+          data-movie-review={6.5}
+          data-movie-director={"uche Jombo"}
+          data-movie-year={"2018-12-4 23"}
+        >
           <MovieCard title="Stuff" like={true} viewed={true} />
-        </div>
-        <div onClick={showDetails} data-movie-id={"2"}>
-          <MovieCard title="Stuff" like={true} viewed={true} />
-        </div>
-        <div onClick={showDetails} data-movie-id={"3"}>
-          <MovieCard title="Stuff" like={true} viewed={true} />
-        </div>
-        <div onClick={showDetails} data-movie-id={"4"}>
-          <MovieCard title="Stuff" like={true} viewed={true} />
-        </div>
-        <div onClick={showDetails} data-movie-id={"5"}>
-          <MovieCard title="Stuff" like={true} viewed={true} />
-        </div>
+        </div> */}
+        {
+          MoviesState.map((i, idx) => (
+            <div 
+              key={idx} 
+              data-movie-id={i.id} 
+              data-movie-desc={i.description}
+              data-movie-title={i.name}
+              data-movie-genre={i.genre}
+              data-movie-review={i.review}
+              data-movie-director={i.creator}
+              data-movie-year={i.created_on}
+              onClick={showDetails}
+            >
+              <MovieCard title={i.name} like={i.thumbs_up} viewed={i.popular} />
+            </div>
+          ))
+        }
       </div>
       <PlusMovies />
     </div>

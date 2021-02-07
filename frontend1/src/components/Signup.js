@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { BsFillCameraVideoFill } from "react-icons/bs";
+// import { BsFillCameraVideoFill } from "react-icons/bs";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "../styles/Signin.css";
-import { register } from "./Helper";
 import axios from "axios";
+import urls from "../apiEndPoints";
 
 // Date Picker
 import { enGB } from 'date-fns/locale'
@@ -34,7 +34,7 @@ function Signup() {
     number: "",
   });
   
-  const [redirect, setRedirect] = useState(false);
+  const [registered, setRegistered] = useState(false);
   
   const [date, setDate] = useState(new Date(2020, 1, 24, 18, 15));
   
@@ -103,11 +103,11 @@ function Signup() {
   
   useEffect(() => {
     form["dob"] = `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}`;
-    // console.log(form, country);
   }, [date, form]);
   
   
   // Register function to submit the values
+  // @todo -> Make sure to do the form validation
   const submit = e => {
     e.preventDefault();
     updateForm(n => {
@@ -122,15 +122,25 @@ function Signup() {
       phone_no: formatPhoneNumber(form.number),
     }
 
-    // console.log(body);
-    register(body); // register function should return an object
-    setRedirect(true);
+    console.log(body);
+    axios.post(urls.signup, body)
+      .then(res => {
+        console.log(res);
+        if(res.data.status === "success") {
+          setRegistered(true);
+        }
+      })
+      .catch(err => {
+        console.log("Signup attempt failed\n", err);
+        // Update UI telling user registration failed
+      })
+
   }
 
   const [count, setCount] = useState(1);
   return (
     <div className="sign-body">
-      {redirect ? <Redirect to="/signin" /> : null}
+      {registered ? <Redirect to="/signin" /> : null}
       <Nav />
       <div className="main">
         <form onSubmit={submit}>

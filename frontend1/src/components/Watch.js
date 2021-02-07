@@ -7,17 +7,11 @@ import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
 import ReactPlayer from "react-player";
 import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
-import { MdPlaylistAdd } from "react-icons/md";
+// import { MdPlaylistAdd } from "react-icons/md";
 
-import {
-  FaThumbsUp,
-  FaThumbsDown,
-  FaShareAlt,
-  FaRegSave,
-  FaPlay,
-} from "react-icons/fa";
+
 import axios from "axios";
-import { GoPrimitiveDot } from "react-icons/go";
+// import { GoPrimitiveDot } from "react-icons/go";
 import urls from "../apiEndPoints";
 
 /* Some small components */
@@ -148,10 +142,11 @@ const Watch = ({ match }) => {
           <div className="vid">
             <div className="main">
               <ReactPlayer 
-                url="http://filba.com/vid.mp4"
-                // url="http://192.168.43.157/vid.mp4"
+                // url="http://filba.com/vid.mp4"
+                url="http://192.168.43.157/vid.mp4"
                 lazy="true"
                 controls
+                className="theShow"
               />
             </div>
             <div className="actions">

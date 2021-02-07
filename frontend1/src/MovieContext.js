@@ -14,7 +14,13 @@ export const MovieProvider = (props) => {
     details: {
       top: 0,
       left: 0,
-      ui_id: ""
+      ui_id: "",
+      title: "",
+      desc: "",
+      genre: "",
+      rating: "",
+      director: "",
+      year: ""
     }
   });
   return (

@@ -2,9 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { MovieContext } from "../MovieContext";
 import { Link, Redirect } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
-// import { BsFillCameraVideoFill } from "react-icons/bs";
 import "../styles/Signin.css";
-import { login } from "./Helper";
+import axios from "axios";
+import urls from "../apiEndPoints";
 
 const Nav = () => {
   return (
@@ -28,23 +28,25 @@ function Signin() {
   const [count, setCount] = useState(1);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect, setRedirect] = useState(false);
+  const [remember, setRememeber] = useState(false);
   const [state, updateState] = useContext(MovieContext);
 
   useEffect(() => {
-    const getStorage = () => {
-      if (state.logged_in === true) {
-        setRedirect(true);
-        updateState((n) => {
-          return {
-            ...n,
-            logged_in: true,
-          };
-        });
-      }
+    const getLogged_State = () => {
+      axios.get(urls.all)
+        .then(res => {
+          console.log(res);
+          updateState(n => {
+            return {
+              ...n,
+              logged_in: res.data["logged in"]
+            };
+          });          
+        })
+        .catch(() => console.log("Something went wrong!"));
     };
-    getStorage();
-  }, [state, updateState]);
+    getLogged_State();
+  }, [updateState]);
 
   const updateEmail = (e) => {
     setEmail(e.target.value);
@@ -52,32 +54,44 @@ function Signin() {
 
   const updatePassword = (e) => setPassword(e.target.value);
 
+  const handleRemember = (e) => setRememeber(e.target.checked);
+
   const submit = () => {
     const body = {
       email,
       password,
+      remember,
     };
     console.log(body);
-    login(body);
-    updateState((n) => {
-      return {
-        ...n,
-        logged_in: true,
-      };
-    });
 
-    // Redirect the page
-    setRedirect(true);
+    // Make api calls
+    axios.post(urls.login, body)
+      .then(res => {
+        console.log(res);
+        const data = res.data;
+        if(data.status === "success") {
+          // Store token in local storage
+          localStorage.setItem("token", data.data.token);
+          // console.log(localStorage.getItem("token"));
+          updateState(n => {
+            return {
+              ...n,
+              logged_in: true
+            };
+          });
+          console.log(state);
+        } else {
+        // update UI telling user that login failed.
+        }
+      })
+      .catch(err => {
+        // update UI telling user that login failed.
+      });
   };
 
   return (
     <div className="sign-body">
-      {redirect ? <Redirect to="/" /> : null}
-      { state.logged_in ? <Redirect to="/" /> : 
-        <>
-
-        </>
-      }
+      {state.logged_in ? <Redirect to="/" /> : null}
       <Nav />
       <div className="main">
         {count === 1 ? (
@@ -133,7 +147,7 @@ function Signin() {
             </div>
             <div className="remember">
             <p>Remember Me</p>
-            <input type="checkbox" />
+            <input type="checkbox" onChange={handleRemember}/>
             <span className="checkbox-custom"></span>
             </div>
           </>
