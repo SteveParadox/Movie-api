@@ -132,15 +132,13 @@ def create_room(movie):
     db.session.add(room)
     db.session.commit()
 
-    '''return jsonify(
+    return jsonify(
         {
             "message": f"Room {created_room} created by {host} ",
             "movie": movie.movies,
             "movie name": movie.name
         }
-    )'''
-    return redirect(url_for('chat.watch', movie=movie.public_id, room=created_room))
-
+    )
 
 # redirecting to the room id
 @chat.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
