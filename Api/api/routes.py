@@ -77,23 +77,28 @@ def search():
 @cross_origin()
 @login_required
 def get_movie(u_id):
-    movie_name = Movie.query.filter_by(public_id=u_id).first()
-    movie_name.popular = movie_name.popular + 1
-    db.session.commit()
-    movie_schema = MovieSchema()
-    result = movie_schema.dump(movie_name)
-    id = current_user.id
-    name = current_user.name
     try:
-        return jsonify({
-            'data': result,
-            "user_id": id,
-            "user_name": name
-        }), 200
-    except:
-        return jsonify({
-            'message': "could not load data"
-        })
+        movie_name = Movie.query.filter_by(public_id=u_id).first()
+        movie_name.popular = movie_name.popular + 1
+        db.session.commit()
+        movie_schema = MovieSchema()
+        result = movie_schema.dump(movie_name)
+        id = current_user.id
+        name = current_user.name
+        try:
+            return jsonify({
+                'data': result,
+                "user_id": id,
+                "user_name": name
+            }), 200
+        except:
+            return jsonify({
+                'message': "could not load data"
+            })
+        except:
+            return jsonify({
+                'message': "Server error"
+            })
 
 
 @api.route('/api/similar/movie/<string:u_id>', methods=['GET'])
