@@ -95,10 +95,10 @@ def get_movie(u_id):
             return jsonify({
                 'message': "could not load data"
             })
-        except:
-            return jsonify({
-                'message': "Server error"
-            })
+    except:
+        return jsonify({
+            'message': "Server error"
+        })
 
 
 @api.route('/api/similar/movie/<string:u_id>', methods=['GET'])
