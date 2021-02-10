@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { MovieContext } from "../MovieContext";
 import { Link, Redirect } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa";
 import "../styles/Signin.css";
 import axios from "axios";
 import urls from "../apiEndPoints";
+// import RouteProtect from "./RouteProtect";
 
 const Nav = () => {
   return (
@@ -28,46 +29,29 @@ function Signin() {
   const [count, setCount] = useState(1);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRememeber] = useState(false);
+  const [remember] = useState(true);
   const [state, updateState] = useContext(MovieContext);
 
-  useEffect(() => {
-    const getLogged_State = () => {
-      axios.get(urls.all)
-        .then(res => {
-          console.log(res);
-          updateState(n => {
-            return {
-              ...n,
-              logged_in: res.data["logged in"]
-            };
-          });          
-        })
-        .catch(() => console.log("Something went wrong!"));
-    };
-    getLogged_State();
-  }, [updateState]);
-
+  
   const updateEmail = (e) => {
     setEmail(e.target.value);
   };
 
   const updatePassword = (e) => setPassword(e.target.value);
 
-  const handleRemember = (e) => setRememeber(e.target.checked);
+  // const handleRemember = (e) => setRememeber(e.target.checked);
 
   const submit = () => {
     const body = {
       email,
       password,
-      remember,
+      remember
     };
     console.log(body);
 
     // Make api calls
     axios.post(urls.login, body)
       .then(res => {
-        console.log(res);
         const data = res.data;
         if(data.status === "success") {
           // Store token in local storage
@@ -91,6 +75,7 @@ function Signin() {
 
   return (
     <div className="sign-body">
+      {/* <RouteProtect /> */}
       {state.logged_in ? <Redirect to="/" /> : null}
       <Nav />
       <div className="main">
@@ -145,11 +130,11 @@ function Signin() {
                 Login
               </button>
             </div>
-            <div className="remember">
+            {/* <div className="remember">
             <p>Remember Me</p>
             <input type="checkbox" onChange={handleRemember}/>
             <span className="checkbox-custom"></span>
-            </div>
+            </div> */}
           </>
         ) : null}
       </div>

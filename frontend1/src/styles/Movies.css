@@ -16,6 +16,7 @@
   border-bottom: 1.5px solid darkgrey;
   min-width: 150px;
   text-align: center;
+  cursor: pointer;
 }
 
 .movies .top > h3.active {

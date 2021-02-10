@@ -24,6 +24,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 5px;
   /* background: dodgerblue; */
 }
 
@@ -63,8 +64,9 @@
 .watch .movieShow .ratings {
   display: flex;
   justify-content: space-between;
-  padding-right: 20px;
+  /* padding-right: 20px; */
   margin-bottom: 10px;
+  padding: 0 5px;
 }
 
 .watch .movieShow .ratings > .stars > * {

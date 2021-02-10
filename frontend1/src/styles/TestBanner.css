@@ -38,6 +38,13 @@ ul.slick-dots {
 }
 
 /* Details Styling */
+.details {
+  background-position: left;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100%;
+  height: calc(100vh - 0.1rem);
+}
 .details .main-details {
   position: relative;
   width: 80%;

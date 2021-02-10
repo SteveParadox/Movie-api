@@ -12,32 +12,32 @@ import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
 
 import axios from "axios";
 // import { GoPrimitiveDot } from "react-icons/go";
-import urls from "../apiEndPoints";
+// import urls from "../apiEndPoints";
 
 /* Some small components */
-const Cast = ({ pic, actorName, name }) => {
-  return (
-    <div className="cast-item">
-      <img src={pic} alt="." />
-      <div>
-        <p>{actorName}</p>
-        <p>{name}</p>
-      </div>
-    </div>
-  );
-};
+// const Cast = ({ pic, actorName, name }) => {
+//   return (
+//     <div className="cast-item">
+//       <img src={pic} alt="." />
+//       <div>
+//         <p>{actorName}</p>
+//         <p>{name}</p>
+//       </div>
+//     </div>
+//   );
+// };
 
-const Friend = ({ pic, name, address }) => {
-  return (
-    <div className="friend">
-      <img src={pic} alt="." />
-      <div className="detail">
-        <h3>{name}</h3>
-        <p>{address}</p>
-      </div>
-    </div>
-  );
-};
+// const Friend = ({ pic, name, address }) => {
+//   return (
+//     <div className="friend">
+//       <img src={pic} alt="." />
+//       <div className="detail">
+//         <h3>{name}</h3>
+//         <p>{address}</p>
+//       </div>
+//     </div>
+//   );
+// };
 
 const SimilarMovies = ({ u_id }) => {
   // fetch data from api using u_id
@@ -63,7 +63,7 @@ const SimilarMovies = ({ u_id }) => {
     <div className="recommended">
       <p className="title">You might also like</p>
       <div className="show">
-        <MovieCard
+        {/* <MovieCard
           title="The Lord"
           liked={false}
           viewed={false}
@@ -104,25 +104,19 @@ const SimilarMovies = ({ u_id }) => {
           liked={false}
           viewed={false}
           adPic={Joker}
-        />
-        {/* {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} viewed={i.viewed} adPic={i.poster} />)} */}
+        /> */}
+        {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} viewed={i.viewed} />)}
       </div>
     </div>
   );
 };
 
-const Watch = ({ match }) => {
-  console.log(match.params.movie_id);
+const Watch = (props) => {
+  const { match, location } = props;
+  // console.log(match.params.movie_id);
   const u_id = match.params.movie_id;
-  // const [data, setData] = useEffect();
-  // useEffect(() => {
-  //   // Check if logged in
-  //   axios.get(urls.all)
-  //     .then(res => {
-  //       setData(res.data);
-  //     })
-  //     .catch(err => console.log("There might be a network error"));
-  // }, []);
+  const movie_name = location.state.name;
+  // const [data, setData] = useState({});
   // useEffect(() => {
   //   function fetchDetail() {
   //     axios.get(`https://movie-stream-api.herokuapp.com/api/get/movie/${u_id}/`)
@@ -141,16 +135,27 @@ const Watch = ({ match }) => {
         <div className="movieShow">
           <div className="vid">
             <div className="main">
-              <ReactPlayer 
+              {/* <ReactPlayer 
                 // url="http://filba.com/vid.mp4"
                 url="http://192.168.43.157/vid.mp4"
                 lazy="true"
+                
                 controls
                 className="theShow"
-              />
+              /> */}
+              <video 
+                poster={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}.jpg`}
+                autoPlay={true}
+                controls={true}
+                className="theShow"
+              >
+                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/webm"/>
+                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/mp4"/>
+                <source src={`https://res.cloudinary.com/du05mneox/video/upload/${movie_name}`} type="video/ogg"/>
+              </video>
             </div>
             <div className="actions">
-              <p className="title">The Joker</p>
+              <p className="title">{movie_name}</p>
               <div className="btns">
                 <div>
                   <FaHeart className="icons" /> <br />

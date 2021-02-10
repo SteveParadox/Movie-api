@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
+import React, {  } from "react";
 import "../styles/SubscribeLayout.css";
 // import Carousel from 'react-elastic-carousel';
 import Slider from "react-slick";
-import { MovieContext } from "../MovieContext";
+// import { MovieContext } from "../MovieContext";
 // import Item from "./Item2";
 import Joker from "../joker_movie.jpg";
 import MovieRating from "./MovieRating";
@@ -45,8 +45,6 @@ const SlideShow = () => {
 }
 
 const SubscribeLayout = () => {
-    const {appState, setAppState} = useContext(MovieContext);
-
     return (
         <div className="subscribelayout">
             <div className="form-part">

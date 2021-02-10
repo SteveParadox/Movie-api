@@ -24,12 +24,6 @@ const Details = ({ year, genre, time, review, movieName, desc, link }) => {
 
   const detailStyle = {
     "backgroundImage": `url("https://res.cloudinary.com/du05mneox/image/upload/${movieName}.jpg")`,
-    "backgroundRepeat": "no-repeat",
-    "backgroundPosition": "center",
-    // "backgroundSize": "100% 100%",
-    "backgroundSize": "cover",
-    "width": "100%",
-    "height": "calc(100vh - 0.1rem)",
     "opacity": appState.friendsDisplay ? "0.4" : "1",
   }
   return (
@@ -40,7 +34,13 @@ const Details = ({ year, genre, time, review, movieName, desc, link }) => {
         <h3 className="title">{movieName}</h3>
         <p className="desc">{desc}</p>
         <div className="buttons">
-          <Link to={`/watch/${link}/`}><button className="watch-btn"> <FaPlay id="watch-icon" className="icon" /> Watch</button></Link>
+          <Link 
+            to={{ pathname: `/watch/${link}/`, state: { u_id: link, name: movieName }}}
+            >
+            <button className="watch-btn">
+              <FaPlay id="watch-icon" className="icon" /> Watch
+            </button>
+          </Link>
           <Link to={`/#`}><button className="addlist" onClick={AddList}> <FaPlus id="add-icon" className="icon" /> Add List</button></Link>
         </div>
       </div>
@@ -57,7 +57,7 @@ export default function Banner() {
         setMovies(res.data.data.slice(0, 3));
       })
       .catch(error => console.log(error));
-  }, []);
+  }, [setMovies]);
 
   const settings = {
     dots: true,
@@ -73,7 +73,7 @@ export default function Banner() {
     <div>
       <Slider {...settings}>
         {movies.map((movie, idx) => {
-          console.log(movie);
+          // console.log(movie);
           return <Details year={movie.created_on} genre={movie.genre} time={movie.runtime} desc={movie.description} movieName={movie.name} key={`movie-${idx}`} review={movie.review} link={movie.public_id} />
         })}
       </Slider>

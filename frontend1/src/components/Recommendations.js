@@ -1,8 +1,9 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Recommendations.css";
 import MovieCard from "./MovieCard";
 // import Carousel from "react-elastic-carousel";
 import Joker from "../joker_movie.jpg";
+import axios from "axios";
 
 // Import styles
 import Slider from "react-slick";
@@ -59,8 +60,20 @@ const Recommendations = (props) => {
     ]
   };
 
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    function fetchRecommended() {
+      axios.get("https://movie-stream-api.herokuapp.com/api/choice")
+        .then(res => {
+          console.log(res.data);
+          setMovies(res.data.data);
+        })
+    }
+    fetchRecommended();
+  }, []);
+
   return (
-    <div className="recommendations">
+    <div className="recommendations" style={{"display": movies.length <= 0 ? "none" : "block"}}>
       <div className="top">
           <div className="title">Recommendations</div>
           <div className="filter">
@@ -78,41 +91,14 @@ const Recommendations = (props) => {
 
       {/* <button {...props} onClick={() => Slider.slickPrev()}>Prev</button> */}
       <Slider {...settings}>
-        <MovieCard title="Old Guard" like={false} viewed={true} adPic={Joker} />
+        {/* <MovieCard title="Old Guard" like={false} viewed={true} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
+        <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} /> */}
+        {movies.map((i, idx) => <MovieCard title={i.name} like={true} viewed={true} /> )}
       </Slider>
-      {/* <button {...props} onClick={() => Slider.slickNext()}>Next</button> */}
-      {/* <Carousel
-        itemsToShow={5.5}
-        pagination={false}
-        enableSwipe={true}
-        style={{
-          "padding": "20px"
-        }}
-      >
-        <MovieCard title="Old Guard" like={false} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-        <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
-
-      </Carousel> */}
     </div>
   );
 }

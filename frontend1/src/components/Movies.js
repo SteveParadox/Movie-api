@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { MovieContext } from "../MovieContext";
 import MovieCard from "./MovieCard";
 import "../styles/MovieCard.css";
-import { FaPlus, FaStar, FaFilm, FaPlayCircle } from "react-icons/fa";
-// import { BiTrendingUp } from "react-icons/bi";
-import { GiAerialSignal } from "react-icons/gi";
+import { FaPlus, FaStar, FaFilm, FaFire, FaPlayCircle } from "react-icons/fa";
+import { BiTrendingUp } from "react-icons/bi";
+// import { GiAerialSignal } from "react-icons/gi";
 import { GoPrimitiveDot } from "react-icons/go";
 import { MdMovie } from "react-icons/md";
 import "../styles/Movies.css";
@@ -26,6 +26,7 @@ const PlusMovies = () => {
 const Movies = () => {
   const [state, updateState] = useContext(MovieContext);
   const [MoviesState, setMovieState] = useState([]);
+  const [set, setSet] = useState(1);
   // movies state should hold data to be mapped(displayed) to the screen
   // @todo -> using the useEffect hook, update the movies state based
   // on the genre state, by making calls to the server
@@ -52,12 +53,13 @@ const Movies = () => {
     function fetchMovies() {
       axios.get(urls.popular)
         .then(res => {
+          // console.log(res.data);
           setMovieState(res.data.data);
         })
         .catch(err => console.log("Sorry fetch movies failed", err));
     }
     fetchMovies();
-  },[]);
+  },[setMovieState]);
 
   window.addEventListener("click", (e) => {
     window.test = e.target;
@@ -186,22 +188,60 @@ const Movies = () => {
     });
   };
 
+  const showMovies = () => {
+    setSet(1);
+    axios.get("https://movie-stream-api.herokuapp.com/api/choice")
+      .then(res => {
+        setMovieState(res.data.data);
+      })
+      .catch(err => console.log("Failed fetcing movies"));
+  };
+
+  const showPopular = () => {
+    setSet(2);
+    axios.get("https://movie-stream-api.herokuapp.com/api/popular")
+      .then(res => {
+        setMovieState(res.data.data);
+      })
+      .catch(err => console.log("Failed fetcing movies"));
+  };
+
+  const showTrending = () => {
+    setSet(3);
+    axios.get("https://movie-stream-api.herokuapp.com/api/trending")
+      .then(res => {
+        setMovieState(res.data.data);
+      })
+      .catch(err => console.log("Failed fetcing movies"));
+  };
+
+  const showoPremieres = () => {
+    setSet(4);
+    axios.get("https://movie-stream-api.herokuapp.com/api/")
+      .then(res => {
+        setMovieState(res.data.data);
+      })
+      .catch(err => console.log("Failed fetcing movies"));
+  };
+
   return (
     <div className="movies">
       <div className="top">
-        <h3 className="active">
+        <h3 className={set === 1 ? "active" : ""} onClick={showMovies}>
           {" "}
           <MdMovie /> Movies
         </h3>
-        <h3>
+        <h3 className={set === 2 ? "active" : ""} onClick={showPopular}>
           {" "}
-          <FaFilm /> Series
+          {/* <FaFilm /> Series */}
+          <FaFire /> Popular
         </h3>
-        <h3>
+        <h3 className={set === 3 ? "active" : ""} onClick={showTrending}>
           {" "}
-          <GiAerialSignal /> Live Streams
+          {/* <GiAerialSignal /> Live Streams */}
+          <BiTrendingUp /> Trending
         </h3>
-        <h3>
+        <h3 className={set === 4 ? "active" : ""} onClick={showoPremieres}>
           {" "}
           <FaStar /> Premieres
         </h3>
