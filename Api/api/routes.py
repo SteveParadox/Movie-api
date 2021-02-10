@@ -18,7 +18,7 @@ def home():
     if current_user.is_authenticated:
         id = current_user.id
         name = current_user.name
-        profile = current_user.profile
+  
         email = current_user.email
         friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
         friend = len(friends)
