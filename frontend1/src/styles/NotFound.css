@@ -43,11 +43,11 @@
 }
 
 @media screen and (max-width: 610px) {
-  .notFoundPage .top > h1 {
+  .notFoundPage > .top > h1 {
     font-size: 170px;
   }
 
-  .notFoundPage .top > img {
+  .notFoundPage > .top > img {
     width: 115px;
     height: 115px;
   }
@@ -63,7 +63,7 @@
 }
 
 @media screen and (max-width: 460px) {
-  .notFoundPage .top {
+  .notFoundPage > .top {
     transform: scale(0.75);
   }
 }

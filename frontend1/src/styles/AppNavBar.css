@@ -167,6 +167,10 @@
   cursor: pointer;
 }
 
+.find-friends .friend-results > div {
+  max-height: 70px;
+}
+
 
 /* Styles for mobile Nav */
 @media screen and (max-width: 830px) {
@@ -190,6 +194,7 @@
   .mobile .actions {
     display: flex;
     /* background: dodgerblue; */
+    /* display: none; */
   }
   
   .mobile .icon {
@@ -227,15 +232,12 @@
 
   .mobile .actions {
     position: absolute;
-    top: 0;
+    top: 0px;
     left: 0;
     background: var(--apps-black);
     width: 100%;
-    min-height: 100vh;
-    z-index: 100;
-  }
-
-  .mobile .actions {
+    height: auto;
+    z-index: 300;
     display: block;
   }
 
@@ -243,9 +245,10 @@
     display: flex;
     align-items: center;
     padding: 0 10px;
-    width: 100%;
+    width: 100vw;
     height: 40px;
     cursor: pointer;
+    /* background: red; */
   }
   .mobile .actions .top .title {
     text-align: center;
@@ -255,10 +258,32 @@
     color: var(--apps-red);
   }
 
-  .mobile .actions .nav-body > div {
+  .mobile .actions .nav-body > a > div {
     background: var(--apps-grey);
     margin: 20px 0;
     padding: 10px;
-    min-height: 50px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .mobile .actions .nav-body .profile .dp {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+    border-radius: 50%;
+  }
+
+  .mobile .actions .nav-body > a > div .details {
+    width: auto;
+    text-align: center;
+  }
+
+  .mobile .actions .nav-body .nav-arrows {
+    position: absolute;
+    right: 10px;
+    align-self: center;
+    font-size: 30px;
   }
 }

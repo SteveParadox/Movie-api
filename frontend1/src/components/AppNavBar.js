@@ -1,9 +1,9 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, createRef } from "react";
 import { NavLink, Link, Redirect } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
-import { FaSearch, FaAngleDown, FaBell, FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaAngleDown, FaBell, FaArrowLeft, FaAngleRight } from "react-icons/fa";
 import { BsFillCameraVideoFill } from "react-icons/bs";
 import Friend from "./Friend";
 import axios from "axios";
@@ -26,7 +26,9 @@ const UserAvatar = (props) => {
 const AppNavBar = () => {
   const [appState, setAppState] = useContext(MovieContext);
   const [navOpen, setNavOpen] = useState(false);
+  // console.log(navOpen);
   const [logged_in, setLogged] = useState(false);
+  const burger = createRef();
 
   // Check and store logged in
   // useEffect(() => {
@@ -74,23 +76,14 @@ const AppNavBar = () => {
     visibility: "visible",
   };
 
-  const closeMobileNav = () => {
-    try {
-      setNavOpen(false);
-    } catch(err) {
-      console.log(err);
-    }
-    console.log(navOpen);
-    console.log(setNavOpen.toString());
+  const closeMobileNav = (e) => {
+    e.stopPropagation();
+    setNavOpen(false);
   }
 
-  const openMobileNav = () => {
-    try {
-      setNavOpen(true);
-    } catch(err) {
-      console.log(err);
-    }
-    console.log(navOpen);
+  const openMobileNav = (e) => {
+    e.stopPropagation();
+    setNavOpen(true);
   }
   
   return (
@@ -197,30 +190,72 @@ const AppNavBar = () => {
             <div className="line1"></div>
             <div className="line1"></div>
           </div>
-        <div className="actions" style={{"display": navOpen ? "block" : "none"}}>
+        <div className="actions" ref={burger} style={{"transform": navOpen === true ? "translateY(0)" : "translateY(-900px)"}}>
           <div className="top">
-            <FaArrowLeft className="icon" onClick={closeMobileNav}/>
+            <FaArrowLeft className="icon arrow-left" onClick={closeMobileNav}/>
             <h3 className="title">Activity</h3>
           </div>
           <div className="nav-body">
-            <div className="profile">
-              Profile
-            </div>
-            <div className="Movies">
-              Movies
-            </div>
-            <div className="My List">
-              My List
-            </div>
-            <div className="Settings">
-              Settings
-            </div>
-            <div className="Friend Request">
-              Friend Request
-            </div>
-            <div className="Messages">
-              Messages
-            </div>
+            <Link>
+              <div className="profile">
+                <img src={Joker} alt="." className="dp"/>
+                <div className="details">
+                  <h3>@Nonso</h3>
+                  <p>Visit Profile</p>
+                </div>
+                <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link>
+
+            <Link>
+              <div className="Movies">
+                <div className="details">
+                  <h3>Movies</h3>
+                  <p>Your movie categories</p>
+                </div>
+                <FaAngleDown className="nav-arrows"/>
+              </div>
+            </Link>
+
+            <Link>
+              <div className="My List">
+                <div className="details">
+                  <h3>My List</h3>
+                  <p>View your saved movies</p>
+                </div>
+                <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link>
+
+            <Link>
+              <div className="Settings">
+                <div className="details">
+                  <h3>Settings</h3>
+                  <p>View your privacy policy, etc</p>
+                </div>
+                <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link>
+
+            <Link>
+              <div className="Friend Request">
+                <div className="details">
+                  <h3>Friend Request</h3>
+                  <p>Respond to friend requests</p>
+                </div>
+                <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link>
+
+            <Link>
+              <div className="Messages">
+                <div className="details">
+                  <h3>Messages</h3>
+                  <p>Write messages to friends</p>
+                </div>
+              <FaAngleRight className="nav-arrows"/>
+              </div>
+            </Link>
           </div>
         </div>
           

@@ -64,6 +64,7 @@ const Movies = () => {
   window.addEventListener("click", (e) => {
     window.test = e.target;
     if(e.target.nodeName === "svg") return;
+    if(!e.target.className.includes) return;
     if(!e.target.className.includes("specX")) {
       updateState((n) => {
         return {

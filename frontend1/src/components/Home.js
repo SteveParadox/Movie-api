@@ -37,7 +37,7 @@ function Home() {
       {!appState.logged_in ? <Redirect to="/signin" /> : null}
       <AppNavBar />
       <Banner />
-      <Watching />
+      {/* <Watching /> */}
       <Recommendations />
       <Movies />
       <SubscribeLayout />
