@@ -50,7 +50,7 @@ def genres(genre):
 
 
 # searching for movie
-@api.route('/api/search/movie', methods=['GET'])
+@api.route('/api/search/movie', methods=['POST'])
 @cross_origin()
 def search():
     data = request.get_json()
@@ -73,7 +73,7 @@ def search():
 
 # link to redirect to selected movie
 # watching alone
-@api.route('/api/get/movie/<string:u_id>/', methods=['POST'])
+@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
 @cross_origin()
 @login_required
 def get_movie(u_id):
