@@ -12,7 +12,8 @@ api = Blueprint('api', __name__)
 @api.route('/api/', methods=['GET'])
 @cross_origin()
 def home():
-    movies = Movie.query.all()
+    page = request.args.get('page', 1, type=int)
+    movies = Movie.query.paginate(page=page, per_page=10)
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
     if current_user.is_authenticated:
