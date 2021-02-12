@@ -55,7 +55,7 @@ def genres(genre):
 def search():
     data = request.get_json()
     print(str(data['name']).lower())
-    movie_name = Movie.query.filter(str(Movie.name).lower() == str(data['name']).lower()).all()
+    movie_name = Movie.query.filter(Movie.name == data['name']).all()
     if not movie_name:
         movie_name = Movie.query.filter_by(genre=data['name']).all()
         if not movie_name:
