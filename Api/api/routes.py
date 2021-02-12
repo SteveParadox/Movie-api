@@ -73,7 +73,7 @@ def search():
 
 # link to redirect to selected movie
 # watching alone
-@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
+@api.route('/api/get/movie/<string:u_id>/', methods=['POST'])
 @cross_origin()
 @login_required
 def get_movie(u_id):
