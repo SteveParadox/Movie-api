@@ -64,7 +64,7 @@ def login(expires_sec=1800):
     email = data['email']
     user = Users.query.filter_by(email=email).first()
     if user and bcrypt.check_password_hash(user.password, data['password']):
-        login_user(user)
+        login_user(user,  remember=True)
         user.logged_in = True
         db.session.commit()
         s = Serializer(Config.SECRET_KEY , expires_sec)
