@@ -15,7 +15,7 @@ def home():
     page = request.args.get('page', 1, type=int)
     movies = Movie.query.paginate(page=page, per_page=10)
     movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies.items())
+    result = movie_schema.dump(movies.items)
     if current_user.is_authenticated:
         id = current_user.id
         name = current_user.name
