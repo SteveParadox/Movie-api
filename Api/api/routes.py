@@ -114,7 +114,6 @@ def get_movie(u_id):
 
 @api.route('/api/similar/movie/<string:u_id>', methods=['GET'])
 @cross_origin()
-@login_required
 def similar_movie(u_id):
     movie_name = Movie.query.filter_by(public_id=u_id).first()
     movies = Movie.query.filter_by(genre=movie_name.genre).all()
