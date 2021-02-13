@@ -55,7 +55,7 @@ def genres(genre):
                  }
             )
     return jsonify({
-        "data": result,
+        "data": dataList
     }), 200
 
 
