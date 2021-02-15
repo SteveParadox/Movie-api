@@ -40,14 +40,18 @@ def home():
 
 
 
-@api.route('/api/genre/<string:genre>', methods=['GET'])
+@api.route('/api/genre', methods=['GET'])
 @cross_origin()
-def genres(genre):
+def genres():
+    data =request.get_json()
     dataList = []
-    for genres in genre:
-        movies = Movie.query.filter_by(genre=f"{str(genres[0]).upper()+str(genres[1:]).lower()}").all()
+    dataLists = []
+    for i in data['genre']:
+        dataList.append(i)
+    for genreList in dataList:
+        movies = Movie.query.filter_by(genre=f"{str(genreList[0]).upper()+str(genreList[1:]).lower()}").all()
         for result in movies:
-            dataList.append(
+            dataLists.append(
                 {'name': result.name,
                          'genre': result.genre,
                          'public_id': result.public_id,
@@ -55,7 +59,7 @@ def genres(genre):
                  }
             )
     return jsonify({
-        "data": dataList
+        "data": dataLists
     }), 200
 
 
