@@ -121,14 +121,14 @@ def upload_movie():
         movies.cast2 = lists[1]
         movies.cast3 = lists[2]
         movies.cast4 = lists[3]
-        genre = []
+        genrex = []
         company = dict_movie['production_companies']
         com = []
         for i in company:
             com.append(i['name'])
         for i in genres:
-            genre.append(i['name'])
-        movies.genre = json.loads({"data": genre})
+            genrex.append(i['name'])
+        movies.genre = genrex
         movies.creator = com[0]
         movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
