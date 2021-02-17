@@ -22,9 +22,10 @@ login_manager.login_view = 'users.login'
 login_manager.login_message = None
 io.manage_session= False
 login_manager.session_protection = "strong"
-REMEMBER_COOKIE_NAME = 'remember_token'
+REMEMBER_COOKIE_NAME = 'remember'
 REMEMBER_COOKIE_DURATION = datetime.timedelta(days=64, seconds=29156, microseconds=10)
-REMEMBER_COOKIE_REFRESH_EACH_REQUEST = False
+REMEMBER_COOKIE_REFRESH_EACH_REQUEST = True
+PERMANENT_SESSION_LIFETIME= datetime.timedelta(days=64, seconds=29156, microseconds=10)
 
 
 def create_app(config_class=Config):
