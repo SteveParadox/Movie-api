@@ -128,7 +128,7 @@ def upload_movie():
             com.append(i['name'])
         for i in genres:
             genre.append(i['name'])
-        movies.genre = {"data": genre}
+        movies.genre = json.loads({"data": genre})
         movies.creator = com[0]
         movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
