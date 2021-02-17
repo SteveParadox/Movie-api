@@ -2,7 +2,7 @@ import random
 from flask import *
 from flask_login import current_user, login_required
 from Api import *
-from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store
+from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store, userRating
 from flask_cors import cross_origin
 
 api = Blueprint('api', __name__)
@@ -40,26 +40,23 @@ def home():
 
 
 
-@api.route('/api/genre', methods=['GET'])
+@api.route('/api/genre', methods=['POST'])
 @cross_origin()
 def genres():
     data =request.get_json()
-    dataList = []
+    genreList = {}
     dataLists = []
+    resultList = []
     for i in data['genre']:
-        dataList.append(i)
-    for genreList in dataList:
-        movies = Movie.query.filter_by(genre=f"{str(genreList[0]).upper()+str(genreList[1:]).lower()}").all()
-        for result in movies:
-            dataLists.append(
-                {'name': result.name,
-                         'genre': result.genre,
-                         'public_id': result.public_id,
-                         'overview': result.description
-                 }
-            )
+        dataLists.append(i)
+    movies = Movie.query.all()
+    for j in movies:
+        genreList.update({"name":j.name, "genre": j.genre})
+    for x in dataLists:
+        if x in genreList['genre']:
+            resultList.append(genreList['name'])
     return jsonify({
-        "data": dataLists
+        "data": resultList
     }), 200
 
 
@@ -70,11 +67,11 @@ def genres():
 def search():
     data = request.get_json()
     print(str(data['name']).lower())
-    movie_name = Movie.query.filter(Movie.name == data['name']).all()
+    movie_name = Movie.query.filter(name= str(data['name'][0]).upper()+data['name'][1:]).all()
     if not movie_name:
-        movie_name = Movie.query.filter_by(genre=data['name']).all()
+        movie_name = Movie.query.filter_by(genre=str(data['name'][0]).upper()+data['name'][1:]).all()
         if not movie_name:
-            movie_name = Movie.query.filter_by(creator=data['name']).all()
+            movie_name = Movie.query.filter_by(creator=str(data['name'][0]).upper()+data['name'][1:]).all()
             if not movie_name:
                 return jsonify({
                     "message": " Could not find Name"
@@ -140,19 +137,6 @@ def like(u_id):
     db.session.commit()
     return jsonify({
         'data': movie.thumbs_up
-    })
-
-
-# thumbs down movie
-@api.route('/api/dislike/movie/<string:u_id>', methods=['POST'])
-@cross_origin()
-@login_required
-def dislike(u_id):
-    movie = Movie.query.filter_by(public_id=u_id).first()
-    movie.thumbs_down = movie.thumbs_down + 1
-    db.session.commit()
-    return jsonify({
-        'data': movie.thumbs_down
     })
 
 
@@ -258,6 +242,32 @@ def i_and_my_friend(name):
             "message": f"{user} is not your friend"
         })
     return jsonify({"message": f"{name} not registered"})
+
+
+@api.route('/api/add/review/<string:movie_id>', methods=['POST'])
+def addRating(movie_id):
+    data=request.get_json()
+    movies = Movie.query.filter_by(public_id=movie_id).first()
+    ratings = userRating(reviews=current_user, reviewing=movies)
+    ratings.rating = int(data("rating"))
+    db.session.add(ratings)
+    db.session.commit()
+
+    return jsonify({
+        "message": "rated"
+    })
+
+@api.route('/api/review/<string:movie_id>', methods=['GET'])
+def rating(movie_id):
+    movies = Movie.query.filter_by(public_id=movie_id).first()
+    ratings = userRating.query.filter_by(reviews=current_user, reviewing=movies).first()
+    return jsonify({
+        "movie": movies.name,
+        "rating": ratings.rating,
+        "public_id": movies.public_id,
+        "overview": movies.description,
+        "genre": movies.genres
+    })
 
 
 @api.route('/api/popular')
