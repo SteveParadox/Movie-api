@@ -116,7 +116,7 @@ def upload_movie():
         movies.name = str(dict_movie['original_title'])
         movies.description = description
         movies.review = review
-        genres = dict_movie['genres']
+        genres = {"genre": dict_movie['genres']}
         movies.cast1 = lists[0]
         movies.cast2 = lists[1]
         movies.cast3 = lists[2]
