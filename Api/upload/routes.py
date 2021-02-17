@@ -125,7 +125,8 @@ def upload_movie():
         com = []
         for i in company:
             com.append(i['name'])
-        movies.genre = genres
+        for i in genres:
+            movies.genre = i
         movies.creator = com[0]
         movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
