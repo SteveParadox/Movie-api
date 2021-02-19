@@ -151,7 +151,7 @@ class Store(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
 
-class userRating(db.Model):
+class UserRating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     rating = db.Column(db.Integer)
     time_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
