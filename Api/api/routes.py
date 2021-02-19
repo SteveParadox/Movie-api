@@ -2,7 +2,7 @@ import random
 from flask import *
 from flask_login import current_user, login_required
 from Api import *
-from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store, userRating
+from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store, UserRating
 from flask_cors import cross_origin
 
 api = Blueprint('api', __name__)
@@ -248,7 +248,7 @@ def i_and_my_friend(name):
 def addRating(movie_id):
     data=request.get_json()
     movies = Movie.query.filter_by(public_id=movie_id).first()
-    ratings = userRating(reviews=current_user, reviewing=movies)
+    ratings = UserRating(reviews=current_user, reviewing=movies)
     ratings.rating = int(data("rating"))
     db.session.add(ratings)
     db.session.commit()
@@ -260,7 +260,7 @@ def addRating(movie_id):
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
 def rating(movie_id):
     movies = Movie.query.filter_by(public_id=movie_id).first()
-    ratings = userRating.query.filter_by(reviews=current_user, reviewing=movies).first()
+    ratings = UserRating.query.filter_by(reviews=current_user, reviewing=movies).first()
     return jsonify({
         "movie": movies.name,
         "rating": ratings.rating,
