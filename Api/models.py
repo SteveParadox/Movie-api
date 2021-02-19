@@ -28,7 +28,7 @@ class Users(db.Model, UserMixin):
     activity = db.relationship('Activities', backref='social', lazy=True)
     save_ = db.relationship('Store', backref='saved', lazy=True)
     admin = db.Column(db.Boolean, default=False)
-
+    review_ = db.relationship('userRating', backref='reviews', lazy=True)
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
 
@@ -46,12 +46,12 @@ class Movie(db.Model):
     cast2 = db.Column(db.String())
     cast3 = db.Column(db.String())
     cast4 = db.Column(db.String())
-    genre = db.Column(db.String())
+    genre = db.Column(db.JSON)
     date_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
     thumbs_up = db.Column(db.Integer, default=0)
     thumbs_down = db.Column(db.Integer, default=0)
     popular = db.Column(db.Integer, default=0)
-
+    reviewed_ = db.relationship('userRating', backref='reviewing', lazy=True)
 
 class Series(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -149,6 +149,15 @@ class Store(db.Model):
     stored_data = db.Column(db.String(100))
     time_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class userRating(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer)
+    time_uploaded = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    movie_id = db.Column(db.Integer, db.ForeignKey('movie.id'))
+
 
 
 class Vote(db.Model):
