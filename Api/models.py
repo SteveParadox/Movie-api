@@ -28,7 +28,7 @@ class Users(db.Model, UserMixin):
     activity = db.relationship('Activities', backref='social', lazy=True)
     save_ = db.relationship('Store', backref='saved', lazy=True)
     admin = db.Column(db.Boolean, default=False)
-    review_ = db.relationship('userRating', backref='reviews', lazy=True)
+    review_ = db.relationship('UserRating', backref='reviews', lazy=True)
     def __repr__(self):
         return f"User('{self.name}', '{self.email}')"
 
@@ -51,7 +51,7 @@ class Movie(db.Model):
     thumbs_up = db.Column(db.Integer, default=0)
     thumbs_down = db.Column(db.Integer, default=0)
     popular = db.Column(db.Integer, default=0)
-    reviewed_ = db.relationship('userRating', backref='reviewing', lazy=True)
+    reviewed_ = db.relationship('UserRating', backref='reviewing', lazy=True)
 
 class Series(db.Model):
     id = db.Column(db.Integer, primary_key=True)
