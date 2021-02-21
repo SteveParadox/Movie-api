@@ -245,6 +245,8 @@ def i_and_my_friend(name):
 
 
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
+@cross_origin()
+@login_required
 def addRating(movie_id):
     data=request.get_json()
     movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -260,7 +262,7 @@ def addRating(movie_id):
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
 def rating(movie_id):
     movies = Movie.query.filter_by(public_id=movie_id).first()
-    ratings = UserRating.query.filter_by(reviews=current_user, reviewing=movies).first()
+    ratings = UserRating.query.filter_by(reviewing=movies).first()
     return jsonify({
         "movie": movies.name,
         "rating": ratings.rating,
