@@ -248,8 +248,8 @@ def i_and_my_friend(name):
 @cross_origin()
 @login_required
 def addRating(movie_id):
-    data=request.get_json()
-    if data["rating"]:
+    data = request.get_json()
+    try:
         movies = Movie.query.filter_by(public_id=movie_id).first()
         ratings = UserRating(reviews=current_user, reviewing=movies)
         ratings.rating = int(data["rating"])
@@ -259,7 +259,7 @@ def addRating(movie_id):
         return jsonify({
             "message": "rated"
         })
-    else:
+    except:
         return jsonify({
         "message": "data is empty"})
 
