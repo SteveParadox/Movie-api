@@ -260,6 +260,7 @@ def addRating(movie_id):
     })
 
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
+@cross_origin()
 def rating(movie_id):
     movies = Movie.query.filter_by(public_id=movie_id).first()
     ratings = UserRating.query.filter_by(reviewing=movies).first()
