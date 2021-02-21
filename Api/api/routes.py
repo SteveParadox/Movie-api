@@ -249,28 +249,36 @@ def i_and_my_friend(name):
 @login_required
 def addRating(movie_id):
     data=request.get_json()
-    movies = Movie.query.filter_by(public_id=movie_id).first()
-    ratings = UserRating(reviews=current_user, reviewing=movies)
-    ratings.rating = int(data("rating"))
-    db.session.add(ratings)
-    db.session.commit()
+    if data["rating"]:
+        movies = Movie.query.filter_by(public_id=movie_id).first()
+        ratings = UserRating(reviews=current_user, reviewing=movies)
+        ratings.rating = int(data["rating"])
+        db.session.add(ratings)
+        db.session.commit()
 
-    return jsonify({
-        "message": "rated"
-    })
+        return jsonify({
+            "message": "rated"
+        })
+    else:
+        return jsonify({
+        "message": "data is empty"})
 
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
 @cross_origin()
 def rating(movie_id):
-    movies = Movie.query.filter_by(public_id=movie_id).first()
-    ratings = UserRating.query.filter_by(reviewing=movies).first()
-    return jsonify({
-        "movie": movies.name,
-        "rating": ratings.rating,
-        "public_id": movies.public_id,
-        "overview": movies.description,
-        "genre": movies.genres
-    })
+    try:
+        movies = Movie.query.filter_by(public_id=movie_id).first()
+        ratings = UserRating.query.filter_by(reviewing=movies).first()
+        return jsonify({
+            "movie": movies.name,
+            "rating": ratings.rating,
+            "public_id": movies.public_id,
+            "overview": movies.description,
+            "genre": movies.genres
+        })
+    except:
+        return jsonify({
+        "message": "no ratings for this movie"})
 
 
 @api.route('/api/popular')
