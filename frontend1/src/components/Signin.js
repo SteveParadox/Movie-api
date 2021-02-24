@@ -66,10 +66,12 @@ function Signin() {
           console.log(state);
         } else {
         // update UI telling user that login failed.
+        console.log("Resquest went through but returned: ", res);
         }
       })
       .catch(err => {
         // update UI telling user that login failed.
+        console.log("Request didn't go through and return an error: ", err);
       });
   };
 

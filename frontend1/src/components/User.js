@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { MovieContext } from "../MovieContext";
 import { Redirect } from "react-router-dom";
-import { FaEdit, FaPencilAlt, FaArrowLeft } from "react-icons/fa";
+import { FaPencilAlt, FaArrowLeft } from "react-icons/fa";
 import AppNavBar from "./AppNavBar";
 import Footer from "./Footer";
 import "../styles/User.css";
 import dp from "../user.jpg";
-import axios from "axios";
-import urls from "../apiEndPoints";
+// import axios from "axios";
+// import urls from "../apiEndPoints";
 
 function User() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [appState, setAppState] = useContext(MovieContext);
+  // const [loggedIn, setLoggedIn] = useState(false);
+  const [appState] = useContext(MovieContext);
   // First use the useEffect hook to check if user is logged in
   // on clicking logout simply set loggedIn state to false.
   

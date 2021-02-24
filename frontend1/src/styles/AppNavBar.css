@@ -213,8 +213,8 @@
 
   .mobile .burger > div {
     background: var(--font-color);
-    width: 30px;
-    height: 2.5px;
+    width: 40px;
+    height: 3.5px;
     border-radius: 15px;
     margin-bottom: 6px;
   }
@@ -258,7 +258,7 @@
     color: var(--apps-red);
   }
 
-  .mobile .actions .nav-body > a > div {
+  .mobile .actions .nav-body > a > div, .mobile .actions .nav-body > div {
     background: var(--apps-grey);
     margin: 20px 0;
     padding: 10px;
@@ -275,7 +275,7 @@
     border-radius: 50%;
   }
 
-  .mobile .actions .nav-body > a > div .details {
+  .mobile .actions .nav-body > a > div .details, .mobile .actions .nav-body > div .details {
     width: auto;
     text-align: center;
   }
@@ -285,5 +285,32 @@
     right: 10px;
     align-self: center;
     font-size: 30px;
+  }
+
+  .mobile .actions .nav-body .movie-arrow {
+    /* transition: all 1s ease-in-out; */
+    align-self: flex-start;
+  }
+
+  /* .mobile .actions .nav-body a > .Movies {
+    height: 220px;
+  } */
+
+  .mobile .actions .nav-body .Movies > .other {
+    position: absolute;
+    margin: 60px auto;
+  }
+  .mobile .actions .nav-body .Movies > .other > a {
+    display: block;
+    margin: 14px 0;
+  }
+  .mobile .actions .nav-body .Movies > .other .icons {
+    font-size: 25px;
+    margin: 0 5px;
+    transform: translateY(6px);
+  }
+  .mobile .active-mobile {
+    color: var(--apps-red);
+    font-weight: bold;
   }
 }

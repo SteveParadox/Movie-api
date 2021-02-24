@@ -3,9 +3,9 @@ import "../styles/Watch.css";
 import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
 import Footer from "./Footer";
-import Joker from "../joker_movie.jpg";
+// import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
-import ReactPlayer from "react-player";
+// import ReactPlayer from "react-player";
 import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
 // import { MdPlaylistAdd } from "react-icons/md";
 

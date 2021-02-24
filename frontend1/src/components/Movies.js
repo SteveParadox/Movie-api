@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { MovieContext } from "../MovieContext";
 import MovieCard from "./MovieCard";
 import "../styles/MovieCard.css";
-import { FaPlus, FaStar, FaFilm, FaFire, FaPlayCircle } from "react-icons/fa";
+import { FaPlus, FaStar, FaFire, FaPlayCircle } from "react-icons/fa";
 import { BiTrendingUp } from "react-icons/bi";
 // import { GiAerialSignal } from "react-icons/gi";
 import { GoPrimitiveDot } from "react-icons/go";

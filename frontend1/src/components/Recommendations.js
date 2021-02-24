@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/Recommendations.css";
 import MovieCard from "./MovieCard";
 // import Carousel from "react-elastic-carousel";
-import Joker from "../joker_movie.jpg";
+// import Joker from "../joker_movie.jpg";
 import axios from "axios";
 
 // Import styles

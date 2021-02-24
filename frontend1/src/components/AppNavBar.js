@@ -1,13 +1,16 @@
-import React, { useEffect, useContext, useState, createRef } from "react";
-import { NavLink, Link, Redirect } from "react-router-dom";
+import React, { useContext, useState, createRef } from "react";
+import { NavLink, Link } from "react-router-dom";
 import "../styles/AppNavBar.css";
 import logo from "../video-camera.svg";
 import { MovieContext } from "../MovieContext";
-import { FaSearch, FaAngleDown, FaBell, FaArrowLeft, FaAngleRight } from "react-icons/fa";
+import { FaSearch, FaAngleDown, FaBell, FaArrowLeft, FaAngleRight, FaMixcloud } from "react-icons/fa";
 import { BsFillCameraVideoFill } from "react-icons/bs";
+import { TiArrowSortedDown } from "react-icons/ti";
+import { MdMovie } from "react-icons/md";
+import { AiFillDatabase } from "react-icons/ai";
 import Friend from "./Friend";
-import axios from "axios";
-import urls from "../apiEndPoints";
+// import axios from "axios";
+// import urls from "../apiEndPoints";
 
 // Bring in img for testing purpose
 import Joker from "../joker_movie.jpg";
@@ -26,8 +29,8 @@ const UserAvatar = (props) => {
 const AppNavBar = () => {
   const [appState, setAppState] = useContext(MovieContext);
   const [navOpen, setNavOpen] = useState(false);
-  // console.log(navOpen);
-  const [logged_in, setLogged] = useState(false);
+  const [turn, setTurn] = useState(false);
+  // const [logged_in, setLogged] = useState(false);
   const burger = createRef();
 
   // Check and store logged in
@@ -196,7 +199,7 @@ const AppNavBar = () => {
             <h3 className="title">Activity</h3>
           </div>
           <div className="nav-body">
-            <Link>
+            <Link to="/user">
               <div className="profile">
                 <img src={Joker} alt="." className="dp"/>
                 <div className="details">
@@ -207,15 +210,18 @@ const AppNavBar = () => {
               </div>
             </Link>
 
-            <Link>
-              <div className="Movies">
-                <div className="details">
-                  <h3>Movies</h3>
-                  <p>Your movie categories</p>
-                </div>
-                <FaAngleDown className="nav-arrows"/>
+            <div className="Movies" style={{height: !turn ? "60px" : "220px"}}>
+              <div className="details">
+                <h3>Movies</h3>
+                <p>Your movie categories</p>
               </div>
-            </Link>
+              <TiArrowSortedDown onClick={() => setTurn(n => !n)} className="nav-arrows movie-arrow" style={{ "transform": turn ? "scaleY(-1)" : "scaleY(1)" }}/>
+              <div className="other" style={{display: !turn ? "none" : "block"}}>
+                <Link to="/movies"><p className="active-mobile"><MdMovie className="icons" />Movies</p></Link>
+                <Link><p><AiFillDatabase className="icons" /> Series</p></Link>
+                <Link><p><FaMixcloud className="icons" /> Live</p></Link>
+              </div>
+            </div>
 
             <Link>
               <div className="My List">

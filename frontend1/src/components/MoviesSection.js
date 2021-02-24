@@ -217,12 +217,12 @@ const Movies = () => {
 
   const submit = e => {
     e.preventDefault();
-    axios.get("https://movie-stream-api.herokuapp.com/api/search/movie", {
+    axios.post("https://movie-stream-api.herokuapp.com/api/search/movie", {
       name: search
     })
       .then(res => {
         console.log(res.data);
-        setMoviesState(res.data.data);
+        // setMoviesState(res.data.data);
       })
       .catch(err => console.log("Failed searching movies"));
   }

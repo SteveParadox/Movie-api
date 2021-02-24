@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { Redirect } from "react-router-dom";
-import axios from "axios";
-import url from "../apiEndPoints";
+// import axios from "axios";
+// import url from "../apiEndPoints";
 
 // The components
 import AppNavBar from "./AppNavBar";
 import Banner from "./TestBanner";
-import Watching from "./Watching";
+// import Watching from "./Watching";
 import Recommendations from "./Recommendations";
 import Movies from "./Movies";
 import SubscribeLayout from "./SubscribeLayout";
@@ -29,9 +29,9 @@ function Home() {
         });
       }
     }
-  }, [appState, setAppState]);
+    // eslint-disable-next-line
+  }, []);
 
-  // useEffect(() => console.log(appState), [appState]);
   return (
     <div>
       {!appState.logged_in ? <Redirect to="/signin" /> : null}
