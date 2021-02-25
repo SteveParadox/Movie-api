@@ -116,7 +116,8 @@ def upload_movie():
         movies.name = str(dict_movie['original_title'])
         movies.description = description
         movies.review = review
-        genres = dict_movie['genres']
+        genSeries = ia.get_movie(id)
+        genres = genSeries.data['genres']
         movies.cast1 = lists[0]
         movies.cast2 = lists[1]
         movies.cast3 = lists[2]
@@ -125,8 +126,7 @@ def upload_movie():
         com = []
         for i in company:
             com.append(i['name'])
-        for i in genres:
-            movies.genre = i
+        movies.genre = genres
         movies.creator = com[0]
         movies.created_on = str(dict_movie['release_date'])
         movies.runtime = str(dict_movie['runtime'])
