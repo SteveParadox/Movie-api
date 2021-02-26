@@ -47,9 +47,9 @@ def genres():
     genreList = {}
     dataLists = []
     resultList = []
+    movies = Movie.query.all()
     for i in data['genre']:
         dataLists.append(i)
-    movies = Movie.query.all()
     for j in movies:
         genreList.update({"name":j.name, "genre": j.genre})
     for x in dataLists:
@@ -66,7 +66,6 @@ def genres():
 @cross_origin()
 def search():
     data = request.get_json()
-    print(str(data['name']).lower())
     movie_name = Movie.query.filter(name= str(data['name'][0]).upper()+data['name'][1:]).all()
     if not movie_name:
         movie_name = Movie.query.filter_by(genre=str(data['name'][0]).upper()+data['name'][1:]).all()
@@ -116,12 +115,34 @@ def get_movie(u_id):
 @api.route('/api/similar/movie/<string:u_id>', methods=['GET'])
 @cross_origin()
 def similar_movie(u_id):
+    similarList={}
+    genreList=[]
+    moviesSimilar=[]
     movie_name = Movie.query.filter_by(public_id=u_id).first()
-    movies = Movie.query.filter_by(genre=movie_name.genre).all()
-    movie_schema = MovieSchema(many=True)
-    result = movie_schema.dump(movies)
+    for i in movie_name.genre:
+        genreList.append(i)
+    movies = Movie.query.all()
+    for j in movies:
+        for k in j.genre:
+            if k in genreList:
+                moviesSimilar.append(k)
+    movies_ = Movie.query.all()
+    for i,h in zip(movies_, moviesSimilar):
+        if h in i.genre:
+            similarList.update({
+                "name": i.name,
+                'id': i.public_id,
+                "genre": i.genre,
+                'overview': i.description
+    })
+    if u_id in similarList['id']:
+        similarList.pop('id')
+        similarList.pop('genre')
+        similarList.pop('name')
+        similarList.pop('overview')
+       
     return jsonify({
-        'data': result
+        'data': similarList
     }), 200
 
 
@@ -160,12 +181,14 @@ def choice():
         selected_genres.remove('love')
     except:
         pass
-
-    for i in selected_genres:
-        movie = Movie.query.filter_by(genre=f'{i[0].upper() + i[1:]}').all()
-
+    movie={}
+    movisx= Movie.query.all()
+    for i,h in zip(selected_genres, movisx):
+        if i in h.genre:
+            pass
         for z in movie:
             suggested_movies.append({'name': z.name,
+                                     'name': z.name,
                                      'id': z.public_id,
                                      "genre": z.genre,
                                      'overview': z.description})
@@ -247,9 +270,9 @@ def i_and_my_friend(name):
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
 @login_required
-def addRating(movie_id):
-    data = request.get_json()
+def addRatings(movie_id):
     try:
+        data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
         ratings = UserRating(reviews=current_user, reviewing=movies)
         ratings.rating = int(data["rating"])
@@ -261,11 +284,34 @@ def addRating(movie_id):
         })
     except:
         return jsonify({
-        "message": "data is empty"})
+            "message":"Error adding to database"
+        })
+
+
+
+@api.route('/api/post/review/<string:movie_id>', methods=['POST'])
+@cross_origin()
+@login_required
+def addReviews(movie_id):
+    try:
+        data=request.get_json()
+        movies = Movie.query.filter_by(public_id=movie_id).first()
+        ratings = UserReview(reviews=current_user, reviewing=movies)
+        ratings.rating = int(data["rating"])
+        db.session.add(ratings)
+        db.session.commit()
+
+        return jsonify({
+            "message": "rated"
+        })
+    except:
+        return jsonify({
+            "message":"Error adding to database"
+        })
 
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
-@cross_origin()
-def rating(movie_id):
+@cross_origin
+def movieRating(movie_id):
     try:
         movies = Movie.query.filter_by(public_id=movie_id).first()
         ratings = UserRating.query.filter_by(reviewing=movies).first()
@@ -278,7 +324,8 @@ def rating(movie_id):
         })
     except:
         return jsonify({
-        "message": "no ratings for this movie"})
+            "message": "Movie has no rating"
+        })
 
 
 @api.route('/api/popular')
