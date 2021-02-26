@@ -59,7 +59,7 @@ def sign_up():
 # logging in
 @users.route('/api/login', methods=['POST'])
 @cross_origin()
-def login(expires_sec=1800):
+def login(expires_sec=1800000000000):
     data = request.get_json()
     email = data['email']
     user = Users.query.filter_by(email=email).first()
