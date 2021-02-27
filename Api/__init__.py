@@ -25,8 +25,13 @@ login_manager.session_protection = "strong"
 REMEMBER_COOKIE_NAME = 'remember'
 REMEMBER_COOKIE_DURATION = datetime.timedelta(days=64, seconds=29156, microseconds=10)
 REMEMBER_COOKIE_REFRESH_EACH_REQUEST = True
-PERMANENT_SESSION_LIFETIME= datetime.timedelta(days=64, seconds=29156, microseconds=10)
 
+
+@app.before_request
+def before_request():
+    flask.session.permanent = True
+    app.permanent_session_lifetime = datetime.timedelta(minutes=200000000)
+    flask.session.modified = True
 
 def create_app(config_class=Config):
 
