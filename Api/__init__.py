@@ -1,4 +1,5 @@
 import datetime
+import flask
 from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_marshmallow import Marshmallow
