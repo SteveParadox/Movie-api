@@ -162,7 +162,7 @@ def like(u_id):
 
 
 # getting user's registered genre's choice for data processing
-@api.route('/api/choice')
+@api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @login_required
 def choice():
@@ -199,7 +199,7 @@ def choice():
 
 
 # using user's interested movies for data processing
-@api.route('/api/loved/movies')
+@api.route('/api/loved/movies', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @login_required
 def loved_movies():
@@ -224,7 +224,7 @@ def loved_movies():
 
 
 # suggesting movies a user and his friend likes
-@api.route('/api/my/friend/<string:name>/suggest')
+@api.route('/api/my/friend/<string:name>/suggest', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @login_required
 def i_and_my_friend(name):
