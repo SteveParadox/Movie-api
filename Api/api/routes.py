@@ -161,15 +161,13 @@ def like(u_id):
     })
 
 
-# getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @login_required
 def choice():
     selected_genres = []
-    suggested_movies = []
+    suggested_result =[]
     datas = Data.query.filter_by(love=current_user).all()
-
     datas_schema = DataSchema(many=True)
     result = datas_schema.dump(datas)
     for i in result:
@@ -177,24 +175,25 @@ def choice():
             if value == True:
                 selected_genres.append(key)
     try:
+        
         selected_genres.remove('id')
         selected_genres.remove('love')
     except:
         pass
-    movie={}
-    movisx= Movie.query.all()
-    for i,h in zip(selected_genres, movisx):
-        if i in h.genre:
-            pass
-        for z in movie:
-            suggested_movies.append({'name': z.name,
-                                     'name': z.name,
-                                     'id': z.public_id,
-                                     "genre": z.genre,
-                                     'overview': z.description})
-            random.shuffle(suggested_movies)
+    movies= Movie.query.all()
+    for i,h in zip(selected_genres, movies):
+        for j in h.genre:
+            if i in j:
+                suggested_result.append({
+                    'name': h.name,
+                    'id': h.public_id,
+                    "genre": h.genre,
+                    'overview': h.description
+
+                })
+            random.shuffle(suggested_result)
     return jsonify({
-        "data": suggested_movies
+        "data": suggested_result
     })
 
 
