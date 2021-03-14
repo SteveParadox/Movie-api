@@ -161,6 +161,8 @@ def like(u_id):
     })
 
 
+
+# getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @login_required
@@ -181,17 +183,16 @@ def choice():
     except:
         pass
     movies= Movie.query.all()
-    for i,h in zip(selected_genres, movies):
-        for j in h.genre:
-            if i in j:
-                suggested_result.append({
-                    'name': h.name,
-                    'id': h.public_id,
-                    "genre": h.genre,
-                    'overview': h.description
+    for i,h in zip(selected_genres, movies):  
+        if str(i[0].upper())+i[1:] in h.genre:
+            suggested_result.append({
+                'name': h.name,
+                'id': h.public_id,
+                "genre": h.genre,
+                'overview': h.description,
 
-                })
-            random.shuffle(suggested_result)
+            })
+        random.shuffle(suggested_result)
     return jsonify({
         "data": suggested_result
     })
@@ -203,6 +204,7 @@ def choice():
 @login_required
 def loved_movies():
     result = []
+    filter_data = []
     t = []
     data = Exciting.query.filter_by(rate=current_user).all()
     for i in data:
@@ -210,16 +212,22 @@ def loved_movies():
     for c in result:
         liked = Movie.query.filter_by(name=c).first()
         movies = Movie.query.filter_by(genre=liked.genre).all()
+        
         # get movies related to liked movies
-        for movie in movies:
+    movies= Movie.query.all()
+    for i,h in zip(selected_genres, movies):  
+        if str(i[0].upper())+i[1:] in h.genre:
             t.append({'name': movie.name,
                       'genre': movie.genre,
                       'id': movie.public_id,
                       'overview': movie.description,
                       })
+        
+            
     return jsonify({
         'data': t
     })
+
 
 
 # suggesting movies a user and his friend likes
