@@ -165,37 +165,43 @@ def like(u_id):
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-@login_required
+#@login_required
 def choice():
     selected_genres = []
     suggested_result =[]
-    datas = Data.query.filter_by(love=current_user).all()
-    datas_schema = DataSchema(many=True)
-    result = datas_schema.dump(datas)
-    for i in result:
-        for key, value in i.items():
-            if value == True:
-                selected_genres.append(key)
     try:
-        
-        selected_genres.remove('id')
-        selected_genres.remove('love')
-    except:
-        pass
-    movies= Movie.query.all()
-    for i,h in zip(selected_genres, movies):  
-        if str(i[0].upper())+i[1:] in h.genre:
-            suggested_result.append({
-                'name': h.name,
-                'id': h.public_id,
-                "genre": h.genre,
-                'overview': h.description,
+        datas = Data.query.filter_by(love=current_user).all()
+        datas_schema = DataSchema(many=True)
+        result = datas_schema.dump(datas)
+        for i in result:
+            for key, value in i.items():
+                if value == True:
+                    selected_genres.append(key)
+        try:
+            
+            selected_genres.remove('id')
+            selected_genres.remove('love')
+        except:
+            pass
+        movies= Movie.query.all()
+        for i,h in zip(selected_genres, movies):  
+            if str(i[0].upper())+i[1:] in h.genre:
+                suggested_result.append({
+                    'name': h.name,
+                    'id': h.public_id,
+                    "genre": h.genre,
+                    'overview': h.description,
 
-            })
-        random.shuffle(suggested_result)
-    return jsonify({
-        "data": suggested_result
-    })
+                })
+
+        return jsonify({
+            "data": suggested_result
+        })
+    except:
+        return jsonify({
+            "message": "Not Logged In"
+        })
+
 
 
 # using user's interested movies for data processing
