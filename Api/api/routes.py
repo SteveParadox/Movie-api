@@ -164,7 +164,7 @@ def like(u_id):
 
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
-@cross_origin()
+#@cross_origin()
 #@login_required
 def choice():
     selected_genres = []
