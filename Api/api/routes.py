@@ -170,6 +170,7 @@ def choice():
     selected_genres = []
     suggested_result =[]
     try:
+        print("bAt")
         datas = Data.query.filter_by(love=current_user).all()
         datas_schema = DataSchema(many=True)
         result = datas_schema.dump(datas)
