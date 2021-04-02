@@ -59,7 +59,7 @@ def sign_up():
 # logging in
 @users.route('/api/login', methods=['POST'])
 @cross_origin()
-def login(expires_sec=1800000000000):
+def login():
     data = request.get_json()
     email = data['email']
     user = Users.query.filter_by(email=email).first()
@@ -71,7 +71,7 @@ def login(expires_sec=1800000000000):
         payload= {
                 "id": user.id,  
                 "name": user.name,
-                'exp' : expires_sec),
+                'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
                 "email": user.email
             }
         token = jwt.encode(payload, Config.SECRET_KEY)
