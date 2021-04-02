@@ -1,32 +1,52 @@
 import random
 from flask import *
-from functools import wraps
-from flask_login import login_user, logout_user, login_required, current_user, user_loaded_from_cookie
+from flask_login import current_user, login_required
 from Api import *
 from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store, UserRating
 from flask_cors import cross_origin
+from functools import wraps
+
+
 
 api = Blueprint('api', __name__)
 
-Email= "spiffjg@gmail.com"
-Password= "pass123"
+
+# decorator for verifying the JWT
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        incoming = request.get_json()
+        token = incoming['token']
+     
+        if not token:
+            return jsonify({'message' : 'Token is missing !!'}), 401
+        
+        try:
+       
+            data = jwt.decode(token, Config.SECRET_KEY)
+            current_user = User.query\
+                .filter_by(email = data['email']).first()
+        except:
+            return jsonify({
+                'message' : 'Token is invalid !!'
+            }), 401
+        
+        return  f(current_user, *args, **kwargs)
+   
+    return decorated
+
 
 # home
 @api.route('/api/', methods=['GET'])
+@token_required
 @cross_origin()
 def home():
     page = request.args.get('page', 1, type=int)
     movies = Movie.query.paginate(page=page, per_page=10)
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies.items)
-    email = Email
-    user = Users.query.filter_by(email=Email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
-    if current_user.is_authenticated:
+    if current_user:
         id = current_user.id
         name = current_user.name
   
@@ -52,15 +72,19 @@ def home():
 
 @api.route('/api/genre', methods=['POST'])
 @cross_origin()
-def choiceGenres():
+def genres():
     data =request.get_json()
+    genreList = {}
+    dataLists = []
     resultList = []
-    dc= data['genre']
     movies = Movie.query.all()
-    for l in movies:
-        for i in range(0,len(dc)):
-            if dc[i] in l.genre:
-                resultList.append(l.name)
+    for i in data['genre']:
+        dataLists.append(i)
+    for j in movies:
+        genreList.update({"name":j.name, "genre": j.genre})
+    for x in dataLists:
+        if x in genreList['genre']:
+            resultList.append(genreList['name'])
     return jsonify({
         "data": resultList
     }), 200
@@ -92,6 +116,7 @@ def search():
 # watching alone
 @api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
 @cross_origin()
+@token_required
 def get_movie(u_id):
     try:
         movie_name = Movie.query.filter_by(public_id=u_id).first()
@@ -99,13 +124,6 @@ def get_movie(u_id):
         db.session.commit()
         movie_schema = MovieSchema()
         result = movie_schema.dump(movie_name)
-        email = Email
-        user = Users.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password, Password):
-            login_user(user,  remember=True)
-            user.logged_in = True
-            db.session.commit()
-            next_page = request.args.get('next')
         id = current_user.id
         name = current_user.name
         try:
@@ -139,18 +157,20 @@ def similar_movie(u_id):
             if k in genreList:
                 moviesSimilar.append(k)
     movies_ = Movie.query.all()
-    print(moviesSimilar)
-    for i in movies_:
-        
-        for h in range(0, len(moviesSimilar)):
-            if moviesSimilar[h] in i.genre:
-                similarList.update({
-                    "name": i.name,
-                    'id': i.public_id,
-                    "genre": i.genre,
-                    'overview': i.description
-        })
-   
+    for i,h in zip(movies_, moviesSimilar):
+        if h in i.genre:
+            similarList.update({
+                "name": i.name,
+                'id': i.public_id,
+                "genre": i.genre,
+                'overview': i.description
+    })
+    if u_id in similarList['id']:
+        similarList.pop('id')
+        similarList.pop('genre')
+        similarList.pop('name')
+        similarList.pop('overview')
+       
     return jsonify({
         'data': similarList
     }), 200
@@ -159,16 +179,10 @@ def similar_movie(u_id):
 # thumbs up a movie
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
+@login_required
 def like(u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     loved_movie = Exciting(rate=current_user, loved=movie.name)
     db.session.add(loved_movie)
     db.session.commit()
@@ -177,24 +191,19 @@ def like(u_id):
     })
 
 
+
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-#@login_required
+@token_required
 def choice():
     selected_genres = []
     suggested_result =[]
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     try:
         datas = Data.query.filter_by(love=current_user).all()
         datas_schema = DataSchema(many=True)
         result = datas_schema.dump(datas)
+        print("bAt")
         for i in result:
             for key, value in i.items():
                 if value == True:
@@ -225,20 +234,15 @@ def choice():
         })
 
 
+
 # using user's interested movies for data processing
 @api.route('/api/loved/movies', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
+@token_required
 def loved_movies():
     result = []
     filter_data = []
     t = []
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     data = Exciting.query.filter_by(rate=current_user).all()
     for i in data:
         result.append(i.loved)
@@ -248,7 +252,7 @@ def loved_movies():
         
         # get movies related to liked movies
     movies= Movie.query.all()
-    for i,h in zip(result, movies):  
+    for i,h in zip(selected_genres, movies):  
         if str(i[0].upper())+i[1:] in h.genre:
             t.append({'name': movie.name,
                       'genre': movie.genre,
@@ -260,6 +264,7 @@ def loved_movies():
     return jsonify({
         'data': t
     })
+
 
 
 # suggesting movies a user and his friend likes
@@ -308,19 +313,13 @@ def i_and_my_friend(name):
 
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
+@token_required
 def addRatings(movie_id):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
-        email = Email
-        user = Users.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password, Password):
-            login_user(user,  remember=True)
-            user.logged_in = True
-            db.session.commit()
-            next_page = request.args.get('next')
         ratings = UserRating(reviews=current_user, reviewing=movies)
-        ratings.rating = 8
+        ratings.rating = int(data["rating"])
         db.session.add(ratings)
         db.session.commit()
 
@@ -336,14 +335,8 @@ def addRatings(movie_id):
 
 @api.route('/api/post/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
+@token_required
 def addReviews(movie_id):
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -361,7 +354,7 @@ def addReviews(movie_id):
         })
 
 @api.route('/api/review/<string:movie_id>', methods=['GET'])
-@cross_origin()
+@cross_origin
 def movieRating(movie_id):
     try:
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -403,14 +396,8 @@ def trending():
 
 @api.route('/api/add/list/<string:movie_id>', methods=['POST'])
 @cross_origin()
+@token_required
 def add_to_list(movie_id):
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     movie = Movie.query.filter_by(public_id=movie_id).first()
     store = Store(saved=current_user)
     store.stored_data = movie.public_id
@@ -423,14 +410,8 @@ def add_to_list(movie_id):
 
 @api.route('/api/my/list')
 @cross_origin()
+@token_required
 def my_list():
-    email = Email
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, Password):
-        login_user(user,  remember=True)
-        user.logged_in = True
-        db.session.commit()
-        next_page = request.args.get('next')
     store = Store.query.filter_by(saved=current_user).all()
     data = []
     for movie_id in store:
