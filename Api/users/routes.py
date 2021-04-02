@@ -68,24 +68,23 @@ def login(expires_sec=1800000000000):
         session.permanent = True
         user.logged_in = True
         db.session.commit()
-        s = Serializer(Config.SECRET_KEY , expires_sec)
         payload= {
-                "id": user.id,
-                "name": user.name
-            }
-        return jsonify({
-            "status": "success",
-            "message": "login successful",
-            "data": {
-                "id": user.id,
+                "id": user.id,  
                 "name": user.name,
-                "token": "Bearer " + s.dumps(payload).decode('utf-8')
+                'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
+                "email": user.email
             }
-        }), 200
-    return jsonify({
-        "status": "failed",
-        "message": "Failed getting user"
-    }), 401
+        token = jwt.encode(payload, Config.SECRET_KEY)
+       data = jwt.decode(toke, Config.SECRET_KEY)
+
+        return make_response(jsonify({'token' : token.decode('UTF-8'),
+        "name":data['name'], "email": data['email']}), 201)
+    return make_response(
+            'Could not verify',
+            401,
+            {'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
+        )
+
 
 
 # registering user's preferred genre for data processing
