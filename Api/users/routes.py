@@ -71,14 +71,14 @@ def login(expires_sec=1800000000000):
         payload= {
                 "id": user.id,  
                 "name": user.name,
-                'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
+                'exp' : expires_sec),
                 "email": user.email
             }
         token = jwt.encode(payload, Config.SECRET_KEY)
-       data = jwt.decode(toke, Config.SECRET_KEY)
+        data = jwt.decode(toke, Config.SECRET_KEY)
 
         return make_response(jsonify({'token' : token.decode('UTF-8'),
-        "name":data['name'], "email": data['email']}), 201)
+            "name":data['name'], "email": data['email']}), 201)
     return make_response(
             'Could not verify',
             401,
