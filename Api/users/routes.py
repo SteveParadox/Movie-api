@@ -74,7 +74,7 @@ def login():
                 "email": user.email
             }
         token = jwt.encode(payload, Config.SECRET_KEY)
-        data = jwt.decode(toke, Config.SECRET_KEY)
+        data = jwt.decode(token, Config.SECRET_KEY)
 
         return make_response(jsonify({'token' : token.decode('UTF-8'),
             "name":data['name'], "email": data['email']}), 201)
