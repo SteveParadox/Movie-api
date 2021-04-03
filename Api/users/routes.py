@@ -1,6 +1,6 @@
 import datetime
 import os
-
+import jwt
 from flask import *
 from flask_login import login_user, logout_user, login_required, current_user
 from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchema, Activities, ActivitiesSchema, \
@@ -12,7 +12,6 @@ import cloudinary.uploader
 from Api.utils import save_img
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from Api.config import Config
-
 users = Blueprint('users', __name__)
 
 
