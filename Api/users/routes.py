@@ -79,7 +79,7 @@ def login(expires_sec=1800000000000):
         token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
         data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
 
-        return make_response(jsonify({'token' : token.decode('UTF-8'),
+        return make_response(jsonify({'token' : token,
         "name":data['name'], "email": data['email']}), 201)
     return make_response(
             'Could not verify',
