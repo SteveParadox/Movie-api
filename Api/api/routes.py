@@ -11,7 +11,7 @@ api = Blueprint('api', __name__)
 
 
 @api.route('/api/home', methods=['GET'])
-@cross_origin
+@cross_origin()
 def home():
     page = request.args.get('page', 1, type=int)
     movies = Movie.query.paginate(page=page, per_page=10)
