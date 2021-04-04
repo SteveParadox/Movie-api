@@ -1,47 +1,33 @@
 import random
 from flask import *
-from flask_login import current_user, login_required
 from Api import *
 from Api.models import Movie, MovieSchema, Data, DataSchema, Friend, Users, Exciting, Store, UserRating
 from flask_cors import cross_origin
 from functools import wraps
-
-
+import jwt
+from Api.ext import token_required
 
 api = Blueprint('api', __name__)
 
 
-# decorator for verifying the JWT
-def token_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = None
-        incoming = request.get_json()
-        token = incoming['token']
-     
-        if not token:
-            return jsonify({'message' : 'Token is missing !!'}), 401
-        
-        try:
-       
-            data = jwt.decode(token, Config.SECRET_KEY)
-            current_user = User.query\
-                .filter_by(email = data['email']).first()
-        except:
-            return jsonify({
-                'message' : 'Token is invalid !!'
-            }), 401
-        
-        return  f(current_user, *args, **kwargs)
-   
-    return decorated
-
+@api.route('/api/', methods=['GET'])
+@cross_origin
+def home():
+    page = request.args.get('page', 1, type=int)
+    movies = Movie.query.paginate(page=page, per_page=10)
+    movie_schema = MovieSchema(many=True)
+    result = movie_schema.dump(movies.items)
+    return jsonify({
+        "data": result,
+        "message": "user not logged in",
+        'logged in': False
+    }), 200
 
 # home
-@api.route('/api/', methods=['GET'])
-#@token_required
+@api.route('/api/', methods=['POST'])
+@token_required
 @cross_origin()
-def home():
+def loggedHome(current_user):
     page = request.args.get('page', 1, type=int)
     movies = Movie.query.paginate(page=page, per_page=10)
     movie_schema = MovieSchema(many=True)
@@ -49,7 +35,6 @@ def home():
     if current_user:
         id = current_user.id
         name = current_user.name
-  
         email = current_user.email
         friends = Friend.query.filter_by(get=current_user).filter(Friend.u_friend != 'null').all()
         friend = len(friends)
@@ -63,7 +48,6 @@ def home():
             'logged in': True
         }), 200
     return jsonify({
-        "data": result,
         "message": "user not logged in",
         'logged in': False
     })
@@ -114,10 +98,10 @@ def search():
 
 # link to redirect to selected movie
 # watching alone
-@api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
+@api.route('/api/get/movie/<string:u_id>/', methods=['POST'])
 @cross_origin()
-#@token_required
-def get_movie(u_id):
+@token_required
+def get_movie(u_id, current_user):
     try:
         movie_name = Movie.query.filter_by(public_id=u_id).first()
         movie_name.popular = movie_name.popular + 1
@@ -179,8 +163,8 @@ def similar_movie(u_id):
 # thumbs up a movie
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
-#@login_required
-def like(u_id):
+@token_required
+def like(u_id, current_user):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
     loved_movie = Exciting(rate=current_user, loved=movie.name)
@@ -195,15 +179,14 @@ def like(u_id):
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-#@token_required
-def choice():
+@token_required
+def choice(current_user):
     selected_genres = []
     suggested_result =[]
     try:
         datas = Data.query.filter_by(love=current_user).all()
         datas_schema = DataSchema(many=True)
         result = datas_schema.dump(datas)
-        print("bAt")
         for i in result:
             for key, value in i.items():
                 if value == True:
@@ -238,8 +221,8 @@ def choice():
 # using user's interested movies for data processing
 @api.route('/api/loved/movies', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-#@token_required
-def loved_movies():
+@token_required
+def loved_movies(current_user):
     result = []
     filter_data = []
     t = []
@@ -270,7 +253,7 @@ def loved_movies():
 # suggesting movies a user and his friend likes
 @api.route('/api/my/friend/<string:name>/suggest', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-@login_required
+@token_required
 def i_and_my_friend(name):
     conjoin = []
     suggested_movies = []
@@ -313,8 +296,8 @@ def i_and_my_friend(name):
 
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
-#@token_required
-def addRatings(movie_id):
+@token_required
+def addRatings(movie_id, current_user):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -335,8 +318,8 @@ def addRatings(movie_id):
 
 @api.route('/api/post/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
-#@token_required
-def addReviews(movie_id):
+@token_required
+def addReviews(movie_id, current_user):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -396,8 +379,8 @@ def trending():
 
 @api.route('/api/add/list/<string:movie_id>', methods=['POST'])
 @cross_origin()
-#@token_required
-def add_to_list(movie_id):
+@token_required
+def add_to_list(movie_id, current_user):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     store = Store(saved=current_user)
     store.stored_data = movie.public_id
@@ -410,8 +393,8 @@ def add_to_list(movie_id):
 
 @api.route('/api/my/list')
 @cross_origin()
-#@token_required
-def my_list():
+@token_required
+def my_list(current_user):
     store = Store.query.filter_by(saved=current_user).all()
     data = []
     for movie_id in store:
