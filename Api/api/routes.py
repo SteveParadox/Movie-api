@@ -10,7 +10,7 @@ from Api.ext import token_required
 api = Blueprint('api', __name__)
 
 
-@api.route('/api/', methods=['GET'])
+@api.route('/api/home', methods=['GET'])
 @cross_origin
 def home():
     page = request.args.get('page', 1, type=int)
