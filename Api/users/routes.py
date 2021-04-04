@@ -76,8 +76,8 @@ def login(expires_sec=1800000000000):
                 'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
                 "email": user.email
             }
-        token = jwt.encode(payload, Config.SECRET_KEY, algorithm="RS256")
-        data = jwt.decode(token, Config.SECRET_KEY, algorithm="RS256")
+        token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
+        data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
 
         return make_response(jsonify({'token' : token.decode('UTF-8'),
         "name":data['name'], "email": data['email']}), 201)
