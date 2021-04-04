@@ -56,7 +56,7 @@ def loggedHome(current_user):
 
 @api.route('/api/genre', methods=['POST'])
 @cross_origin()
-def genres():
+def genresGet():
     data =request.get_json()
     genreList = {}
     dataLists = []
@@ -78,7 +78,7 @@ def genres():
 # searching for movie
 @api.route('/api/search/movie', methods=['POST'])
 @cross_origin()
-def search():
+def searchList():
     data = request.get_json()
     movie_name = Movie.query.filter(name= str(data['name'][0]).upper()+data['name'][1:]).all()
     if not movie_name:
@@ -164,7 +164,7 @@ def similar_movie(u_id):
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def like(u_id, current_user):
+def likeMovie(u_id, current_user):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
     loved_movie = Exciting(rate=current_user, loved=movie.name)
@@ -180,7 +180,7 @@ def like(u_id, current_user):
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
 @token_required
-def choice(current_user):
+def choicesUser(current_user):
     selected_genres = []
     suggested_result =[]
     try:
@@ -297,7 +297,7 @@ def i_and_my_friend(name):
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def addRatings(movie_id, current_user):
+def addRating(movie_id, current_user):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -336,8 +336,8 @@ def addReviews(movie_id, current_user):
             "message":"Error adding to database"
         })
 
-@api.route('/api/review/<string:movie_id>', methods=['GET'])
-@cross_origin
+@api.route('/api/reviews/<string:movie_id>', methods=['GET'])
+
 def movieRating(movie_id):
     try:
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -357,7 +357,7 @@ def movieRating(movie_id):
 
 @api.route('/api/popular')
 @cross_origin()
-def popular():
+def popularMovies():
     movies = Movie.query.order_by(Movie.review.desc()).all()
     movie_schema = MovieSchema(many=True)
     result = movie_schema.dump(movies)
