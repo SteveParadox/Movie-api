@@ -92,7 +92,7 @@ def login(expires_sec=1800000000000):
 @users.route('/api/select/genre', methods=['POST'])
 @cross_origin()
 @token_required
-def genre():
+def genre(current_user):
     data = request.get_json()
     action = data['action']
     comedy = data['comedy']
@@ -140,7 +140,7 @@ def genre():
 
 @users.route('/logout')
 @cross_origin()
-@token_required
+
 def logout_users():
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
@@ -154,7 +154,7 @@ def logout_users():
 @users.route('/api/logout', methods=['POST'])
 @cross_origin()
 @token_required
-def logout():
+def logout(current_user):
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
     db.session.commit()
@@ -169,7 +169,7 @@ def logout():
 @users.route('/api/user/profile', methods=['POST'])
 @cross_origin()
 @token_required
-def profile():
+def profile(current_user):
     try:
         # changing profile name
         data = request.get_json()
@@ -240,7 +240,7 @@ def profile():
 @users.route('/api/upload/story', methods=['POST'])
 @cross_origin()
 @token_required
-def upload_story():
+def upload_story(current_user):
     data = request.get_json()
     file = request.files['story']
     socials = Activities(social=current_user)
@@ -263,7 +263,7 @@ def upload_story():
 @users.route('/api/user/story', methods=['GET'])
 @cross_origin()
 @token_required
-def my_story():
+def my_story(current_user):
     socials = Activities.query.filter_by(social=current_user).all()
     activities_schema = ActivitiesSchema(many=True)
     result = activities_schema.dump(socials)
@@ -277,7 +277,7 @@ def my_story():
 @users.route('/api/friend/story', methods=['GET'])
 @cross_origin()
 @login_required
-def friend_story():
+def friend_story(current_user):
     friends = Friend.query.filter_by(get=current_user).all()
     for friend in friends:
         socials = Activities.query.filter_by(social=friend).all()
