@@ -39,7 +39,7 @@ def token_required(f):
 
 # home
 @api.route('/api/', methods=['GET'])
-@token_required
+#@token_required
 @cross_origin()
 def home():
     page = request.args.get('page', 1, type=int)
@@ -116,7 +116,7 @@ def search():
 # watching alone
 @api.route('/api/get/movie/<string:u_id>/', methods=['GET'])
 @cross_origin()
-@token_required
+#@token_required
 def get_movie(u_id):
     try:
         movie_name = Movie.query.filter_by(public_id=u_id).first()
@@ -179,7 +179,7 @@ def similar_movie(u_id):
 # thumbs up a movie
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
-@login_required
+#@login_required
 def like(u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
@@ -195,7 +195,7 @@ def like(u_id):
 # getting user's registered genre's choice for data processing
 @api.route('/api/choice', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-@token_required
+#@token_required
 def choice():
     selected_genres = []
     suggested_result =[]
@@ -238,7 +238,7 @@ def choice():
 # using user's interested movies for data processing
 @api.route('/api/loved/movies', methods=['GET', 'POST', 'OPTIONS'])
 @cross_origin()
-@token_required
+#@token_required
 def loved_movies():
     result = []
     filter_data = []
@@ -313,7 +313,7 @@ def i_and_my_friend(name):
 
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
-@token_required
+#@token_required
 def addRatings(movie_id):
     try:
         data=request.get_json()
@@ -335,7 +335,7 @@ def addRatings(movie_id):
 
 @api.route('/api/post/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
-@token_required
+#@token_required
 def addReviews(movie_id):
     try:
         data=request.get_json()
@@ -396,7 +396,7 @@ def trending():
 
 @api.route('/api/add/list/<string:movie_id>', methods=['POST'])
 @cross_origin()
-@token_required
+#@token_required
 def add_to_list(movie_id):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     store = Store(saved=current_user)
@@ -410,7 +410,7 @@ def add_to_list(movie_id):
 
 @api.route('/api/my/list')
 @cross_origin()
-@token_required
+#@token_required
 def my_list():
     store = Store.query.filter_by(saved=current_user).all()
     data = []
