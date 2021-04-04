@@ -2,7 +2,7 @@ import datetime
 import os
 import jwt
 from flask import *
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, login_required
 from Api.models import Users, UsersSchema, Data, DataSchema, Friend, FriendSchema, Activities, ActivitiesSchema, \
     Exciting, ExcitingSchema
 from Api import db, bcrypt
@@ -12,6 +12,8 @@ import cloudinary.uploader
 from Api.utils import save_img
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from Api.config import Config
+from Api.ext import token_required
+
 users = Blueprint('users', __name__)
 
 
@@ -56,9 +58,9 @@ def sign_up():
 
 
 # logging in
-@users.route('/api/login', methods=['POST'])
+@users.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
-def login():
+def login(expires_sec=1800000000000):
     data = request.get_json()
     email = data['email']
     user = Users.query.filter_by(email=email).first()
@@ -67,6 +69,7 @@ def login():
         session.permanent = True
         user.logged_in = True
         db.session.commit()
+        #s = Serializer(Config.SECRET_KEY , expires_sec)
         payload= {
                 "id": user.id,  
                 "name": user.name,
@@ -74,10 +77,10 @@ def login():
                 "email": user.email
             }
         token = jwt.encode(payload, Config.SECRET_KEY)
-        data = payload
+        data = jwt.decode(token, Config.SECRET_KEY)
 
         return make_response(jsonify({'token' : token.decode('UTF-8'),
-            "name":data['name'], "email": data['email']}), 201)
+        "name":data['name'], "email": data['email']}), 201)
     return make_response(
             'Could not verify',
             401,
@@ -85,11 +88,10 @@ def login():
         )
 
 
-
 # registering user's preferred genre for data processing
 @users.route('/api/select/genre', methods=['POST'])
 @cross_origin()
-@login_required
+@token_required
 def genre():
     data = request.get_json()
     action = data['action']
@@ -138,7 +140,7 @@ def genre():
 
 @users.route('/logout')
 @cross_origin()
-@login_required
+@token_required
 def logout_users():
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
@@ -151,7 +153,7 @@ def logout_users():
 # logging out
 @users.route('/api/logout', methods=['POST'])
 @cross_origin()
-@login_required
+@token_required
 def logout():
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
@@ -164,9 +166,9 @@ def logout():
 
 
 # getting profile of a user
-@users.route('/api/user/profile', methods=['GET'])
+@users.route('/api/user/profile', methods=['POST'])
 @cross_origin()
-@login_required
+@token_required
 def profile():
     try:
         # changing profile name
@@ -237,7 +239,7 @@ def profile():
 # uploading a story
 @users.route('/api/upload/story', methods=['POST'])
 @cross_origin()
-@login_required
+@token_required
 def upload_story():
     data = request.get_json()
     file = request.files['story']
@@ -260,7 +262,7 @@ def upload_story():
 # list of current user's story
 @users.route('/api/user/story', methods=['GET'])
 @cross_origin()
-@login_required
+@token_required
 def my_story():
     socials = Activities.query.filter_by(social=current_user).all()
     activities_schema = ActivitiesSchema(many=True)
