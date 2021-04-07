@@ -101,7 +101,7 @@ def searchList():
 @api.route('/api/get/movie/<string:u_id>/', methods=['POST'])
 @cross_origin()
 @token_required
-def get_movie(u_id, current_user):
+def get_movie(current_user, u_id):
     try:
         movie_name = Movie.query.filter_by(public_id=u_id).first()
         movie_name.popular = movie_name.popular + 1
@@ -297,7 +297,7 @@ def i_and_my_friend(name):
 @api.route('/api/add/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def addRating(movie_id, current_user):
+def addRating(current_user, movie_id):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -319,7 +319,7 @@ def addRating(movie_id, current_user):
 @api.route('/api/post/review/<string:movie_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def addReviews(movie_id, current_user):
+def addReviews(current_user, movie_id):
     try:
         data=request.get_json()
         movies = Movie.query.filter_by(public_id=movie_id).first()
@@ -380,7 +380,7 @@ def trending():
 @api.route('/api/add/list/<string:movie_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def add_to_list(movie_id, current_user):
+def add_to_list(current_user, movie_id):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     store = Store(saved=current_user)
     store.stored_data = movie.public_id
