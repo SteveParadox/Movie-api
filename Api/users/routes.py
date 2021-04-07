@@ -62,41 +62,32 @@ def sign_up():
 @users.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
 def login(expires_sec=1800000000000):
-    try:
+   
         
-        data = request.get_json()
-        email = data['email']
-        user = Users.query.filter_by(email=email).first()
-        if user and bcrypt.check_password_hash(user.password, data['password']):
-            login_user(user,  remember=True)
-            session.permanent = True
-            user.logged_in = True
-            db.session.commit()
-            #s = Serializer(Config.SECRET_KEY , expires_sec)
-            payload= {
-                    "id": user.id,  
-                    "name": user.name,
-                    'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
-                    "email": user.email
-                }
-            token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
-            data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
+    data = request.get_json()
+    email = data['email']
+    user = Users.query.filter_by(email=email).first()
+    if user and bcrypt.check_password_hash(user.password, data['password']):
+        login_user(user,  remember=True)
+        session.permanent = True
+        user.logged_in = True
+        db.session.commit()
+        #s = Serializer(Config.SECRET_KEY , expires_sec)
+        payload= {
+                "id": user.id,  
+                "name": user.name,
+                'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
+                "email": user.email
+            }
+        token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
+        data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
 
-            return jsonify({'token' : token.decode('UTF-8'),
-            "name":data['name'], "email": data['email']}), 201
-        return jsonify({
-            "message":
-                'Could not verify user'}, 401)
+        return jsonify({'token' : token.decode('UTF-8'),
+        "name":data['name'], "email": data['email']}), 201
+    return jsonify({
+        "message":
+            'Could not verify user'}, 401)
                 
-    except:
-        return jsonify({
-            "message":
-                'Sorry there is error on our end'},
-                500
-            
-        )
-
-
 
 
 # registering user's preferred genre for data processing
