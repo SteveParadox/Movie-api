@@ -57,6 +57,7 @@ def sign_up():
         }), 201
 
 
+
 # logging in
 @users.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
@@ -81,19 +82,20 @@ def login(expires_sec=1800000000000):
             token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
             data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
 
-            return make_response(jsonify({'token' : token.decode('UTF-8'),
-            "name":data['name'], "email": data['email']}), 201)
-        return make_response(
-                'Could not verify',
-                401,
-                {'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
-            )
+            return jsonify({'token' : token.decode('UTF-8'),
+            "name":data['name'], "email": data['email']}), 201
+        return jsonify({
+            "message":
+                'Could not verify user'}, 401)
+                
     except:
-        return make_response(
-            'Could not verify',
-            401,
-            {'WWW-Authenticate' : 'Basic realm ="Error trying to login !!"'}
+        return jsonify({
+            "message":
+                'Sorry there is error on our end'},
+                500
+            
         )
+
 
 
 
