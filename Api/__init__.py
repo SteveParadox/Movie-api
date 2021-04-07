@@ -8,10 +8,13 @@ from flask_login import LoginManager
 from .config import Config
 from flask_cors import CORS
 from flask_socketio import SocketIO
+#from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
 cors = CORS()
 io = SocketIO()
+#jwt= JWTManager()
+
 
 app.config.from_object(Config)
 
@@ -34,6 +37,8 @@ def before_request():
     app.permanent_session_lifetime = datetime.timedelta(minutes=200000000)
     flask.session.modified = True
 
+   
+
 def create_app(config_class=Config):
 
     db.init_app(app)
@@ -42,6 +47,7 @@ def create_app(config_class=Config):
     ma.init_app(app)
     login_manager.init_app(app)
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
+    #jwt.init_app(app)
   
     # mail.init_app(app)
 
@@ -58,5 +64,27 @@ def create_app(config_class=Config):
     app.register_blueprint(upload)
     app.register_blueprint(chat)
 
-
+ 
     return app
+
+'''@app.after_request
+    def after_request_func(response):
+        origin = request.headers.get('Origin')
+        if request.method == 'OPTIONS':
+            response = make_response()
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+            response.headers.add('Access-Control-Allow-Headers', 'x-csrf-token')
+            response.headers.add('Access-Control-Allow-Methods',
+                                'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+        else:
+            response.headers.add('Access-Control-Allow-Credentials', 'true')
+            if origin:
+                response.headers.add('Access-Control-Allow-Origin', origin)
+
+        return response
+
+'''
+
