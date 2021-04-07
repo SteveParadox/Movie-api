@@ -61,31 +61,40 @@ def sign_up():
 @users.route('/api/login', methods=['GET', 'POST'])
 @cross_origin()
 def login(expires_sec=1800000000000):
-    data = request.get_json()
-    email = data['email']
-    user = Users.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, data['password']):
-        login_user(user,  remember=True)
-        session.permanent = True
-        user.logged_in = True
-        db.session.commit()
-        #s = Serializer(Config.SECRET_KEY , expires_sec)
-        payload= {
-                "id": user.id,  
-                "name": user.name,
-                'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
-                "email": user.email
-            }
-        token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
-        data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
+    try:
+        
+        data = request.get_json()
+        email = data['email']
+        user = Users.query.filter_by(email=email).first()
+        if user and bcrypt.check_password_hash(user.password, data['password']):
+            login_user(user,  remember=True)
+            session.permanent = True
+            user.logged_in = True
+            db.session.commit()
+            #s = Serializer(Config.SECRET_KEY , expires_sec)
+            payload= {
+                    "id": user.id,  
+                    "name": user.name,
+                    'exp' : datetime.datetime.now() + datetime.timedelta(minutes = 300000),
+                    "email": user.email
+                }
+            token = jwt.encode(payload, Config.SECRET_KEY, algorithm="HS256")
+            data = jwt.decode(token, Config.SECRET_KEY, algorithms="HS256")
 
-        return make_response(jsonify({'token' : token,
-        "name":data['name'], "email": data['email']}), 201)
-    return make_response(
+            return make_response(jsonify({'token' : token.decode('UTF-8'),
+            "name":data['name'], "email": data['email']}), 201)
+        return make_response(
+                'Could not verify',
+                401,
+                {'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
+            )
+    except:
+        return make_response(
             'Could not verify',
             401,
-            {'WWW-Authenticate' : 'Basic realm ="Login required !!"'}
+            {'WWW-Authenticate' : 'Basic realm ="Error trying to login !!"'}
         )
+
 
 
 # registering user's preferred genre for data processing
