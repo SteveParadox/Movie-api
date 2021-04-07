@@ -18,7 +18,7 @@ online_friend = []
 @chat.route('/api/add/friend/<string:name>', methods=["GET", 'POST'])
 @cross_origin()
 @token_required
-def add(name, current_user):
+def add(current_user, name):
     add_friend = Users.query.filter_by(name=name).first()
     add_req = Users.query.filter_by(name=current_user.name).first()
     if add_friend:
@@ -56,7 +56,7 @@ def add(name, current_user):
 @chat.route('/api/remove/friend/<string:name>', methods=["GET", 'POST'])
 @cross_origin()
 @token_required
-def remove_(name,current_user):
+def remove_(current_user, name):
     remove_friend = Users.query.filter_by(name=name).first()
     add_req = Users.query.filter_by(name=current_user.name).first()
     if remove_friend:
@@ -94,7 +94,7 @@ def remove_(name,current_user):
 @chat.route('/api/my/friends', methods=['GET'])
 @cross_origin()
 @token_required
-def my_friends():
+def my_friends(current_user):
     friends = Friend.query.filter_by(get=current_user).all()
     friend_schema = FriendSchema(many=True)
     result = friend_schema.dump(friends)
@@ -168,7 +168,7 @@ def watch(current_user, movie_id, room):
 
 @chat.route('/api/my/rooms', methods=['GET'])
 @cross_origin()
-@login_required
+@token_required
 def my_rooms(current_user):
     room = Room.query.filter_by(host=current_user.name).all()
     room_schema = RoomSchema(many=True)
@@ -182,8 +182,8 @@ def my_rooms(current_user):
 
 @chat.route('/api/my/rooms/delete/<string:room_id>', methods=['POST'])
 @cross_origin()
-@login_required
-def delete_room(room_id):
+@token_required
+def delete_room(current_user, room_id):
     room = Room.query.filter_by(host=current_user.name).filter_by(unique_id=room_id).first()
     if room:
         db.session.delete(room)
