@@ -6,6 +6,7 @@ from flask_socketio import emit, close_room, leave_room, join_room
 
 from Api import *
 from Api.models import Room, RoomSchema, Users, Friend, FriendSchema, Movie, Vote, Room_Activities
+from Api.ext import token_required
 
 chat = Blueprint('chat', __name__)
 
@@ -16,8 +17,8 @@ online_friend = []
 # adding a friend to watch with
 @chat.route('/api/add/friend/<string:name>', methods=["GET", 'POST'])
 @cross_origin()
-@login_required
-def add(name):
+@token_required
+def add(name, current_user):
     add_friend = Users.query.filter_by(name=name).first()
     add_req = Users.query.filter_by(name=current_user.name).first()
     if add_friend:
@@ -54,8 +55,8 @@ def add(name):
 
 @chat.route('/api/remove/friend/<string:name>', methods=["GET", 'POST'])
 @cross_origin()
-@login_required
-def remove_(name):
+@token_required
+def remove_(name,current_user):
     remove_friend = Users.query.filter_by(name=name).first()
     add_req = Users.query.filter_by(name=current_user.name).first()
     if remove_friend:
@@ -92,7 +93,7 @@ def remove_(name):
 # all friends of a particular user
 @chat.route('/api/my/friends', methods=['GET'])
 @cross_origin()
-@login_required
+@token_required
 def my_friends():
     friends = Friend.query.filter_by(get=current_user).all()
     friend_schema = FriendSchema(many=True)
@@ -120,8 +121,8 @@ def all_frnds():
 # Create room
 @chat.route('/api/create/room/for/<string:movie>', methods=['POST'])
 @cross_origin()
-@login_required
-def create_room(movie):
+@token_required
+def create_room(current_user, movie):
     created_room = str(uuid.uuid4())
     movie = Movie.query.filter_by(public_id=movie).first()
     host = current_user.name
@@ -143,8 +144,8 @@ def create_room(movie):
 # redirecting to the room id
 @chat.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
 @cross_origin()
-@login_required
-def watch(movie_id, room):
+@token_required
+def watch(current_user, movie_id, room):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     room = Room.query.filter_by(unique_id=room).first()
     if room:
@@ -168,7 +169,7 @@ def watch(movie_id, room):
 @chat.route('/api/my/rooms', methods=['GET'])
 @cross_origin()
 @login_required
-def my_rooms():
+def my_rooms(current_user):
     room = Room.query.filter_by(host=current_user.name).all()
     room_schema = RoomSchema(many=True)
     result = room_schema.dump(room)
