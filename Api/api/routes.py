@@ -164,7 +164,7 @@ def similar_movie(u_id):
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
 @cross_origin()
 @token_required
-def likeMovie(u_id, current_user):
+def likeMovie(current_user, u_id):
     movie = Movie.query.filter_by(public_id=u_id).first()
     movie.thumbs_up = movie.thumbs_up + 1
     loved_movie = Exciting(rate=current_user, loved=movie.name)
