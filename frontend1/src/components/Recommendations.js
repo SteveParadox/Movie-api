@@ -63,7 +63,9 @@ const Recommendations = (props) => {
   const [movies, setMovies] = useState([]);
   useEffect(() => {
     function fetchRecommended() {
-      axios.get("https://movie-stream-api.herokuapp.com/api/choice")
+      axios.post("https://movie-stream-api.herokuapp.com/api/choice", {
+        "token": localStorage.getItem("token")
+      })
         .then(res => {
           console.log(res.data);
           setMovies(res.data.data);
@@ -97,7 +99,7 @@ const Recommendations = (props) => {
         <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={true} adPic={Joker} />
         <MovieCard title="Old Guard" like={true} viewed={false} adPic={Joker} /> */}
-        {movies.map((i, idx) => <MovieCard title={i.name} like={true} viewed={true} /> )}
+        {movies.map((i, idx) => <MovieCard title={i.name} like={true} key={idx} viewed={true} /> )}
       </Slider>
     </div>
   );
