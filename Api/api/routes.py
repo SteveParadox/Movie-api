@@ -132,33 +132,37 @@ def similar_movie(u_id):
     similarList={}
     genreList=[]
     moviesSimilar=[]
-    movie_name = Movie.query.filter_by(public_id=u_id).first()
-    for i in movie_name.genre:
-        genreList.append(i)
-    movies = Movie.query.all()
-    for j in movies:
-        for k in j.genre:
-            if k in genreList:
-                moviesSimilar.append(k)
-    movies_ = Movie.query.all()
-    for i,h in zip(movies_, moviesSimilar):
-        if h in i.genre:
-            similarList.update({
-                "name": i.name,
-                'id': i.public_id,
-                "genre": i.genre,
-                'overview': i.description
-    })
-    if u_id in similarList['id']:
-        similarList.pop('id')
-        similarList.pop('genre')
-        similarList.pop('name')
-        similarList.pop('overview')
-       
-    return jsonify({
-        'data': similarList
-    }), 200
+    try:
+        movie_name = Movie.query.filter_by(public_id=u_id).first()
+        for i in movie_name.genre:
+            genreList.append(i)
+        movies = Movie.query.all()
+        for j in movies:
+            for k in j.genre:
+                if k in genreList:
+                    moviesSimilar.append(k)
+        movies_ = Movie.query.all()
+        for i,h in zip(movies_, moviesSimilar):
+            if h in i.genre:
+                similarList.update({
+                    "name": i.name,
+                    'id': i.public_id,
+                    "genre": i.genre,
+                    'overview': i.description
+        })
+        if u_id in similarList['id']:
+            similarList.pop('id')
+            similarList.pop('genre')
+            similarList.pop('name')
+            similarList.pop('overview')
 
+        return jsonify({
+            'data': similarList
+        }), 200
+    except:
+        return jsonify({
+            'data': "Wrong Public Id Used"
+        }), 402
 
 # thumbs up a movie
 @api.route('/api/like/movie/<string:u_id>', methods=['POST'])
