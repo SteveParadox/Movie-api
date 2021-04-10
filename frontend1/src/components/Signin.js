@@ -53,21 +53,15 @@ function Signin() {
     axios.post(urls.login, body)
       .then(res => {
         const data = res.data;
-        if(data.status === "success") {
-          // Store token in local storage
-          localStorage.setItem("token", data.data.token);
-          // console.log(localStorage.getItem("token"));
-          updateState(n => {
-            return {
-              ...n,
-              logged_in: true
-            };
-          });
-          console.log(state);
-        } else {
-        // update UI telling user that login failed.
-        console.log("Resquest went through but returned: ", res);
-        }
+        console.log(data);
+        localStorage.setItem("token", data.token);
+        updateState(n => {
+          return {
+            ...n,
+            logged_in: true
+          };
+        });
+        console.log(state);
       })
       .catch(err => {
         // update UI telling user that login failed.
