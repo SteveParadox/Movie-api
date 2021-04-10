@@ -96,7 +96,7 @@ const Movies = () => {
       left: state.details.left,
     };
     const bg = {
-      background: `url("https://res.cloudinary.com/du05mneox/image/upload/${state.details.title}.jpg")`,
+      background: `url("https://res.cloudinary.com/dymhlpm8a/image/upload/${state.details.title}.jpg")`,
       // background: `url(${Joker})`,
       backgroundPosition: "center",
       backgroundRepeat: "no-repeat",
@@ -191,7 +191,9 @@ const Movies = () => {
 
   const showMovies = () => {
     setSet(1);
-    axios.get("https://movie-stream-api.herokuapp.com/api/choice")
+    axios.post("https://movie-stream-api.herokuapp.com/api/choice", {
+      "token": localStorage.getItem("token"),
+    })
       .then(res => {
         setMovieState(res.data.data);
       })
@@ -218,7 +220,9 @@ const Movies = () => {
 
   const showoPremieres = () => {
     setSet(4);
-    axios.get("https://movie-stream-api.herokuapp.com/api/")
+    axios.post("https://movie-stream-api.herokuapp.com/api/", {
+      "token": localStorage.getItem("token")
+    })
       .then(res => {
         setMovieState(res.data.data);
       })
