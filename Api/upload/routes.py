@@ -297,3 +297,10 @@ def seri():
     series_season_schema = Series_SeasonSchema(many=True)
     res = series_season_schema.dump(series_)
     return jsonify({'data': result, 'season': res })
+
+@upload.route('/mov/del')
+def movieDel():
+    movies = Movie.query.all()
+    for i in movies:
+        db.session.delete(i)
+    return jsonify({'data': 'Deleted movies'})
