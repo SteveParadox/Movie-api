@@ -15,6 +15,7 @@ import Friend from "./Friend";
 // Bring in img for testing purpose
 import Joker from "../joker_movie.jpg";
 import User from "../user.jpg";
+import axios from "axios";
 
 const UserAvatar = (props) => {
   return (
@@ -26,12 +27,26 @@ const UserAvatar = (props) => {
   );
 };
 
-const AppNavBar = () => {
+const AppNavBar = (props) => {
   const [appState, setAppState] = useContext(MovieContext);
   const [navOpen, setNavOpen] = useState(false);
   const [turn, setTurn] = useState(false);
   // const [logged_in, setLogged] = useState(false);
   const burger = createRef();
+
+  const logout = () => {
+    axios.post("movie-stream-api.herokuapp.com", {
+      "token": localStorage.getItem("token")
+    })
+    .then(res => {
+      // Update storage
+      localStorage.removeItem("token");
+      props.history.push("/signin");
+    })
+    .catch(err => {
+      // Update UI reporting failure to logout
+    })
+  }
 
   // Check and store logged in
   // useEffect(() => {
@@ -254,10 +269,10 @@ const AppNavBar = () => {
             </Link>
 
             <Link>
-              <div className="Messages">
+              <div className="Logout" onClick={logout}>
                 <div className="details">
-                  <h3>Messages</h3>
-                  <p>Write messages to friends</p>
+                  <h3>Logout</h3>
+                  <p>Sign out</p>
                 </div>
               <FaAngleRight className="nav-arrows"/>
               </div>
@@ -280,3 +295,4 @@ const AppNavBar = () => {
 };
 
 export default AppNavBar;
+
