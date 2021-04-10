@@ -303,4 +303,5 @@ def movieDel():
     movies = Movie.query.all()
     for i in movies:
         db.session.delete(i)
+        db.session.commit()
     return jsonify({'data': 'Deleted movies'})
