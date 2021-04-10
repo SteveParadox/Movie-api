@@ -39,11 +39,18 @@ ul.slick-dots {
 
 /* Details Styling */
 .details {
-  background-position: left;
-  background-size: cover;
+  background-position: top;
+  /* background-size: cover; */
+  background-size: 100% 150%;
   background-repeat: no-repeat;
   width: 100%;
   height: calc(100vh - 0.1rem);
+}
+.details .main-details:hover {
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 5px 25px;
+  border-radius: 8px;
 }
 .details .main-details {
   position: relative;
