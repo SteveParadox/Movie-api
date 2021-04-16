@@ -6,7 +6,8 @@ import Footer from "./Footer";
 import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
 // import ReactPlayer from "react-player";
-import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
+import { FaEye, FaHeart, FaPlus, FaStar, FaArrowLeft } from "react-icons/fa";
+import logo from "../video-camera.svg";
 // import { MdPlaylistAdd } from "react-icons/md";
 
 
@@ -61,12 +62,21 @@ const Watch = (props) => {
 	const connect = e => {
 		setShowFriends(false);
 		setShowChat(true);
-	}
+	};
 
 	const disconnect = e => {
 		setShowFriends(true);
 		setShowChat(false);
-	}
+	};
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    alert("Sent!");
+  };
+
+  const startVideoCall = e => {
+
+  };
 
   const SimilarMovies = () => {
     // fetch data from api using u_id
@@ -222,10 +232,20 @@ const Watch = (props) => {
 						{
 							showChat && (
 								<div className="chat">
-									<header>Chat</header>
-									<div>
-										The chat
+									<header>
+										<div>
+                			<FaArrowLeft size={20} color="white" onClick={disconnect} />
+											<span>Jane</span>
+										</div>
+										<img src={logo} alt="." onClick={startVideoCall} />
+									</header>
+									<div className="chatBoard">
+										{/* The chat */}
 									</div>
+                  <form onSubmit={handleSubmit}>
+                    <input type="text" className="inp" placeholder="Message" />
+                    <button type="submit">Send</button>
+                  </form>
 								</div>
 							)
 						}
