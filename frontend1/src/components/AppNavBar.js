@@ -45,29 +45,9 @@ const AppNavBar = (props) => {
     })
     .catch(err => {
       // Update UI reporting failure to logout
+      alert("logout failed!");
     })
   }
-
-  // Check and store logged in
-  // useEffect(() => {
-  //   function fetchData() {
-  //     axios.get(urls.all)
-  //       .then(res => {
-  //         console.log(res);
-  //         setLogged(res.data["logged in"]);
-  //         console.log(res.data["logged in"]);
-  //         setAppState(n => {
-  //           return {
-  //             ...n,
-  //             logged_in: res.data["logged in"],
-  //             user_name: res.data["name"] ? res.data["name"] : ""
-  //           }
-  //         })
-  //       })
-  //       .catch(() => console.log("Something went wrong!"));
-  //   }
-  //   fetchData();
-  // }, []);
 
   // Helper functions
   function openFindFriends() {

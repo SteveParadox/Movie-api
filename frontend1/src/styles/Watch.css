@@ -74,6 +74,84 @@
   font-size: 19px;
 }
 
+.watch .movieShow .room {
+    /* background: red; */
+    color: #eee;
+    min-width: 280px;
+    width: 30%;
+    min-height: 400px;
+    height: 400px;
+    padding: 10px 0px;  
+    margin-top: 50px;
+    border: 2px solid rgb(37, 33, 33);
+}
+
+.watch .movieShow .room .center {
+    text-align: center;
+}
+
+.watch .movieShow .room .friends {
+    background: none !important;
+    position: static !important;
+    margin: 0px !important;
+    padding: 0px !important;
+    /* background: blue !important; */
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.watch .movieShow .room .friends .friend {
+    margin: 3px 0px !important;
+    padding: 4px 0px 4px 10px;
+    width: 100%;
+    /* background: red; */
+}
+
+.watch .movieShow .room .friends img {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    position: relative;
+    top: 2px;
+    left: 0;
+}
+
+.watch .movieShow .room .friends .friend .imgFrame {
+    border-radius: 50%;
+    background: linear-gradient(to bottom, purple, rgb(214, 57, 83));
+    width: 55px;
+    height: 55px;
+    text-align: center;
+}
+
+.watch .movieShow .room .friends .friend .detail {
+    /* background: red; */
+    flex-grow: 1;
+}
+
+.watch .movieShow .room .friends .friend .detail > p {
+    display: flex;
+    justify-content: space-between;
+    /* background: red; */
+}
+
+.watch .movieShow .room .friends .friend .detail a {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+.watch .movieShow .room .friends .friend .detail .connectBtn {
+    color: #eee;
+    background: rgb(14, 145, 14);
+    padding: 3px 10px;
+    border: none;
+    outline: none;
+    border-radius: 2px;
+    transform: translateY(-5px);
+}
+
+
 /* Styles for cast */
 .watch .watch-body .display {
   display: flex;

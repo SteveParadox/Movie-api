@@ -3,7 +3,7 @@ import "../styles/Watch.css";
 import AppNavBar from "./AppNavBar";
 import SubcribeLayout from "./SubscribeLayout";
 import Footer from "./Footer";
-// import Joker from "../joker_movie.jpg";
+import Joker from "../joker_movie.jpg";
 import MovieCard from "./MovieCard";
 // import ReactPlayer from "react-player";
 import { FaEye, FaHeart, FaPlus, FaStar } from "react-icons/fa";
@@ -27,17 +27,6 @@ import axios from "axios";
 //   );
 // };
 
-// const Friend = ({ pic, name, address }) => {
-//   return (
-//     <div className="friend">
-//       <img src={pic} alt="." />
-//       <div className="detail">
-//         <h3>{name}</h3>
-//         <p>{address}</p>
-//       </div>
-//     </div>
-//   );
-// };
 
 const Watch = (props) => {
   const { match, location } = props;
@@ -47,7 +36,9 @@ const Watch = (props) => {
   const [movie_name, setMovieName] = useState("");
   const [movie_id, setMovieId] = useState("");
   const [likes, setLikes] = useState(0);
-  const [views, setViews] = useState(0);
+	const [views, setViews] = useState(0);
+	const [showFriends, setShowFriends] = useState(true);
+	const [showChat, setShowChat] = useState(false);
   // const [data, setData] = useState({});
   useEffect(() => {
     function fetchDetail() {
@@ -64,7 +55,18 @@ const Watch = (props) => {
         .catch(err => console.log("Sorry, can't fetch movie detail!", err));
     }
     fetchDetail();
-  }, []);
+	}, []);
+	
+	// Helper Methods
+	const connect = e => {
+		setShowFriends(false);
+		setShowChat(true);
+	}
+
+	const disconnect = e => {
+		setShowFriends(true);
+		setShowChat(false);
+	}
 
   const SimilarMovies = () => {
     // fetch data from api using u_id
@@ -92,7 +94,26 @@ const Watch = (props) => {
               {/* {movies.map((i, idx) => <MovieCard title={i.title} liked={i.liked} key={idx} viewed={i.viewed} />)} */}
             </div>
           </div>
-  };
+	};
+	
+	// Friends component
+	const Friend = ({ pic, name, address }) => {
+		const imgStyle = {};
+		return (
+			<div className="friend">
+				<div class="imgFrame">
+					<img src={pic} alt="." style={imgStyle} />
+				</div>
+				<div className="detail">
+					<h3>{name}</h3>
+					<p>
+						<a href="#">{address}</a>
+						<button className="connectBtn" onClick={connect}>Connect</button>
+					</p>
+				</div>
+			</div>
+		);
+	};
 
   return (
     <div className="watch">
@@ -118,9 +139,9 @@ const Watch = (props) => {
                 controls={true}
                 className="theShow"
               >
-                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/webm"/>
+                {/* <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/webm"/>
                 <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/mp4"/>
-                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/ogg"/>
+                <source src={`https://res.cloudinary.com/dymhlpm8a/video/upload/${movie_name}`} type="video/ogg"/> */}
               </video>
             </div>
             <div className="actions">
@@ -149,10 +170,65 @@ const Watch = (props) => {
                   <FaStar />
                   <FaStar />
                 </div>
-              </div>
+            </div>
           </div>
-          <div>
-            Hello world
+          <div class="room">
+						{
+							showFriends && (
+								<>
+									<header>
+										<h3 class="center">Friends</h3>
+									</header>
+									<div class="friends">
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+										<Friend 
+											pic={Joker}
+											name="Jane"
+											address="@jane1553"
+											status={true}
+											title="The Avengers"
+										/>
+									</div>
+								</>
+							)
+						}
+						{
+							showChat && (
+								<div className="chat">
+									<header>Chat</header>
+									<div>
+										The chat
+									</div>
+								</div>
+							)
+						}
           </div>
         </div>
         <div className="others">
