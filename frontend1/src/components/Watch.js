@@ -38,8 +38,9 @@ const Watch = (props) => {
   const [movie_id, setMovieId] = useState("");
   const [likes, setLikes] = useState(0);
 	const [views, setViews] = useState(0);
-	const [showFriends, setShowFriends] = useState(true);
-	const [showChat, setShowChat] = useState(false);
+	// const [showFriends, setShowFriends] = useState(true);
+	// const [showChat, setShowChat] = useState(false);
+  const [countShow, setCountShow] = useState(0);
   // const [data, setData] = useState({});
   useEffect(() => {
     function fetchDetail() {
@@ -60,18 +61,30 @@ const Watch = (props) => {
 	
 	// Helper Methods
 	const connect = e => {
-		setShowFriends(false);
-		setShowChat(true);
+		// setShowFriends(false);
+		// setShowChat(true);
+    setCountShow(2);
 	};
 
 	const disconnect = e => {
-		setShowFriends(true);
-		setShowChat(false);
+		// setShowFriends(true);
+		// setShowChat(false);
+    setCountShow(1);
 	};
 
   const handleSubmit = e => {
     e.preventDefault();
     alert("Sent!");
+  };
+
+  const createRoom = () => {
+    axios.post(`https://movie-stream-api.herokuapp.com/api/create/room/for/${movie_name}`, {
+      "token": localStorage.getItem("token")
+    }).then(res => {
+      console.log(res.data);
+      setCountShow(1);
+    })
+    .catch(err => console.log("Sorry an error occured creating room", err));
   };
 
   const startVideoCall = e => {
@@ -183,8 +196,19 @@ const Watch = (props) => {
             </div>
           </div>
           <div class="room">
+            {
+              countShow === 0 ? (
+                <>
+                  <div className="connect">
+                    <header className="center">Connect with friends</header>
+                    <button onClick={createRoom}>Create Room</button>
+                  </div>
+                </>
+              ) : null
+            }
+
 						{
-							showFriends && (
+							countShow === 1 ? (
 								<>
 									<header>
 										<h3 class="center">Friends</h3>
@@ -227,10 +251,10 @@ const Watch = (props) => {
 										/>
 									</div>
 								</>
-							)
+							) : null
 						}
 						{
-							showChat && (
+							countShow === 2 ? (
 								<div className="chat">
 									<header>
 										<div>
@@ -247,7 +271,7 @@ const Watch = (props) => {
                     <button type="submit">Send</button>
                   </form>
 								</div>
-							)
+							) : null
 						}
           </div>
         </div>
