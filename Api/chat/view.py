@@ -89,9 +89,8 @@ def remove_(current_user, name):
         }, 404
     )
 
-
 # all friends of a particular user
-@chat.route('/api/my/friends', methods=['GET'])
+@chat.route('/api/my/friends', methods=['POST'])
 @cross_origin()
 @token_required
 def my_friends(current_user):
@@ -103,6 +102,7 @@ def my_friends(current_user):
             "data": result
         }
     )
+
 
 
 # all friends of all users
