@@ -123,24 +123,30 @@ def all_frnds():
 @cross_origin()
 @token_required
 def create_room(current_user, movie):
-    created_room = str(uuid.uuid4())
-    movie = Movie.query.filter_by(public_id=movie).first()
-    host = current_user.name
-    room = Room()
-    room.unique_id = created_room
-    room.host = host
-    room.admin = True
-    db.session.add(room)
-    db.session.commit()
+    try:
+        created_room = str(uuid.uuid4())
+        movie = Movie.query.filter_by(public_id=movie).first()
+        host = current_user.name
+        room = Room()
+        room.unique_id = created_room
+        room.host = host
+        room.admin = True
+        db.session.add(room)
+        db.session.commit()
 
-    return jsonify(
-        {
-            "message": f"Room {created_room} created by {host} ",
-           
-            "movie name": movie.name
-        }
-    )
+        return jsonify(
+            {
+                "message": f"Room {created_room} created by {host} ",
+                
+                "movie name": movie.name
+            }
+        )
+    except:
+        return jsonify({
+            "message": "Cannot find movie id"
+        })
 
+    
 # redirecting to the room id
 @chat.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
 @cross_origin()
