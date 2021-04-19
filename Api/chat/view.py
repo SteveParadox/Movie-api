@@ -136,7 +136,7 @@ def create_room(current_user, movie):
     return jsonify(
         {
             "message": f"Room {created_room} created by {host} ",
-            "movie": movie.movies,
+           
             "movie name": movie.name
         }
     )
