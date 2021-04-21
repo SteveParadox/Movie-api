@@ -147,11 +147,11 @@ def create_room(current_user, movie):
         })
 
     
+
 # redirecting to the room id
 @chat.route('/api/watch/<string:movie_id>/in/room/<string:room>', methods=['GET'])
 @cross_origin()
-@token_required
-def watch(current_user, movie_id, room):
+def watch(movie_id, room):
     movie = Movie.query.filter_by(public_id=movie_id).first()
     room = Room.query.filter_by(unique_id=room).first()
     if room:
@@ -159,17 +159,16 @@ def watch(current_user, movie_id, room):
         store.append(room.unique_id)
         return jsonify(
             {
-
-
                 "movie name": movie.name,
                 'room': room.unique_id,
-
+                
             }
         )
     else:
         return jsonify({
             'message': 'Error... not found'
         }), 404
+
 
 
 @chat.route('/api/my/rooms', methods=['GET'])
