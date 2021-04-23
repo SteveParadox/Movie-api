@@ -73,7 +73,7 @@
 <script>
 
 
-    var socket = io.connect( 'https://movie-stream-api.herokuapp.com/watch/d2f4c335-c9b4-40c7-913d-bf9a9fef0407/in/room/dbc44167-6cb3-422b-b39a-f2d7f1d0fd68', {secure: true,    rejectUnauthorized: false})
+    var socket = io.connect( 'https://movie-stream-api.herokuapp.com', {secure: true,    rejectUnauthorized: false})
     const myPeer = new Peer(undefined, {host: '/', port: 5000})
     var vid = document.getElementById("myVideo");
 
