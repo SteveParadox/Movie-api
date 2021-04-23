@@ -58,9 +58,9 @@ def home_page():
         movie = Movie.query.all()[1]
         movie1 = Movie.query.all()[2]
         movie2 = Movie.query.all()[3]
-        movie4 = Movie.query.all()[4]
-        movie5 = Movie.query.all()[5]
-        movie6 = Movie.query.all()[6]
+        movie4 = Movie.query.all()[1]
+        movie5 = Movie.query.all()[3]
+        movie6 = Movie.query.all()[2]
         movie7 = Movie.query.all()[0]
         movies = Movie.query.all()
         return render_template('index.html', movie1=movie1, movie2=movie2, movie4=movie4,
