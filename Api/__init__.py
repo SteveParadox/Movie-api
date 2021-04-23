@@ -42,7 +42,7 @@ def before_request():
 def create_app(config_class=Config):
 
     db.init_app(app)
-    io.init_app(app)
+    io.init_app(app, cors_allowed_origins="*")
     bcrypt.init_app(app)
     ma.init_app(app)
     login_manager.init_app(app)
