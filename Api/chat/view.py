@@ -342,7 +342,7 @@ def on_video_stream(data):
 @io.on('send_invite')
 def invite(data):
     #friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
-    user = Users.query.all()
+    #user = Users.query.all()
     io.emit('Invited', {'data': data['link'], 'name': data['name'], 'movie': data['movie']}, broadcast=True)
 
 
