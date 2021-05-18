@@ -64,7 +64,6 @@
                                          <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
-<script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js">
 
 </script>
 
@@ -73,8 +72,8 @@
 <script>
 
 
-    var socket = io.connect( window.location.protocol + '//' + 'movie-stream-api.herokuapp.com', {secure: true,    rejectUnauthorized: false})
-    const myPeer = new Peer(undefined, {host: '/', port: 5000})
+    var socket = io.connect( 'http://' + document.domain + ':' + location.port)
+ 
     var vid = document.getElementById("myVideo");
 
     console.log(socket);
@@ -85,7 +84,7 @@
 
     })
 socket.emit( "join_user", {
-        name : '{{current_user.name}}',
+        name : '{{current_user.name}}',     
         room_id: '{{room.unique_id}}',
         movie_id: '{{movie.public_id}}'
 
@@ -107,7 +106,7 @@ socket.emit( "offline", {
 
  socket.emit( 'send_invite', {
 
-      link:  'https://' + document.domain + ':' + location.port + '/watch/{{movie.public_id}}/in/room/{{room.unique_id}}',
+      link:  'http://' + document.domain + ':' + location.port + '/watch/{{movie.public_id}}/in/room/{{room.unique_id}}',
       name: '{{current_user.name}}',
       movie: '{{movie.name}}'
         })
@@ -115,7 +114,7 @@ socket.emit( "offline", {
 
 // joining room
     socket.on('joined_room', function(msg){
-    $( 'div.cc').append( '<div class="msgbbl"><b>'+msg.username+' has '+msg.status+'......</b> </div>')
+    $( 'div.cc').append( '<div class="msgbbl"><b>  '+msg.username+' has '+msg.status+'......</b> </div>')
      $( 'div.user-wrapper').append( '<div class="msgbbl"><b>'+msg.username+' </b> </div>')
   console.log(vid.currentTime);
 
