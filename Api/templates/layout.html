@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+;<!DOCTYPE html>
 <html lang="en">
 
     <!-- Basic -->
@@ -110,6 +110,8 @@ position: absolute;
     })
 socket.on('Invited', function(msg){
 console.log(msg.data)
+	console.log(msg.name)
+  console.log(msg.movie)
  $('div.Movie').append( '<div style="height: 300px;">'+msg.name+' invited you to watch '+msg.movie+' <br> <a class="btn btn-success" href= '+msg.data+' >Accept!</a> </div>')
 
 	$('div.Movie').css.display ='block';
