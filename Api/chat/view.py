@@ -341,9 +341,8 @@ def on_video_stream(data):
 
 @io.on('send_invite')
 def invite(data):
-    room = data['room_id']
-    active_ = Room.query.filter_by(unique_id=room).first()
-    io.emit('Invited', {'movie': data['movie'], "room_id":active_.unique_id, "sender": data['name']}, broadcast=True)
+
+    io.emit('Invited', {"data": data}, broadcast=True)
 
 
 @io.on('get_time')
