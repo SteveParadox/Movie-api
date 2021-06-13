@@ -221,7 +221,7 @@ def delete_room(current_user, room_id):
 
 @io.on("connect")
 def on_connect():
-    io.to(request.sid).emit('resp', {'your_id': request.sid}, room=request.sid)
+    io.to(request.sid).emit('resp', {'message': 'connected', 'your_id': request.sid}, room=request.sid)
 
 @io.on("disconnect")
 def on_disconnect():
