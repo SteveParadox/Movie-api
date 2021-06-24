@@ -221,7 +221,7 @@ def delete_room(current_user, room_id):
 
 @io.on("connect")
 def on_connect():
-    io.emit('resp', {'message': 'connected'})
+    io.to(request.sid).emit('resp', {'message': 'connected', 'your_id': request.sid}, room=request.sid)
 
 @io.on("disconnect")
 def on_disconnect():
@@ -230,16 +230,13 @@ def on_disconnect():
 
 @io.on('callUser')
 def call(data):
-    io.to(data.userToCall).emit('callUser', {'signal': data['signalData'], 'from': data['from'], 'to': data['to'], 'name':data['name'],
-    'room': active.unique_id, 'status': 'joined'},
-            room=active.unique_id, broadcast=True)  
+    payload = {'signal': data['signalData'], 'from': data['from'], 'to': data['to'], 'name':data['name'], 'status': 'joined'}
+    io.to(data.userToCall).emit('callUser', payload, room=data.userToCall, broadcast=True)  
 
 
-@io.on('answerCall')
-def answerCall(data):
-    io.to(data.to).emit('callAccepted', {'signal': data['signal'],
-     'room': active.unique_id},
-            room=active.unique_id, broadcast=True)
+@io.on('callAccepted')
+def callAccepted(data):
+    io.to(data.to).emit('callAccepted', {'signal': data['signal']}, room=data.to, broadcast=True)
 
 
 @io.on('online')
