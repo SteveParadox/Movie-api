@@ -131,28 +131,22 @@ def all_frnds():
 @cross_origin()
 @token_required
 def create_room(current_user, movie):
-    try:
-        created_room = str(uuid.uuid4())
-        movie = Movie.query.filter_by(public_id=movie).first()
-        host = current_user.name
-        room = Room()
-        room.unique_id = created_room
-        room.host = host
-        room.admin = True
-        db.session.add(room)
-        db.session.commit()
+    movie = Movie.query.filter_by(public_id=movie).first()
+    if not movie:
+        return jsonify({"message": "Movie not found"}), 404
 
-        return jsonify(
-            {
-                "message": f"Room {created_room} created by {host} ",
-                
-                "movie name": movie.name
-            }
-        )
-    except:
-        return jsonify({
-            "message": "Cannot find movie id"
-        })
+    created_room = str(uuid.uuid4())
+    host = current_user.name
+    room = Room(unique_id=created_room, host=host, admin=True)
+
+    db.session.add(room)
+    db.session.commit()
+
+    return jsonify({
+        "message": f"Room {created_room} created by {host}",
+        "movie name": movie.name
+    })
+
 
     
 
@@ -230,9 +224,18 @@ def on_disconnect():
 
 @io.on('callUser')
 def call(data):
-    io.to(data.userToCall).emit('callUser', {'signal': data['signalData'], 'from': data['from'], 'to': data['to'], 'name':data['name'],
-    'room': active.unique_id, 'status': 'joined'},
-            room=active.unique_id, broadcast=True)  
+    room = Room.query.filter_by(unique_id=data['room']).first()
+    if room:
+        io.to(data['userToCall']).emit('callUser', {
+            'signal': data['signalData'],
+            'from': data['from'],
+            'to': data['to'],
+            'name': data['name'],
+            'room': room.unique_id,
+            'status': 'joined'
+        }, room=room.unique_id, broadcast=True)
+    else:
+        io.emit('userError', {'message': 'Room not found'}, room=request.sid)
 
 
 @io.on('answerCall')
@@ -244,33 +247,52 @@ def answerCall(data):
 
 @io.on('online')
 def online(data):
-    friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
+    try:
+        friend = Friend.query.filter_by(get=current_user).filter_by(u_friend=data['name']).first()
+        
+        if friend:
+            print(friend.u_friend)
+            io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
+        elif current_user.name == data['name']:
+            print(current_user.name)
+            io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
+        else:
+            pass
+    except Exception as e:
+        print(f"Error in 'online' function: {e}")
+        io.emit('error', {'message': f"An error occurred while processing your request: {str(e)}"}, broadcast=True)
 
-    if friend:
-        print(friend.u_friend)
-        io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
-    elif current_user.name == data['name']:
-        print(current_user.name)
-        io.emit('status_change', {'username': data['name'], 'status': 'online'}, broadcast=True)
-
-    else:
-        pass
 
 
 # joining room
 @io.on("join_user")
 def on_new_user(data):
-    room = data['room_id']
-    active_ = Room.query.filter_by(unique_id=room).first()
-    join_room(active_.unique_id)
+    room = Room.query.filter_by(unique_id=data['room_id']).first()
+    join_room(room.unique_id)
+
 
 
 @io.on('joined')
 def joined_room(data):
-    room = data['room_id']
-    active = Room.query.filter_by(unique_id=room).first()
-    io.emit('joined_room', {'username': data['name'], 'room': active.unique_id, 'status': 'joined'},
-            room=active.unique_id, broadcast=True)
+    room_id = data.get('room_id')
+    name = data.get('name')
+
+    if not room_id:
+        return
+
+    active = Room.query.filter_by(unique_id=room_id).first()
+
+    if not active:
+        return
+
+    join_room(active.unique_id)
+
+    io.emit('joined_room', {
+        'username': name, 
+        'room': active.unique_id, 
+        'status': 'joined'
+    }, room=active.unique_id)
+
 
 
 # send message to joined room
@@ -289,6 +311,26 @@ def on_new_message(message):
         }, room=active.unique_id, broadcast=True)
     else:
         io.emit('New_group_Message', {'message': f'Room not found'})
+  
+@io.on('private_message')
+def on_private_message(data):
+    recipient_name = data['to']
+    sender_name = data['from']
+    message = data['message']
+    
+    # Look up recipient and sender users
+    recipient = User.query.filter_by(name=recipient_name).first()
+    sender = User.query.filter_by(name=sender_name).first()
+    
+    if recipient and sender:
+        # Emit private message to recipient
+        io.emit('new_private_message', {'sender': sender_name, 'message': message}, room=recipient.sid)
+        
+        # Emit confirmation message to sender
+        io.emit('private_message_sent', {'recipient': recipient_name, 'message': message})
+    else:
+        io.emit('private_message_error', {'message': 'Recipient or sender not found'})
+
 
 
 # leave room
@@ -298,51 +340,78 @@ def on_leave_room(data):
     name = data['name']
     active = Room.query.filter_by(unique_id=room).first()
     leave_room(active.unique_id)
+    
     if name == active.host:
         close_room(active.unique_id)
-        db.session.delete(active.unique_id)
+        db.session.delete(active)
+        db.session.commit()
         return redirect(url_for("api.home"))
-    io.emit("Left_user", {"message": f"{name} has left the room"}, room=active.unique_id, broadcast=True)
+    
+    io.to(active.unique_id).emit("user_left_room", {"username": name, "message": f"{name} has left the room"})
 
 
 # close room
 @io.on("close_room")
 def on_close_room(data):
-    room = data['data']
-    active = Room.query.filter_by(host=current_user.name) \
-        .filter_by(admin=True) \
-        .filter_by(unique_id=room).first()
-    io.close_room(active.unique_id)
-    db.session.delete(active.unique_id)
-    return redirect(url_for("api.home"))
+    room_id = data.get("room_id")
+    active_room = Room.query.filter_by(unique_id=room_id, host=current_user.name, admin=True).first()
+    if not active_room:
+        return jsonify({"error": "You are not authorized to close this room."})
+    
+    io.close_room(room_id)
+    db.session.delete(active_room)
+    db.session.commit()
+    
+    return jsonify({"message": "Room closed successfully."})
+
 
 
 # watch movie
 @io.on('watch_movie')
-def on_video_stream(data):
+def on_watch_movie(data):
     room = data['room_id']
     movie = data['movie_id']
     active = Room.query.filter_by(unique_id=room).first()
     movies = Movie.query.filter_by(public_id=movie).first()
-    r_activities = Room_Activities(activity=active)
-    r_activities.movie = movies.name
-    db.session.add(r_activities)
-    db.session.commit()
-    host = active.host
-    r_activities = Room_Activities.query.filter_by(activity=active).first()
 
-    io.emit("Watch", {
-        "host": host,
-        'movie_id': movie,
-        'room_id': room,
+    if active and movies:
+        r_activities = Room_Activities(activity=active)
+        r_activities.movie = movies.name
+        db.session.add(r_activities)
+        db.session.commit()
+        
+    r_activities.movie = movie.name
+    r_activities.vid_time = datetime.datetime.now().strftime("%a %b %d %H:%M:%S %Y")
+    db.session.commit()
+
+    host = active_room.host
+
+    # Emit an event to all clients in the room with the movie information and current timestamp
+    io.emit('Watch', {
+        'host': host,
+        'movie_id': movie_id,
+        'movie_name': movie.name,
+        'room_id': room_id,
         'time': r_activities.vid_time
-    }, room=active.unique_id, broacast=True)
+    }, room=active_room.unique_id, broadcast=True)
 
 
 @io.on('send_invite')
-def invite(data):
+def send_invite(invite):
+    room_id = invite.get('room_id')
+    username = invite.get('username')
+    room = Room.query.filter_by(unique_id=room_id).first()
+    if room:
+        invite_data = {
+            'room_id': room_id,
+            'room_name': room.name,
+            'inviter': current_user.name
+        }
+        io.emit('invitation', invite_data, room=room_id, include_self=False)
+        flash(f'Invitation sent to {username} for {room.name}')
+    else:
+        flash(f'Room with id {room_id} does not exist')
 
-    io.emit('Invited', {"data": data}, broadcast=True)
 
 
 @io.on('get_time')
@@ -366,13 +435,29 @@ def get_time_(data):
 
 @io.on('paused_movie')
 def paused_(data):
-    room = data['room_id']
-    active = Room.query.filter_by(unique_id=room).first()
-    r_activity = Room_Activities.query.filter_by(activity=active).first()
+    room_id = data.get('room_id')
+    if not room_id:
+        return
+
+    active_room = Room.query.filter_by(unique_id=room_id).first()
+    if not active_room:
+        io.emit('Error', {'message': 'Room not found'}, room=request.sid)
+        return
+
+    room_activities = Room_Activities.query.filter_by(activity=active_room).first()
+    if not room_activities:
+        io.emit('Error', {'message': 'Room activities not found'}, room=request.sid)
+        return
+
+    room_activities.paused = True
+    room_activities.last_played_time = datetime.now()
+    db.session.commit()
 
     io.emit("Continuation", {
-        'message': f" movie is paused"
-    }, room=active.unique_id, broadcast=True)
+        'message': f"Movie is paused",
+        'paused_time': room_activities.last_played_time.timestamp()
+    }, room=active_room.unique_id, broadcast=True)
+
 
 
 @io.on('play_movie')
@@ -405,8 +490,25 @@ def offline(data):
 
 @io.on("video_chat", namespace='/chat')
 def on_video_chat(data):
-    room = data['room']
-    active = Room.query.filter_by(unique_id=room).first()
+    room_id = data.get('room_id')
+    username = data.get('username')
+
+    if not room_id or not username:
+        return
+
+    # Get the active room
+    active_room = Room.query.filter_by(unique_id=room_id).first()
+
+    if not active_room:
+        return
+
+    # Broadcast the event to the room
+    io.emit("new_video_chat", {
+        "room_id": room_id,
+        "username": username,
+        "message": f"{username} started a video chat"
+    }, room=active_room.unique_id, broadcast=True)
+
 
 
 @io.on('vote')
