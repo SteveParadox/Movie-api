@@ -98,60 +98,30 @@ def login(expires_sec=1800000000000):
 
                 
 
-
-# registering user's preferred genre for data processing
 @users.route('/api/select/genre', methods=['POST'])
 @cross_origin()
 @token_required
-def genre(current_user):
-    data = request.get_json()
-    action = data['action']
-    comedy = data['comedy']
-    horror = data['horror']
-    documentary = data['documentary']
-    mystery = data['mystery']
-    animation = data['animation']
-    sci_fi = data['sci-fi']
-    romance = data['romance']
-    erotic = data['erotic']
-    fantasy = data['fantasy']
-    drama = data['drama']
-    thriller = data['thriller']
-    children = data['children']
-    family = data['family']
-    crime = data['crime']
+def select_genre(current_user):
     try:
+        data = request.get_json()
         user = Data(love=current_user)
-        user.action = action
-        user.comedy = comedy
-        user.horror = horror
-        user.documentary = documentary
-        user.mystery = mystery
-        user.animation = animation
-        user.sci_fi = sci_fi
-        user.romance = romance
-        user.erotic = erotic
-        user.fantasy = fantasy
-        user.drama = drama
-        user.thriller = thriller
-        user.children = children
-        user.crime = crime
-        user.family = family
+        for genre, value in data.items():
+            setattr(user, genre, value)
         db.session.add(user)
         db.session.commit()
         return jsonify({
-            "message": "committed"
+            "message": "User's preferred genres have been saved."
         })
-    except:
+    except Exception as e:
+        db.session.rollback()
         return jsonify({
-
-            "message": 'error'
+            "message": "An error occurred while processing your request.",
+            "error": str(e)
         })
-
+    
 
 @users.route('/logout')
 @cross_origin()
-
 def logout_users():
     user = Users.query.filter_by(email=current_user.email).first()
     user.logged_in = False
@@ -176,7 +146,6 @@ def logout(current_user):
     })
 
 
-# getting profile of a user
 @users.route('/api/user/profile', methods=['POST'])
 @cross_origin()
 @token_required
@@ -189,49 +158,49 @@ def profile(current_user):
             if name and name != current_user:
                 return jsonify({
                     "message": "This name is already used by another user",
-
                 })
             elif current_user.name == data['name']:
                 return jsonify({
                     "message": "You are currently using this name",
-
                 })
-
             else:
                 current_user.name = data['name']
-                db.session.commit()
+
         # uploading photo
-        try:
-            profile_pics = save_img(request.files['picture'])
-            current_user.profile = profile_pics
-            db.session.commit()
-            user_photo = str(profile_pics).partition('.')
-            if user_photo[-1] == 'jpg' or user_photo[-1] == 'png':
-                Cloud.uploader.upload(f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
-                                      chunk_size=6000000,
-                                      public_id=current_user.name,
-                                      overwrite=True,
-                                      eager=[
-                                          {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
-                                          {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
-                                           "audio_codec": "none"}],
-                                      eager_async=True,
-                                      notification_url="https://mysite.example.com/notify_endpoint",
-                                      resource_type="image")
+        if 'picture' in request.files:
+            try:
+                profile_pics = save_img(request.files['picture'])
+                current_user.profile = profile_pics
+                user_photo = str(profile_pics).partition('.')
+                if user_photo[-1] == 'jpg' or user_photo[-1] == 'png':
+                    Cloud.uploader.upload(
+                        f"{os.path.join(os.path.abspath('Api/static/movies/'), profile_pics)}",
+                        chunk_size=6000000,
+                        public_id=current_user.name,
+                        overwrite=True,
+                        eager=[
+                            {"width": 300, "height": 300, "crop": "pad", "audio_codec": "none"},
+                            {"width": 160, "height": 100, "crop": "crop", "gravity": "south",
+                             "audio_codec": "none"}],
+                        eager_async=True,
+                        notification_url="https://mysite.example.com/notify_endpoint",
+                        resource_type="image"
+                    )
+                else:
+                    return jsonify({
+                        "message": "Only image extensions allowed"
+                    })
+            except:
                 return jsonify({
-
-                    "message": 'Uploaded'
+                    "message": "Error occurred while uploading image"
                 })
-            else:
-
-                return jsonify({
-
-                    "message": 'Only image extensions allowed'
-                })
-        except:
-            pass
+        
+        db.session.commit()
     except:
-        pass
+        return jsonify({
+            "message": "Error occurred while updating profile"
+        })
+
     name = current_user.name
     email = current_user.email
     dob = current_user.dob
@@ -240,11 +209,11 @@ def profile(current_user):
 
     return jsonify({
         "name": name,
-        'email': email,
+        "email": email,
         "dob": dob,
-        # 'image' : getting cloudinary link / current user's name,
-        'friends': total
+        "friends": total
     })
+
 
 
 # uploading a story
